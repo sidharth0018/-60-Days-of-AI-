@@ -1,0 +1,308 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);color:var(--color-text-primary)}
+.wrap{max-width:680px;padding:1rem 0}
+.hero{padding:1.25rem;background:var(--color-background-secondary);border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);margin-bottom:1.5rem}
+.hero-title{font-size:18px;font-weight:500;margin-bottom:4px}
+.hero-sub{font-size:13px;color:var(--color-text-secondary)}
+.nav-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1.5rem}
+.nav-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:10px 12px;cursor:pointer;text-align:left;font-size:12px;color:var(--color-text-secondary);transition:background 0.15s}
+.nav-btn:hover{background:var(--color-background-secondary)}
+.nav-btn.active{border-color:var(--color-border-info);color:var(--color-text-info);background:var(--color-background-info)}
+.nav-btn .num{font-size:11px;font-weight:500;display:block;margin-bottom:2px}
+.section{display:none}
+.section.active{display:block}
+.sec-head{font-size:16px;font-weight:500;margin-bottom:0.75rem;padding-bottom:0.5rem;border-bottom:0.5px solid var(--color-border-tertiary)}
+.copy-block{position:relative;background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:1rem;margin-bottom:1rem;font-size:13.5px;line-height:1.7;color:var(--color-text-primary);white-space:pre-wrap}
+.copy-btn{position:absolute;top:8px;right:8px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:4px 10px;font-size:11px;cursor:pointer;color:var(--color-text-secondary)}
+.copy-btn:hover{background:var(--color-background-secondary)}
+.tag{display:inline-block;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);margin:2px;font-weight:500}
+.tag-info{background:var(--color-background-info);color:var(--color-text-info)}
+.tag-success{background:var(--color-background-success);color:var(--color-text-success)}
+.tag-warn{background:var(--color-background-warning);color:var(--color-text-warning)}
+.tag-danger{background:var(--color-background-danger);color:var(--color-text-danger)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem;margin-bottom:0.75rem}
+.card-title{font-size:13px;font-weight:500;margin-bottom:4px}
+.card-body{font-size:12.5px;color:var(--color-text-secondary);line-height:1.6}
+.strength-row{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.strength-row:last-child{border-bottom:none}
+.s-icon{font-size:16px;color:var(--color-text-success);margin-top:1px;flex-shrink:0}
+.s-text{font-size:13px;line-height:1.5}
+.s-label{font-weight:500;margin-bottom:2px}
+.gap-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:1rem}
+.gap-table th{text-align:left;padding:8px 10px;font-weight:500;font-size:12px;color:var(--color-text-secondary);border-bottom:0.5px solid var(--color-border-tertiary)}
+.gap-table td{padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;line-height:1.5}
+.gap-table tr:last-child td{border-bottom:none}
+.pill-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0.75rem}
+.bar-wrap{margin-bottom:10px}
+.bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:4px;color:var(--color-text-secondary)}
+.bar-bg{background:var(--color-background-secondary);border-radius:4px;height:6px;overflow:hidden}
+.bar-fill{height:6px;border-radius:4px}
+.bar-info{background:#378ADD}
+.bar-success{background:#639922}
+.bar-warn{background:#EF9F27}
+.bar-danger{background:#E24B4A}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media(max-width:500px){.grid2{grid-template-columns:1fr}}
+.talk-card{border-left:3px solid #378ADD;background:var(--color-background-secondary);border-radius:0 var(--border-radius-md) var(--border-radius-md) 0;padding:0.75rem 1rem;margin-bottom:8px;font-size:13px;line-height:1.6}
+.talk-card .tlabel{font-weight:500;font-size:12px;color:var(--color-text-info);margin-bottom:4px}
+</style>
+
+<div class="wrap">
+<div class="hero">
+<div class="hero-title">Job Search & Personal Branding Toolkit</div>
+<div class="hero-sub">Sidharth Kumar · B.Tech ECE · Target: Data Analyst @ Deloitte, EY, KPMG, Accenture, Genpact</div>
+</div>
+
+<div class="nav-grid" id="nav"></div>
+<div id="sections"></div>
+</div>
+
+<script>
+const sections = [
+{id:1,short:"Cover Letter",icon:"ti-file-text",content:`
+<div class="sec-head">ATS-Friendly Cover Letter (350–450 words)</div>
+<div class="copy-block" id="s1-block">Hiring Manager
+[Company Name] | Data Analyst Opening
+
+Dear Hiring Manager,
+
+I am writing to apply for the Data Analyst position at [Company Name]. As a B.Tech Electronics and Communication Engineering student at ABES Engineering College (graduating 2027), I have built a focused, hands-on skill set in SQL, Python (pandas/NumPy), data visualization, and end-to-end data workflows — directly aligned with the responsibilities outlined in your job description.
+
+My analytical foundation is practical, not just academic. I designed and built NutriScope, a full-stack nutrition analytics dashboard that implements a complete data pipeline: ingesting user inputs, cleaning and normalizing multi-source data, aggregating into daily and weekly KPIs, and rendering insights across four interactive Chart.js dashboards. I applied similar skills on the Environmental Health Dashboard project — integrating public AQI and weather APIs, validating multi-source datasets, and translating raw sensor data into stakeholder-ready visual reports with threshold-based KPI alerts. Both projects reflect exactly the kind of end-to-end analyst workflow your team needs: collect → clean → analyze → visualize → communicate.
+
+On the technical side, I am proficient in SQL (MySQL) — joins, subqueries, window functions, and reporting queries — as well as Python data analysis with pandas and NumPy. I have hands-on experience with Excel (pivot tables, VLOOKUP, data validation) and a working foundation in Power BI/Tableau for dashboard development. My 100+ problems solved on LeetCode and CodeChef have sharpened the logical and statistical reasoning that underpins good analysis. Additionally, my participation in the UX Hackathon at IIT Delhi gave me direct exposure to stakeholder collaboration and translating business requirements into measurable metrics.
+
+What sets me apart is my cross-domain background: an ECE degree with embedded systems experience combined with full-stack development and competitive programming gives me an unusually strong ability to understand data at the systems level — from how it is generated to how it is consumed. I bring this perspective to every analytical task.
+
+I am actively expanding my skills in Power BI, Tableau, and advanced statistical analysis, and I am eager to contribute to a data-driven team where I can deliver measurable business impact from day one. I would welcome the opportunity to discuss how my profile aligns with your team's goals.
+
+Thank you for your time and consideration.
+
+Sincerely,
+Sidharth Kumar
++91-6205535005 | mrsidharth7781@gmail.com
+linkedin.com/in/sidharth-kumar-501768287</div>
+<button class="copy-btn" onclick="copyBlock('s1-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:2,short:"Recruiter Email",icon:"ti-mail",content:`
+<div class="sec-head">Recruiter Outreach Email</div>
+<div class="copy-block" id="s2-block">Subject: Data Analyst – ECE Final Year Student | SQL · Python · Dashboard Development
+
+Hi [Recruiter Name],
+
+I came across the Data Analyst opening at [Company] and wanted to reach out directly. I am a B.Tech ECE student (graduating 2027, ABES Engineering College) with hands-on experience in SQL, Python (pandas/NumPy), and data visualization — and two independently built analytics projects that demonstrate end-to-end data workflow skills.
+
+Quick snapshot:
+- SQL: joins, window functions, aggregations, reporting queries
+- Python: pandas, NumPy, data cleaning, automation
+- Dashboards: Chart.js, Power BI/Tableau fundamentals
+- Projects: NutriScope (nutrition analytics app) and Environmental Health Dashboard (AQI/weather data pipeline)
+
+I'd love to connect if you're evaluating fresher/intern candidates for analyst roles. Happy to share my resume, portfolio, or take a brief call at your convenience.
+
+Best regards,
+Sidharth Kumar
++91-6205535005 | mrsidharth7781@gmail.com
+linkedin.com/in/sidharth-kumar-501768287</div>
+<button class="copy-btn" onclick="copyBlock('s2-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:3,short:"Hiring Manager Email",icon:"ti-user-check",content:`
+<div class="sec-head">Hiring Manager Email</div>
+<div class="copy-block" id="s3-block">Subject: Interested in Contributing to Your Data Analytics Team – Final Year B.Tech Student
+
+Hi [Manager Name],
+
+I hope this message finds you well. I am reaching out because I have been following [Company]'s work in [specific area, e.g., analytics-driven consulting / financial data operations] and am genuinely interested in contributing to your team as a Data Analyst.
+
+I am a final-year B.Tech Electronics and Communication Engineering student at ABES Engineering College. My technical background spans SQL (window functions, complex reporting queries), Python data analysis with pandas and NumPy, and dashboard development. More importantly, I have applied these skills in real projects: I independently built a multi-source data pipeline and interactive analytics dashboard for environmental health data, and an end-to-end nutrition tracking application with KPI monitoring — both built without templates, from data ingestion through to stakeholder-ready visualization.
+
+My ECE foundation gives me a data-at-the-source perspective that most analysts don't have: I understand how sensors, APIs, and systems generate the data I analyze, which makes me more effective at cleaning, interpreting, and finding anomalies in it.
+
+I recognize that you likely receive many messages from students, so I will be direct: I am not looking for a favor — I am confident I can add value to an analytical team from day one, and I'd welcome 15 minutes to demonstrate that. Would a brief call be possible?
+
+Warm regards,
+Sidharth Kumar
++91-6205535005 | mrsidharth7781@gmail.com</div>
+<button class="copy-btn" onclick="copyBlock('s3-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:4,short:"LinkedIn Request",icon:"ti-brand-linkedin",content:`
+<div class="sec-head">LinkedIn Connection Request (≤ 300 characters)</div>
+<div class="copy-block" id="s4-block">Hi [Name], I'm a B.Tech ECE student targeting Data Analyst roles at [Company]. I build SQL + Python data pipelines and dashboards independently. Would love to connect and learn from your experience in this space.</div>
+<button class="copy-btn" onclick="copyBlock('s4-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+<div class="card" style="margin-top:0.75rem">
+<div class="card-title">Character count tip</div>
+<div class="card-body">The message above is ~230 characters — well within LinkedIn's 300-character limit. Personalize [Name] and [Company] before sending.</div>
+</div>
+`},
+{id:5,short:"Referral Request",icon:"ti-users",content:`
+<div class="sec-head">Referral Request Message</div>
+<div class="copy-block" id="s5-block">Hi [Name],
+
+Hope you're doing well! I'm actively applying for Data Analyst roles and noticed that [Company] is hiring. You've been at [Company] for a while and I really respect the work your team does.
+
+I wanted to ask — would you be comfortable referring me for the Data Analyst opening? My background: B.Tech ECE (graduating 2027), strong in SQL, Python (pandas/NumPy), and data visualization. I've independently built two analytics dashboards with end-to-end data pipelines, and I have 100+ competitive programming problems solved for analytical reasoning.
+
+I've attached my resume. If you need any additional info to make the referral easy on your end, I'm happy to provide it. And of course, no pressure at all — I completely understand if now isn't the right time.
+
+Thank you so much for considering it!
+
+Warm regards,
+Sidharth Kumar</div>
+<button class="copy-btn" onclick="copyBlock('s5-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:6,short:"Follow-Up Email",icon:"ti-clock",content:`
+<div class="sec-head">Follow-Up Email (send 5 days after no response)</div>
+<div class="copy-block" id="s6-block">Subject: Following Up – Data Analyst Application | Sidharth Kumar
+
+Hi [Name],
+
+I wanted to follow up on my application/message from [Date] regarding the Data Analyst role at [Company]. I remain very interested in the opportunity and wanted to make sure my application didn't get lost in a busy inbox.
+
+Since we last connected, I've continued strengthening my analytics skill set — currently working through Power BI/Tableau projects to complement my SQL and Python foundation.
+
+I understand you receive many applications, and I appreciate your time. If you need any additional materials — portfolio samples, a technical exercise, or references — I'm happy to provide them immediately.
+
+Thank you for your consideration.
+
+Best regards,
+Sidharth Kumar
++91-6205535005 | mrsidharth7781@gmail.com
+linkedin.com/in/sidharth-kumar-501768287</div>
+<button class="copy-btn" onclick="copyBlock('s6-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:7,short:"30-Sec Intro",icon:"ti-speakerphone",content:`
+<div class="sec-head">30-Second Professional Introduction</div>
+<div class="copy-block" id="s7-block">Hi, I'm Sidharth Kumar — a final-year Electronics and Communication Engineering student at ABES Engineering College, and I'm targeting Data Analyst roles in the analytics and consulting space.
+
+My technical focus is SQL, Python with pandas and NumPy, and data visualization. I've independently built two end-to-end analytics applications — a nutrition tracking dashboard and an environmental health data platform — both involving real data pipeline work: ingesting from APIs, cleaning multi-source datasets, and delivering stakeholder-ready KPI dashboards.
+
+What makes my background a bit different is that my ECE degree gives me a systems-level understanding of how data is actually generated — which makes me sharper at finding data quality issues and interpreting results. I've also solved 100+ competitive programming problems, which keeps my analytical reasoning sharp.
+
+I'm actively looking for my first analyst role and would love to learn more about what your team works on.`}
+,
+<button class="copy-btn" onclick="copyBlock('s7-block',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+`},
+{id:8,short:"Job Titles",icon:"ti-list-check",content:`
+<div class="sec-head">Top 10 Job Titles Best Suited for Your Profile</div>
+<div class="grid2">
+${[
+["1. Data Analyst","Best fit — direct match to SQL, Python, visualization, and KPI work.","info"],
+["2. Business Analyst (Data)","Your stakeholder + metrics experience from IIT hackathon applies here.","info"],
+["3. Junior Data Analyst","Entry-level title at Big 4 / GCCs — common hiring band for freshers.","info"],
+["4. Analyst – Data & Insights","Deloitte / Accenture common internal title for analytics hires.","info"],
+["5. Analytics Associate","Genpact and EY use this title for fresher analytics tracks.","success"],
+["6. Data Operations Analyst","ETL and pipeline work aligns — strong fit for ops-heavy roles.","success"],
+["7. Reporting Analyst","SQL + dashboard work directly maps; frequent Big 4 fresher opening.","success"],
+["8. MIS Analyst","High hiring volume at Accenture/Genpact; Excel + SQL is the core.","warn"],
+["9. BI Analyst (Junior)","Once Power BI/Tableau is polished — this is a 3-month away goal.","warn"],
+["10. Data Quality Analyst","Your validation and cleaning work (NutriScope, Env Dashboard) is a strong fit.","warn"]
+].map(([t,d,c])=>`<div class="card"><div class="card-title">${t} <span class="tag tag-${c}">${c==="info"?"Strong fit":c==="success"?"Good fit":"Near-term"}</span></div><div class="card-body">${d}</div></div>`).join("")}
+</div>
+`},
+{id:9,short:"Key Strengths",icon:"ti-trophy",content:`
+<div class="sec-head">Key Strengths Recruiters Will Notice</div>
+${[
+["End-to-end data pipeline ownership","You didn't just query data — you designed ingestion, transformation, and visualization layers in NutriScope and the Environmental Dashboard. This is rare for a fresher."],
+["SQL depth beyond the basics","Window functions, aggregations, and complex reporting queries signal readiness for real analyst tasks, not just tutorial-level SQL."],
+["Python for data, not just scripting","pandas + NumPy usage in actual projects (not just coursework) is a visible differentiator at Deloitte/KPMG fresher screens."],
+["Cross-domain systems thinking","Your ECE background means you understand data at its origin — sensors, APIs, hardware outputs. This makes you faster at diagnosing data quality issues."],
+["Public, verifiable project work","NutriScope and Environmental Dashboard are real applications on GitHub — not just bullet points. Recruiters can see the code and the output."],
+["Competitive programming analytical base","100+ problems solved signals strong logical reasoning — a proxy many analytics interviewers use to assess problem decomposition skills."],
+["Stakeholder collaboration evidence","IIT Delhi UX Hackathon — collaborating with stakeholders to define user metrics is exactly what an analyst does daily. Most freshers lack this story."],
+["Documented learning discipline","60-Day Claude AI Challenge, daily GitHub commits, LinkedIn content — this signals consistency and growth mindset that Big 4 interviewers notice."]
+].map(([t,d])=>`<div class="strength-row"><i class="ti ti-check s-icon" aria-hidden="true"></i><div class="s-text"><div class="s-label">${t}</div>${d}</div></div>`).join("")}
+`},
+{id:10,short:"Skill Gap",icon:"ti-chart-bar",content:`
+<div class="sec-head">Skill Gap Analysis</div>
+<div style="margin-bottom:1rem">
+<div style="font-size:13px;font-weight:500;margin-bottom:8px">Current strength level</div>
+${[
+["SQL (MySQL)","Strong",85,"info"],
+["Python (pandas/NumPy)","Solid",72,"info"],
+["Excel (VLOOKUP, Pivot, Charts)","Solid",68,"success"],
+["Data Visualization (Chart.js)","Strong in web",65,"success"],
+["Statistics & Descriptive Analysis","Foundational",50,"warn"],
+["Power BI / Tableau","Fundamentals only",30,"danger"],
+["ETL Concepts","Conceptual only",35,"warn"],
+["Machine Learning Fundamentals","Gap",20,"danger"]
+].map(([l,s,v,c])=>`<div class="bar-wrap"><div class="bar-label"><span>${l}</span><span>${s} · ${v}%</span></div><div class="bar-bg"><div class="bar-fill bar-${c}" style="width:${v}%"></div></div></div>`).join("")}
+</div>
+<table class="gap-table">
+<tr><th>Priority</th><th>Skill</th><th>Action (next 90 days)</th></tr>
+<tr><td><span class="tag tag-danger">Critical</span></td><td>Power BI</td><td>Build 2 portfolio dashboards — one with a mock sales dataset, one with your NutriScope data. Free Microsoft Learn path exists.</td></tr>
+<tr><td><span class="tag tag-danger">Critical</span></td><td>Tableau</td><td>Tableau Public (free). Recreate your Environmental Dashboard in Tableau and publish it. 1 published viz = visible proof.</td></tr>
+<tr><td><span class="tag tag-warn">High</span></td><td>Advanced Excel</td><td>Index-Match, array formulas, Power Query. Chandoo.org or ExcelJet — 2 hours/week is enough over 4 weeks.</td></tr>
+<tr><td><span class="tag tag-warn">High</span></td><td>Statistics</td><td>Descriptive stats, correlation, hypothesis testing basics. StatQuest (YouTube) or Khan Academy. Kaggle notebook applying it = proof.</td></tr>
+<tr><td><span class="tag tag-info">Medium</span></td><td>ETL / Data Pipelines</td><td>Build one Python script using pandas that reads a CSV, transforms it, and loads it to a MySQL table. Document it on GitHub.</td></tr>
+<tr><td><span class="tag tag-info">Medium</span></td><td>ML Fundamentals</td><td>Linear regression, classification basics. Kaggle's Intro to ML course. Not required for analyst roles but differentiates you at KPMG/Deloitte.</td></tr>
+</table>
+`},
+{id:11,short:"Personal Brand",icon:"ti-id",content:`
+<div class="sec-head">Personal Brand Summary</div>
+<div class="card" style="border:0.5px solid var(--color-border-info)">
+<div class="card-title" style="color:var(--color-text-info)">Unique Value Proposition</div>
+<div class="card-body" style="font-size:13.5px;margin-top:6px;line-height:1.7">A data analyst with a systems engineer's instinct. I don't just query and visualize data — I understand how it is generated, where it breaks, and what it actually means. My ECE background + full-stack development experience + competitive programming discipline gives me a perspective that pure CS or MBA analysts typically don't have. I build things: end-to-end pipelines, working dashboards, and publicly documented projects that any recruiter can verify.</div>
+</div>
+<div class="card" style="margin-top:0.75rem">
+<div class="card-title">Professional Positioning Statement</div>
+<div class="card-body" style="font-size:13.5px;margin-top:6px;line-height:1.7">"Final-year ECE student and aspiring Data Analyst with hands-on SQL, Python, and dashboard development experience — delivering end-to-end data workflows through independently built, publicly verifiable projects."</div>
+</div>
+<div class="card" style="margin-top:0.75rem">
+<div class="card-title">LinkedIn Headline options</div>
+<div class="copy-block" id="s11a" style="margin-bottom:8px">Aspiring Data Analyst | SQL · Python · Dashboard Development | B.Tech ECE @ ABES Engineering College</div>
+<button class="copy-btn" style="position:relative;top:auto;right:auto;display:inline-block;margin-bottom:8px" onclick="copyBlock('s11a',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+<div class="copy-block" id="s11b" style="margin-bottom:8px">Data Analyst (Fresher) | SQL · Python · Power BI | Building end-to-end data pipelines | Open to opportunities</div>
+<button class="copy-btn" style="position:relative;top:auto;right:auto;display:inline-block" onclick="copyBlock('s11b',this)"><i class="ti ti-copy" aria-hidden="true"></i> Copy</button>
+</div>
+`},
+{id:12,short:"Interview Points",icon:"ti-message-dots",content:`
+<div class="sec-head">Interview Talking Points</div>
+<div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--color-text-secondary)">Most impressive achievements to lead with</div>
+<div class="talk-card"><div class="tlabel">Project: NutriScope</div>Talk about the end-to-end pipeline architecture — not just "I built a dashboard." Frame it as: data model design → input validation and normalization → KPI aggregation logic → Chart.js rendering. Quantify: 4 dashboards, daily + weekly trend tracking, input anomaly flagging. This is the analyst workflow in miniature.</div>
+<div class="talk-card"><div class="tlabel">Project: Environmental Health Dashboard</div>Lead with the multi-source API integration and data quality challenge. "I had to reconcile AQI, temperature, humidity, and UV data from different APIs, handle missing values and format inconsistencies, and then define threshold-based alerts for stakeholder consumption." This directly maps to real analyst work at Deloitte/KPMG.</div>
+<div class="talk-card"><div class="tlabel">Differentiator: ECE + Data intersection</div>If asked "why data analytics with an ECE background?" — this is your strength, not your weakness. "ECE taught me how data is generated at the source — sensors, signals, hardware. That foundation makes me sharper at identifying data quality issues and understanding what anomalies actually mean physically."</div>
+<div class="talk-card"><div class="tlabel">Achievement: IIT Delhi Hackathon</div>Frame as stakeholder collaboration and KPI definition experience. "We worked directly with non-technical stakeholders to define success metrics, translate user needs into measurable design decisions, and iterate based on feedback." This is exactly the 'collaborate with stakeholders to define KPIs' responsibility in job descriptions.</div>
+<div class="talk-card"><div class="tlabel">Analytical reasoning: Competitive programming</div>When asked about problem-solving approach: "I've solved 100+ problems across arrays, trees, graphs, and dynamic programming — this isn't just exercise, it's trained me to decompose ambiguous problems into structured logic, which is directly how I approach data analysis tasks."</div>
+<div style="font-size:13px;font-weight:500;margin:1rem 0 8px;color:var(--color-text-secondary)">Questions recruiters are likely to ask — and how to answer</div>
+${[
+["Tell me about a time you worked with messy data.","Use the Environmental Dashboard: 'I integrated multiple public APIs with inconsistent formats, handled null values and timezone mismatches, and built validation logic to flag anomalous readings before they reached the dashboard.'"],
+["What is your SQL proficiency level?","'I'm comfortable with joins, subqueries, window functions like ROW_NUMBER and LAG, and building reporting queries from scratch. I've applied these in [project] and I regularly practice on LeetCode SQL problems.'"],
+["Do you know Power BI / Tableau?","Be honest but not defeatist: 'I have fundamentals in both and I'm actively building portfolio dashboards in Power BI right now. I'm comfortable with the underlying data modeling and visualization logic — the tool itself I'm ramping up quickly.'"],
+["Why do you want to work at [Big 4/GCC]?","Research 1-2 specific things: a recent project, a practice area, or a technology initiative. 'I'm particularly interested in [Company]'s analytics work in [specific domain] — and I believe my data pipeline experience and cross-functional background would let me contribute meaningfully.'"]
+].map(([q,a])=>`<div class="card"><div class="card-title">"${q}"</div><div class="card-body">${a}</div></div>`).join("")}
+`}
+];
+
+function copyBlock(id, btn) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText.trim()).then(() => {
+    btn.innerHTML = '<i class="ti ti-check" aria-hidden="true"></i> Copied';
+    setTimeout(() => { btn.innerHTML = '<i class="ti ti-copy" aria-hidden="true"></i> Copy'; }, 2000);
+  });
+}
+
+const nav = document.getElementById('nav');
+const sectionsDiv = document.getElementById('sections');
+
+sections.forEach((s, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'nav-btn' + (i === 0 ? ' active' : '');
+  btn.innerHTML = `<span class="num"><i class="ti ${s.icon}" aria-hidden="true"></i> S${s.id}</span>${s.short}`;
+  btn.onclick = () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(sc => sc.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('sec-' + s.id).classList.add('active');
+  };
+  nav.appendChild(btn);
+
+  const div = document.createElement('div');
+  div.className = 'section' + (i === 0 ? ' active' : '');
+  div.id = 'sec-' + s.id;
+  div.innerHTML = s.content;
+  sectionsDiv.appendChild(div);
+});
+</script>
