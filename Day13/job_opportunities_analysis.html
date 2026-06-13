@@ -1,0 +1,184 @@
+
+<style>
+  * { box-sizing: border-box; }
+  .sec-label { font-size: 11px; font-weight: 500; color: var(--color-text-secondary); letter-spacing: 0.06em; text-transform: uppercase; margin: 0 0 10px; }
+  .card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 12px; }
+  .card.top { border: 2px solid #185FA5; }
+  .job-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .job-title { font-size: 15px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 2px; }
+  .job-company { font-size: 13px; color: var(--color-text-secondary); margin: 0; }
+  .score-ring { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+  .score-num { font-size: 22px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+  .score-label { font-size: 10px; color: var(--color-text-secondary); margin-top: 2px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 8px; }
+  .pill { font-size: 11px; padding: 3px 9px; border-radius: 99px; border: 0.5px solid var(--color-border-tertiary); color: var(--color-text-secondary); background: var(--color-background-secondary); display: flex; align-items: center; gap: 4px; }
+  .pill i { font-size: 12px; }
+  .fit-row { font-size: 13px; color: var(--color-text-secondary); margin: 6px 0 0; border-top: 0.5px solid var(--color-border-tertiary); padding-top: 8px; }
+  .fit-row span { color: var(--color-text-primary); }
+  .badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); margin-bottom: 6px; }
+  .badge-blue { background: #E6F1FB; color: #0C447C; }
+  .badge-green { background: #EAF3DE; color: #27500A; }
+  .badge-amber { background: #FAEEDA; color: #633806; }
+  .badge-red { background: #FCEBEB; color: #791F1F; }
+  .apply-btn { display: inline-block; margin-top: 10px; font-size: 12px; padding: 5px 14px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); color: var(--color-text-primary); text-decoration: none; background: var(--color-background-secondary); }
+  .skill-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 10px 0; }
+  .skill-item { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; }
+  .skill-name { font-size: 13px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 6px; }
+  .skill-bar-bg { height: 4px; background: var(--color-border-tertiary); border-radius: 99px; overflow: hidden; }
+  .skill-bar { height: 4px; border-radius: 99px; }
+  .gap-row { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; }
+  .gap-row:last-child { border-bottom: none; }
+  .gap-status { font-size: 11px; padding: 2px 8px; border-radius: 99px; }
+  .have { background: #EAF3DE; color: #27500A; }
+  .partial { background: #FAEEDA; color: #633806; }
+  .missing { background: #FCEBEB; color: #791F1F; }
+</style>
+
+<h2 class="sr-only">Job opportunities analysis: top matched roles, skill gap analysis, and market demand for data analyst and business analyst positions in India</h2>
+
+<div style="padding: 0.5rem 0 1.5rem;">
+
+  <p class="sec-label">Top matched opportunities</p>
+
+  <div class="card top">
+    <span class="badge badge-blue">Best match — apply now</span>
+    <div class="job-header">
+      <div>
+        <p class="job-title">Data Science / Data Analyst Trainee</p>
+        <p class="job-company">Nucot — Bengaluru, Karnataka</p>
+      </div>
+      <div class="score-ring">
+        <span class="score-num">88</span>
+        <span class="score-label">/ 100</span>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill"><i class="ti ti-calendar" aria-hidden="true"></i> June 2, 2026</span>
+      <span class="pill"><i class="ti ti-map-pin" aria-hidden="true"></i> Onsite</span>
+      <span class="pill"><i class="ti ti-currency-rupee" aria-hidden="true"></i> Stipend → CTC post-training</span>
+      <span class="pill"><i class="ti ti-user" aria-hidden="true"></i> Fresher welcome</span>
+    </div>
+    <div class="fit-row"><span>Why it fits:</span> Explicitly targets freshers with Python, SQL, Power BI, ML — matching your exact stack. Training-then-placement model suits your 2027 graduation. Structured mentorship reduces entry barrier significantly.</div>
+    <a href="https://to.indeed.com/aac4fbv9lv8h" class="apply-btn" target="_blank">Apply on Indeed <i class="ti ti-external-link" style="font-size:11px;" aria-hidden="true"></i></a>
+  </div>
+
+  <div class="card top">
+    <span class="badge badge-blue">Walk-in June 20 — urgent</span>
+    <div class="job-header">
+      <div>
+        <p class="job-title">Business Analyst Trainee</p>
+        <p class="job-company">AUTOSherpa (WyzMindz) — Bengaluru, Karnataka</p>
+      </div>
+      <div class="score-ring">
+        <span class="score-num">75</span>
+        <span class="score-label">/ 100</span>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill"><i class="ti ti-calendar" aria-hidden="true"></i> June 9, 2026</span>
+      <span class="pill"><i class="ti ti-building" aria-hidden="true"></i> Hybrid</span>
+      <span class="pill"><i class="ti ti-currency-rupee" aria-hidden="true"></i> ₹3 LPA (₹2.4L + ₹0.6L bonus)</span>
+      <span class="pill"><i class="ti ti-user" aria-hidden="true"></i> Fresher</span>
+    </div>
+    <div class="fit-row"><span>Why it fits:</span> Real product company (CRM SaaS), fresher-friendly, hybrid model, Python + Excel required — skills you have. CTC is low but it's a real product company role that builds the BA story. Requires Malayalam proficiency — check if this disqualifies you.</div>
+    <a href="https://to.indeed.com/aa8ynddbyqpv" class="apply-btn" target="_blank">Apply on Indeed <i class="ti ti-external-link" style="font-size:11px;" aria-hidden="true"></i></a>
+  </div>
+
+  <div class="card">
+    <span class="badge badge-amber">Stretch role — 1–2 yr exp preferred</span>
+    <div class="job-header">
+      <div>
+        <p class="job-title">Data Analyst — Customer Success (Visualization CoE)</p>
+        <p class="job-company">Bain & Company — Delhi</p>
+      </div>
+      <div class="score-ring">
+        <span class="score-num">62</span>
+        <span class="score-label">/ 100</span>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill"><i class="ti ti-calendar" aria-hidden="true"></i> April 15, 2026</span>
+      <span class="pill"><i class="ti ti-map-pin" aria-hidden="true"></i> Delhi (close to you)</span>
+      <span class="pill"><i class="ti ti-currency-rupee" aria-hidden="true"></i> ₹8–12 LPA est.</span>
+    </div>
+    <div class="fit-row"><span>Why it fits:</span> Tier-1 consulting brand, uses SQL + Python + Power BI + Tableau — your exact tools. Asks for 3–4 years exp but worth applying with a strong portfolio. Being Delhi-based is a major geographic advantage for you.</div>
+    <a href="https://to.indeed.com/aawcm4dfvwcy" class="apply-btn" target="_blank">Apply on Indeed <i class="ti ti-external-link" style="font-size:11px;" aria-hidden="true"></i></a>
+  </div>
+
+  <div class="card">
+    <span class="badge badge-red">Senior role — aspirational</span>
+    <div class="job-header">
+      <div>
+        <p class="job-title">Data Management Analyst</p>
+        <p class="job-company">Experian — Mumbai, Maharashtra</p>
+      </div>
+      <div class="score-ring">
+        <span class="score-num">48</span>
+        <span class="score-label">/ 100</span>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="pill"><i class="ti ti-calendar" aria-hidden="true"></i> June 3, 2026</span>
+      <span class="pill"><i class="ti ti-map-pin" aria-hidden="true"></i> Onsite Mumbai</span>
+      <span class="pill"><i class="ti ti-currency-rupee" aria-hidden="true"></i> ₹10–16 LPA est.</span>
+    </div>
+    <div class="fit-row"><span>Why it fits:</span> Global brand, strong data culture, uses SQL + Python + Power BI. Requires 4–7 years exp — too senior for now, but bookmark for Year 2. Gives you a salary benchmark to aim toward.</div>
+    <a href="https://to.indeed.com/aath22rkyz2g" class="apply-btn" target="_blank">Apply on Indeed <i class="ti ti-external-link" style="font-size:11px;" aria-hidden="true"></i></a>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <p class="sec-label">Skills demanded across all job descriptions</p>
+    <div class="skill-grid">
+      <div class="skill-item">
+        <p class="skill-name">SQL</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:100%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">100% of roles</p>
+      </div>
+      <div class="skill-item">
+        <p class="skill-name">Python / pandas</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:90%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">90% of roles</p>
+      </div>
+      <div class="skill-item">
+        <p class="skill-name">Power BI / Tableau</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:85%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">85% of roles</p>
+      </div>
+      <div class="skill-item">
+        <p class="skill-name">Excel (advanced)</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:80%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">80% of roles</p>
+      </div>
+      <div class="skill-item">
+        <p class="skill-name">Statistics / A/B testing</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:70%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">70% of roles</p>
+      </div>
+      <div class="skill-item">
+        <p class="skill-name">Communication / storytelling</p>
+        <div class="skill-bar-bg"><div class="skill-bar" style="width:75%; background:#185FA5;"></div></div>
+        <p style="font-size:11px; color:var(--color-text-secondary); margin:4px 0 0;">75% of roles</p>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top: 2rem;">
+    <p class="sec-label">Your skill gap analysis</p>
+    <div class="card" style="padding: 0.75rem 1.25rem;">
+      <div class="gap-row"><span>SQL (basic queries, joins)</span><span class="gap-status have">Have</span></div>
+      <div class="gap-row"><span>Python + pandas (basics)</span><span class="gap-status have">Have</span></div>
+      <div class="gap-row"><span>Power BI / Tableau (basics)</span><span class="gap-status have">Have</span></div>
+      <div class="gap-row"><span>Excel (advanced: pivot, VLOOKUP)</span><span class="gap-status partial">Partial</span></div>
+      <div class="gap-row"><span>Advanced SQL (window functions, CTEs)</span><span class="gap-status partial">Partial</span></div>
+      <div class="gap-row"><span>Statistics + hypothesis testing</span><span class="gap-status missing">Gap</span></div>
+      <div class="gap-row"><span>Data storytelling + stakeholder presentation</span><span class="gap-status missing">Gap</span></div>
+      <div class="gap-row"><span>ETL / data pipeline basics</span><span class="gap-status missing">Gap</span></div>
+      <div class="gap-row"><span>End-to-end analytics portfolio project</span><span class="gap-status missing">Gap — critical</span></div>
+    </div>
+  </div>
+
+  <div style="margin-top: 1.5rem; text-align: center;">
+    <button onclick="sendPrompt('Build me a 30-day plan to close my skill gaps for Data Analyst roles in India ↗')">Build my 30-day gap-closing plan ↗</button>
+  </div>
+
+</div>
