@@ -1,0 +1,185 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .card {
+    width: 680px;
+    height: 380px;
+    background: #080808;
+    border-radius: 16px;
+    overflow: hidden;
+    position: relative;
+    font-family: 'Inter', sans-serif;
+    border: 1px solid #C9A84C;
+  }
+  .grid-lines {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .accent-bar {
+    position: absolute; left: 0; top: 0; width: 4px; height: 100%;
+    background: #C9A84C;
+  }
+  .top-stripe {
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: #C9A84C; opacity: 0.9;
+  }
+  .bottom-stripe {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 48px;
+    background: #C9A84C; opacity: 0.07;
+    border-top: 0.5px solid #C9A84C;
+  }
+  .photo-col {
+    position: absolute; left: 24px; top: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+  }
+  .photo-frame {
+    width: 148px; height: 176px;
+    border: 2px solid #C9A84C;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #1A1A1A;
+  }
+  .photo-frame img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top center;
+    display: block;
+  }
+  .day-badge {
+    background: #C9A84C;
+    color: #080808;
+    font-size: 11px; font-weight: 600;
+    padding: 4px 14px; border-radius: 20px;
+    letter-spacing: 1px;
+    font-family: 'Inter', sans-serif;
+  }
+  .name-tag {
+    text-align: center;
+    font-size: 12px; color: #C9A84C; font-weight: 500; letter-spacing: 0.5px;
+  }
+  .right-col {
+    position: absolute; left: 196px; top: 32px; right: 20px;
+  }
+  .challenge-label {
+    font-size: 10px; letter-spacing: 2px; color: #7A6030; font-weight: 500;
+    margin-bottom: 4px; font-family: 'Inter', sans-serif;
+  }
+  .main-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 26px; font-weight: 700; color: #C9A84C;
+    line-height: 1.2; margin-bottom: 6px;
+  }
+  .sub-title {
+    font-size: 11px; color: #7A6030; letter-spacing: 1.5px; margin-bottom: 14px;
+    font-family: 'Inter', sans-serif;
+  }
+  .divider { width: 100%; height: 0.5px; background: #C9A84C; opacity: 0.35; margin-bottom: 14px; }
+  .task-title {
+    font-size: 13px; font-weight: 600; color: #E8C96A; margin-bottom: 10px;
+    font-family: 'Inter', sans-serif; letter-spacing: 0.3px;
+  }
+  .flags-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 12px;
+  }
+  .flag-item {
+    display: flex; align-items: flex-start; gap: 6px;
+  }
+  .flag-dot {
+    width: 5px; height: 5px; border-radius: 50%; background: #C9A84C;
+    flex-shrink: 0; margin-top: 4px;
+  }
+  .flag-text {
+    font-size: 11px; color: #B0A080; line-height: 1.4;
+    font-family: 'Inter', sans-serif;
+  }
+  .pills-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .pill {
+    font-size: 10px; padding: 3px 9px; border-radius: 20px; font-weight: 500;
+    font-family: 'Inter', sans-serif; letter-spacing: 0.3px;
+  }
+  .pill-gold { background: #2A2010; color: #C9A84C; border: 0.5px solid #8A6820; }
+  .pill-dark { background: #151510; color: #7A6030; border: 0.5px solid #3A3020; }
+  .verdict-box {
+    background: #1A1508; border: 0.5px solid #C9A84C; border-radius: 8px;
+    padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+  }
+  .verdict-icon {
+    font-size: 18px; flex-shrink: 0;
+  }
+  .verdict-text { font-size: 11px; color: #C9A84C; font-family: 'Inter', sans-serif; line-height: 1.4; }
+  .verdict-bold { font-weight: 600; font-size: 12px; display: block; }
+  .footer-row {
+    position: absolute; bottom: 12px; left: 196px; right: 20px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .footer-left { font-size: 10px; color: #5A4A20; letter-spacing: 0.5px; font-family: 'Inter', sans-serif; }
+  .footer-right { font-size: 10px; color: #5A4A20; letter-spacing: 0.3px; font-family: 'Inter', sans-serif; }
+  .hex { position: absolute; opacity: 0.07; pointer-events: none; }
+  .score-chip {
+    position: absolute; right: 20px; top: 32px;
+    background: #1A1508; border: 1px solid #C9A84C;
+    border-radius: 50%; width: 44px; height: 44px;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+  }
+  .score-num { font-size: 15px; font-weight: 700; color: #C9A84C; font-family: 'Inter', sans-serif; line-height: 1; }
+  .score-sub { font-size: 8px; color: #7A6030; font-family: 'Inter', sans-serif; }
+</style>
+
+<div class="card">
+  <div class="top-stripe"></div>
+  <div class="accent-bar"></div>
+  <div class="bottom-stripe"></div>
+
+  <svg class="hex" style="top:-10px;right:80px;width:120px;height:120px" viewBox="0 0 100 100">
+    <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="#C9A84C" stroke-width="1"/>
+    <polygon points="50,18 78,33 78,67 50,82 22,67 22,33" fill="none" stroke="#C9A84C" stroke-width="0.5"/>
+  </svg>
+  <svg class="hex" style="bottom:10px;right:20px;width:70px;height:70px" viewBox="0 0 100 100">
+    <polygon points="50,5 90,27 90,73 50,95 10,73 10,27" fill="none" stroke="#C9A84C" stroke-width="1"/>
+  </svg>
+
+  <div class="photo-col">
+    <div class="photo-frame">
+      <img src="/mnt/user-data/uploads/Sidharth_Pic.jpg" alt="Sidharth"/>
+    </div>
+    <div class="day-badge">DAY 14 / 60</div>
+    <div class="name-tag">Sidharth · ABES EC · 2027</div>
+  </div>
+
+  <div class="score-chip" style="top:32px;right:20px">
+    <span class="score-num">38</span>
+    <span class="score-sub">/100</span>
+  </div>
+
+  <div class="right-col">
+    <div class="challenge-label">ABTALKS · CLAUDE AI MASTERY CHALLENGE</div>
+    <div class="main-title">JD Red Flag<br>Detector</div>
+    <div class="sub-title">AI · DECISION SUPPORT · CAREER STRATEGY</div>
+    <div class="divider"></div>
+    <div class="task-title">Today's task — Deloitte Analyst, Analytics</div>
+    <div class="flags-grid">
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">Risk score: 38/100 (moderate)</div></div>
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">MBA req for analyst role — red flag</div></div>
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">No salary info disclosed</div></div>
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">US shift: 11am–8pm IST</div></div>
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">CoRe ≠ consulting track</div></div>
+      <div class="flag-item"><div class="flag-dot"></div><div class="flag-text">Big 4 brand — strong resume value</div></div>
+    </div>
+    <div class="pills-row">
+      <span class="pill pill-gold">Prompt engineering</span>
+      <span class="pill pill-gold">Decision-support AI</span>
+      <span class="pill pill-dark">Role + Input + Output pattern</span>
+      <span class="pill pill-dark">Career strategy</span>
+    </div>
+    <div class="verdict-box">
+      <div class="verdict-icon">⚠️</div>
+      <div class="verdict-text">
+        <span class="verdict-bold">Verdict: Apply with caution</span>
+        Used Claude to analyze a real JD in 2 mins — risk score, flags, interview Qs, final call.
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-row">
+    <div class="footer-left">github.com/ABTalks · Day 14 pushed</div>
+    <div class="footer-right">Data Analytics · AI · Career · #ABTalks60</div>
+  </div>
+</div>
