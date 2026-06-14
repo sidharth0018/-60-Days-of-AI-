@@ -1,0 +1,181 @@
+
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: transparent; }
+  .report { background: #FEFCF5; border: 0.5px solid #E8E0C8; border-radius: 16px; padding: 2rem; font-family: var(--font-sans); max-width: 680px; }
+  .header { border-bottom: 1px solid #E8E0C8; padding-bottom: 1.25rem; margin-bottom: 1.5rem; }
+  .company-badge { display: inline-flex; align-items: center; gap: 8px; background: #F5EDD8; border: 0.5px solid #D4B87A; border-radius: 8px; padding: 4px 12px; font-size: 12px; color: #7A5C1A; font-weight: 500; margin-bottom: 0.75rem; }
+  .report-title { font-size: 20px; font-weight: 500; color: #3A2E1A; margin-bottom: 4px; }
+  .report-sub { font-size: 13px; color: #7A6E58; }
+
+  .score-row { display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.5rem; background: #F5EDD8; border-radius: 12px; padding: 1.25rem 1.5rem; border: 0.5px solid #DDD0A8; }
+  .score-circle { width: 72px; height: 72px; border-radius: 50%; background: #FAEEDA; border: 3px solid #EF9F27; display: flex; flex-direction: column; align-items: center; justify-content: center; flex-shrink: 0; }
+  .score-num { font-size: 26px; font-weight: 500; color: #633806; line-height: 1; }
+  .score-label { font-size: 10px; color: #854F0B; font-weight: 500; letter-spacing: 0.5px; }
+  .score-desc { }
+  .score-verdict { font-size: 15px; font-weight: 500; color: #3A2E1A; margin-bottom: 4px; }
+  .score-note { font-size: 13px; color: #5C4E30; line-height: 1.5; }
+  .verdict-chip { display: inline-block; background: #FAEEDA; color: #633806; border: 1px solid #EF9F27; border-radius: 20px; padding: 4px 14px; font-size: 13px; font-weight: 500; margin-top: 6px; }
+
+  .section-title { font-size: 13px; font-weight: 500; color: #7A6E58; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 0.75rem; }
+  .section { margin-bottom: 1.5rem; }
+
+  .flag-card { background: #FEFCF5; border: 0.5px solid #E8E0C8; border-radius: 10px; padding: 0.875rem 1rem; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start; }
+  .flag-sev { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; margin-top: 2px; }
+  .sev-high { background: #F7C1C1; color: #791F1F; }
+  .sev-med { background: #FAC775; color: #633806; }
+  .sev-low { background: #C0DD97; color: #27500A; }
+  .flag-text { font-size: 13px; color: #3A2E1A; line-height: 1.5; }
+  .flag-title { font-weight: 500; color: #2A2014; font-size: 13px; }
+
+  .positive-card { background: #F0F7E8; border: 0.5px solid #C0DD97; border-radius: 10px; padding: 0.75rem 1rem; margin-bottom: 8px; display: flex; gap: 10px; align-items: flex-start; }
+  .positive-dot { width: 8px; height: 8px; border-radius: 50%; background: #639922; flex-shrink: 0; margin-top: 5px; }
+  .positive-text { font-size: 13px; color: #27500A; line-height: 1.5; }
+
+  .risk-table { width: 100%; border-collapse: collapse; }
+  .risk-table th { font-size: 12px; color: #7A6E58; font-weight: 500; text-align: left; padding: 6px 10px; border-bottom: 1px solid #E8E0C8; }
+  .risk-table td { font-size: 13px; color: #3A2E1A; padding: 9px 10px; border-bottom: 0.5px solid #F0E8D0; }
+  .risk-table tr:last-child td { border-bottom: none; }
+  .risk-pill { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .risk-high { background: #F7C1C1; color: #791F1F; }
+  .risk-med { background: #FAC775; color: #633806; }
+  .risk-low { background: #C0DD97; color: #27500A; }
+  .risk-mod { background: #B5D4F4; color: #0C447C; }
+
+  .q-card { background: #FEFCF5; border: 0.5px solid #DDD0A8; border-left: 3px solid #EF9F27; border-radius: 0 10px 10px 0; padding: 0.75rem 1rem; margin-bottom: 8px; }
+  .q-num { font-size: 11px; color: #854F0B; font-weight: 500; margin-bottom: 3px; }
+  .q-text { font-size: 13px; color: #3A2E1A; line-height: 1.5; }
+
+  .divider { border: none; border-top: 1px solid #E8E0C8; margin: 1.25rem 0; }
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  @media (max-width: 500px) { .two-col { grid-template-columns: 1fr; } .score-row { flex-direction: column; } }
+</style>
+
+<div class="report">
+  <div class="header">
+    <div class="company-badge"><i class="ti ti-building" aria-hidden="true"></i> Deloitte · CoRe Business Solutions</div>
+    <div class="report-title">JD Red Flag Analysis Report</div>
+    <div class="report-sub">Role: Analyst, Analytics · Location: Hyderabad / Bengaluru</div>
+  </div>
+
+  <div class="score-row">
+    <div class="score-circle">
+      <span class="score-num">38</span>
+      <span class="score-label">/ 100</span>
+    </div>
+    <div class="score-desc">
+      <div class="score-verdict">Moderate Risk — Mostly Legit</div>
+      <div class="score-note">A well-known Big 4 firm with genuine analytics work. Key concerns are missing salary info, an MA/MBA requirement for an analyst role, and some scope creep. Worth applying with a few smart questions.</div>
+      <div class="verdict-chip">⚠️ Apply with Caution</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title">Top Red Flags</div>
+    
+    <div class="flag-card">
+      <span class="flag-sev sev-high">8/10</span>
+      <div>
+        <div class="flag-title">MA/MS/MBA required for an entry-level analyst role</div>
+        <div class="flag-text">The JD lists a postgraduate degree as mandatory alongside a bachelor's — unusual for an "Analyst" title. This is either a copy-paste error or signals the role is more senior than advertised.</div>
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <span class="flag-sev sev-high">7/10</span>
+      <div>
+        <div class="flag-title">No salary or compensation information</div>
+        <div class="flag-text">Zero mention of CTC, pay band, or even a range. Big 4 India roles are known for below-market base pay, especially in CoRe (support) functions vs. consulting. Negotiate hard or ask directly.</div>
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <span class="flag-sev sev-med">6/10</span>
+      <div>
+        <div class="flag-title">Broad scope with too many concurrent tools</div>
+        <div class="flag-text">Expects Tableau, Tableau Prep, Adobe Analytics, MS Excel + Macros, VBA, ETL tools, and web traffic tools — all for one analyst. That's a wide tech surface for a single role with 1–3 years experience.</div>
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <span class="flag-sev sev-med">5/10</span>
+      <div>
+        <div class="flag-title">CoRe (internal support) vs. client-facing consulting</div>
+        <div class="flag-text">This role is under "CoRe Business Solutions" — Deloitte's internal services arm, not client-facing consulting. Career growth, learning exposure, and prestige differ significantly from Deloitte Consulting roles.</div>
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <span class="flag-sev sev-med">4/10</span>
+      <div>
+        <div class="flag-title">Work timing: 11am–8pm</div>
+        <div class="flag-text">Aligns with US time zones, suggesting this team supports global (likely US) stakeholders. Weekend or extended hours during reporting cycles are common in such setups.</div>
+      </div>
+    </div>
+
+    <div class="flag-card">
+      <span class="flag-sev sev-low">3/10</span>
+      <div>
+        <div class="flag-title">Vague growth language ("no two people learn in the same way")</div>
+        <div class="flag-text">The "How you'll grow" section is boilerplate with no concrete promotion timelines, mentorship structure, or data on internal mobility rates.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-title">Positive Signals</div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27500A">Brand prestige</strong> — Deloitte is a globally recognized Big 4 firm. The name alone adds significant value to your resume, especially early-career.</div></div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27500A">Structured learning</strong> — DU: The Leadership Center in India (Hyderabad) is a real, world-class facility with structured L&D programs.</div></div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27800A">Clear technical expectations</strong> — The JD is specific about tools (Tableau, Adobe Analytics, Excel/VBA), making it easier to self-assess and prep.</div></div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27500A">Realistic experience ask</strong> — 1–3 years overall experience is reasonable for an Analyst role and opens it to fresh graduates with internships.</div></div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27500A">Global exposure</strong> — Supporting Fortune 500 clients across geographies is genuine skill-building, even in a CoRe function.</div></div>
+    <div class="positive-card"><div class="positive-dot"></div><div class="positive-text"><strong style="color:#27500A">Stable company</strong> — Deloitte's $70B+ revenue and 470K workforce make layoff risk very low at the analyst level.</div></div>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-title">Risk Breakdown</div>
+    <table class="risk-table">
+      <thead>
+        <tr><th>Category</th><th>Risk Level</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Requirements</td><td><span class="risk-pill risk-med">Medium</span></td><td style="font-size:12px;color:#5C4E30">Too many tools; MA/MBA demand inflates bar</td></tr>
+        <tr><td>Culture</td><td><span class="risk-pill risk-mod">Low–Moderate</span></td><td style="font-size:12px;color:#5C4E30">US shift hours; support function pace can be monotonous</td></tr>
+        <tr><td>Remote work</td><td><span class="risk-pill risk-low">Low</span></td><td style="font-size:12px;color:#5C4E30">Clearly office-based in Hyd/Bengaluru — no misleading claims</td></tr>
+        <tr><td>Hiring</td><td><span class="risk-pill risk-med">Medium</span></td><td style="font-size:12px;color:#5C4E30">No salary; MBA req may be aspirational but used to underpay</td></tr>
+        <tr><td>Company</td><td><span class="risk-pill risk-low">Low</span></td><td style="font-size:12px;color:#5C4E30">Big 4, highly stable, genuine growth infra</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <div class="section">
+    <div class="section-title">5 Smart Interview Questions</div>
+
+    <div class="q-card">
+      <div class="q-num">Question 1 — Salary clarity</div>
+      <div class="q-text">"What is the compensation band for this role, and how does it compare to Deloitte's consulting analyst tracks?"</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Question 2 — MBA requirement</div>
+      <div class="q-text">"The JD lists an MA/MS/MBA as a requirement — is this strictly necessary, or is strong technical experience and a B.Tech considered equivalent?"</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Question 3 — CoRe vs. consulting mobility</div>
+      <div class="q-text">"Are there structured pathways for CoRe Analytics professionals to transition into Deloitte's client-facing consulting practice?"</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Question 4 — Tool depth vs. breadth</div>
+      <div class="q-text">"Of the tools listed — Tableau, Adobe Analytics, VBA, ETL — which are used daily vs. occasionally? I want to prioritise where to deepen expertise."</div>
+    </div>
+    <div class="q-card">
+      <div class="q-num">Question 5 — Work timing & expectations</div>
+      <div class="q-text">"The 11am–8pm shift suggests global stakeholder alignment. How often does this extend during reporting periods, and is there flexibility around that window?"</div>
+    </div>
+  </div>
+</div>
