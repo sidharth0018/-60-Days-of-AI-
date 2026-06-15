@@ -1,0 +1,90 @@
+# Image Generation Prompts — Day 15 ABTalks Challenge
+# 8-Dimension Framework Applied
+
+## PROMPT 1 — Hyperrealistic Data Analyst Scene
+## Best Tools: Adobe Firefly, Midjourney v6
+
+A young Indian male data analyst in his mid-20s seated at a sleek
+dark-wood desk in a modern tech office at golden hour, three ultra-wide
+monitors displaying glowing dashboards with bar charts, heatmaps, and
+Python code, warm amber light streaming through floor-to-ceiling windows
+casting long soft shadows, bokeh background of an open-plan office with
+blurred colleagues and city skyline through glass, shallow depth of field
+with sharp focus on his concentrated expression and fingertips on keyboard,
+muted earth tones with electric blue and amber accent glows from screens,
+photorealistic, 8K resolution, 16:9 aspect ratio, shot style of a
+professional tech company editorial photograph, 300 DPI
+
+Dimensions breakdown:
+- Subject: Indian male data analyst at desk
+- Style: Photorealistic, editorial photograph
+- Color Palette: Muted earth + electric blue + amber screen glow
+- Lighting: Golden hour, floor-to-ceiling windows, soft shadows
+- Composition: Shallow depth of field, subject at center, bokeh bg
+- Resolution: 8K, 16:9, 300 DPI
+- Constraints: No text on screens readable, no faces of other people
+- Detail: Micro-details on keyboard, screen reflections in eyes
+
+---
+
+## PROMPT 2 — Abstract Data Science Neural Network
+## Best Tools: Midjourney, Stable Diffusion XL
+
+A hyperdetailed digital art piece depicting an abstract neural network
+and data flow visualization floating in deep space, glowing nodes connected
+by fiber-optic streams of light in electric blue, violet, and gold,
+a silhouette of a person standing at the center looking upward into an
+infinite lattice of data points and graphs, nebula-like textures in the
+background blending indigo and teal, cinematic volumetric lighting,
+depth of field from foreground data particles to infinite background stars,
+no text, painterly yet futuristic, 7680x4320 PNG, 16:9, high contrast
+vivid palette
+
+Dimensions breakdown:
+- Subject: Neural network visualization + human silhouette
+- Style: Digital art, painterly futuristic
+- Color Palette: Electric blue, violet, gold on deep space black
+- Lighting: Volumetric, self-lit nodes, cinematic depth
+- Composition: Person at center, lattice radiates outward
+- Resolution: 7680x4320 (8K), PNG, 16:9
+- Constraints: No readable text, no faces
+- Detail: Individual data nodes visible in foreground
+
+---
+
+## PROMPT 3 — Career Pivot Motivational Scene
+## Best Tools: DALL-E 3, Midjourney
+
+A wide-angle photorealistic scene of a young professional walking
+confidently on a glass bridge suspended between two skyscrapers at dawn,
+one tower representing ECE/electronics (circuit boards, antenna motifs),
+the other glowing with data science iconography (graphs, code, BI dashboards),
+soft sunrise light in rose gold and cyan, misty clouds below,
+city skyline visible in background, rule-of-thirds composition with the
+figure at the left third looking toward the data science tower,
+cinematic depth, motivational yet grounded mood,
+4K digital illustration, 16:9, no explicit text on buildings
+
+Dimensions breakdown:
+- Subject: Young professional on glass bridge between two career towers
+- Style: Photorealistic digital illustration
+- Color Palette: Rose gold + cyan sunrise, misty atmospheric
+- Lighting: Dawn, directional sunrise from right, soft shadows
+- Composition: Rule of thirds, figure at left third, towers frame image
+- Resolution: 4K, 16:9
+- Constraints: No readable text, no faces clearly visible
+- Detail: Glass bridge texture, misty cloud depth, tower details
+
+---
+
+## THE 8-DIMENSION FRAMEWORK (Template for any image prompt)
+
+[SUBJECT: what is depicted, who/what is the focal point]
+[SETTING: environment, location, time period]
+[STYLE: photorealistic / hyperrealistic / digital art / watercolor / oil painting]
+[COLOR PALETTE: dominant hues, temperature (warm/cool), mood]
+[LIGHTING: time of day, light source direction, quality (hard/soft), shadows]
+[COMPOSITION: focal point, rule of thirds, depth of field, angle]
+[RESOLUTION: dimensions, aspect ratio, DPI, file format]
+[CONSTRAINTS: include X, avoid Y, aspect ratio locks]
+[DETAIL LEVEL: texture fidelity, micro-details, realism vs painterly balance]
