@@ -1,0 +1,350 @@
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font-sans); }
+.wrap { padding: 1.5rem 0; }
+.page-title { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 1.5rem; }
+.header-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
+.stock-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; }
+.stock-card.ril { border-top: 3px solid #185FA5; }
+.stock-card.hdfc { border-top: 3px solid #0F6E56; }
+.stock-name { font-size: 15px; font-weight: 500; color: var(--color-text-primary); }
+.stock-sector { font-size: 12px; color: var(--color-text-secondary); margin-top: 2px; margin-bottom: 12px; }
+.price-row { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.price { font-size: 22px; font-weight: 500; color: var(--color-text-primary); }
+.change-neg { font-size: 13px; color: #E24B4A; }
+.minis { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.mini { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 10px; }
+.mini-label { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 2px; }
+.mini-val { font-size: 14px; font-weight: 500; color: var(--color-text-primary); }
+.section-title { font-size: 14px; font-weight: 500; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px; margin-top: 1.5rem; }
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.compare-table th { text-align: left; padding: 8px 12px; color: var(--color-text-secondary); font-weight: 400; background: var(--color-background-secondary); border-bottom: 0.5px solid var(--color-border-tertiary); }
+.compare-table th:nth-child(2) { color: #185FA5; text-align: right; }
+.compare-table th:nth-child(3) { color: #0F6E56; text-align: right; }
+.compare-table td { padding: 8px 12px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); vertical-align: middle; }
+.compare-table td:nth-child(2), .compare-table td:nth-child(3) { text-align: right; }
+.compare-table tr:last-child td { border-bottom: none; }
+.badge { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 4px; margin-left: 4px; }
+.badge-blue { background: #E6F1FB; color: #185FA5; }
+.badge-teal { background: #E1F5EE; color: #0F6E56; }
+.badge-gray { background: var(--color-background-secondary); color: var(--color-text-secondary); }
+.badge-warn { background: #FAEEDA; color: #854F0B; }
+.badge-ok { background: #EAF3DE; color: #3B6D11; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem; }
+.chart-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem; }
+.chart-title { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px; }
+.legend-row { display: flex; gap: 12px; font-size: 11px; color: var(--color-text-secondary); margin-bottom: 8px; }
+.leg-dot { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+.verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 1rem; }
+.verdict-card { border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; border: 0.5px solid var(--color-border-tertiary); background: var(--color-background-primary); }
+.verdict-head { font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.verdict-list { list-style: none; }
+.verdict-list li { font-size: 13px; color: var(--color-text-secondary); padding: 3px 0; }
+.verdict-list li::before { content: "→ "; color: var(--color-text-tertiary); }
+.disclaimer { font-size: 11px; color: var(--color-text-tertiary); margin-top: 1.5rem; padding-top: 1rem; border-top: 0.5px solid var(--color-border-tertiary); line-height: 1.6; }
+</style>
+
+<div class="wrap">
+  <h2 class="sr-only">Fundamental comparison: Reliance Industries vs HDFC Bank — June 2026</h2>
+  <p class="page-title">Reliance Industries vs HDFC Bank</p>
+  <p class="page-sub">Fundamental comparison · Data sourced from Screener, Tickertape, BSE filings · June 2026</p>
+
+  <div class="header-grid">
+    <div class="stock-card ril">
+      <p class="stock-name">Reliance Industries (RELIANCE)</p>
+      <p class="stock-sector">Conglomerate — Energy · Retail · Telecom · Petrochem</p>
+      <div class="price-row">
+        <span class="price">₹1,331</span>
+        <span class="change-neg">▼ 9.1% (1Y)</span>
+      </div>
+      <p style="font-size:12px; color:var(--color-text-secondary);">52W: ₹1,253 – ₹1,612</p>
+      <div class="minis">
+        <div class="mini"><div class="mini-label">Market Cap</div><div class="mini-val">₹17.7L Cr</div></div>
+        <div class="mini"><div class="mini-label">Face Value</div><div class="mini-val">₹10</div></div>
+        <div class="mini"><div class="mini-label">P/E (TTM)</div><div class="mini-val">~24x</div></div>
+        <div class="mini"><div class="mini-label">EPS (FY25)</div><div class="mini-val">₹51.47</div></div>
+      </div>
+    </div>
+    <div class="stock-card hdfc">
+      <p class="stock-name">HDFC Bank (HDFCBANK)</p>
+      <p class="stock-sector">Banking & Financial Services — Private Sector</p>
+      <div class="price-row">
+        <span class="price">₹1,935</span>
+        <span class="change-neg">▼ 7.4% (1Y)</span>
+      </div>
+      <p style="font-size:12px; color:var(--color-text-secondary);">52W: ₹1,440 – ₹1,971</p>
+      <div class="minis">
+        <div class="mini"><div class="mini-label">Market Cap</div><div class="mini-val">₹11.97L Cr</div></div>
+        <div class="mini"><div class="mini-label">Face Value</div><div class="mini-val">₹1</div></div>
+        <div class="mini"><div class="mini-label">P/E (TTM)</div><div class="mini-val">~19x</div></div>
+        <div class="mini"><div class="mini-label">EPS (FY25)</div><div class="mini-val">₹92.81</div></div>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">Side-by-side fundamentals</p>
+  <table class="compare-table">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Reliance (RIL)</th>
+        <th>HDFC Bank</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Revenue (FY25)</td>
+        <td>₹9.65L Cr</td>
+        <td>₹2.73L Cr (NII-led)</td>
+      </tr>
+      <tr>
+        <td>Net Profit (FY25)</td>
+        <td>₹69,648 Cr</td>
+        <td>₹70,792 Cr</td>
+      </tr>
+      <tr>
+        <td>Net Profit Growth (YoY)</td>
+        <td>~2.4% <span class="badge badge-warn">Slow</span></td>
+        <td>~6.7% <span class="badge badge-ok">Steady</span></td>
+      </tr>
+      <tr>
+        <td>ROE (3Y avg)</td>
+        <td>8.77% <span class="badge badge-warn">Below 10%</span></td>
+        <td>~12–14.5% <span class="badge badge-ok">Healthy</span></td>
+      </tr>
+      <tr>
+        <td>ROCE</td>
+        <td>9.18%</td>
+        <td>~12% (RoA: 1.9%)</td>
+      </tr>
+      <tr>
+        <td>P/E Ratio</td>
+        <td>24x <span class="badge badge-gray">Near sector avg</span></td>
+        <td>~19x <span class="badge badge-blue">Below hist. avg</span></td>
+      </tr>
+      <tr>
+        <td>P/B Ratio</td>
+        <td>2.0x</td>
+        <td>2.8x</td>
+      </tr>
+      <tr>
+        <td>Dividend (FY25)</td>
+        <td>₹5.5/share (0.4%)</td>
+        <td>₹22/share (1.1%)</td>
+      </tr>
+      <tr>
+        <td>Promoter Holding</td>
+        <td>50.0% <span class="badge badge-ok">Stable</span></td>
+        <td>~0% (no promoter)</td>
+      </tr>
+      <tr>
+        <td>FII Holding</td>
+        <td>18.67%</td>
+        <td>~53% (high FII)</td>
+      </tr>
+      <tr>
+        <td>Debt / Leverage</td>
+        <td>High capex cycle; D/E elevated</td>
+        <td>Banking leverage; CAR 19.6%</td>
+      </tr>
+      <tr>
+        <td>Gross NPA</td>
+        <td>N/A (non-bank)</td>
+        <td>1.33% <span class="badge badge-ok">Controlled</span></td>
+      </tr>
+      <tr>
+        <td>Net NPA</td>
+        <td>N/A</td>
+        <td>0.43% <span class="badge badge-ok">Very low</span></td>
+      </tr>
+      <tr>
+        <td>NIM (Net Interest Margin)</td>
+        <td>N/A</td>
+        <td>3.46–3.54% <span class="badge badge-warn">Under pressure</span></td>
+      </tr>
+      <tr>
+        <td>Business moat</td>
+        <td>Scale + brand across 5 verticals</td>
+        <td>15% market share, 37% pvt bank share</td>
+      </tr>
+      <tr>
+        <td>1Y stock return</td>
+        <td>▼ 9.1%</td>
+        <td>▼ 7.4%</td>
+      </tr>
+      <tr>
+        <td>5Y stock return</td>
+        <td>+29.8%</td>
+        <td>+~30%</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="charts-grid">
+    <div class="chart-card">
+      <p class="chart-title">Net profit comparison — FY25 (₹ Cr)</p>
+      <div class="legend-row">
+        <span><span class="leg-dot" style="background:#185FA5;"></span>RIL</span>
+        <span><span class="leg-dot" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:180px;">
+        <canvas id="profitChart" role="img" aria-label="Bar chart: RIL net profit 69648 crore, HDFC Bank 70792 crore for FY25">RIL: ₹69,648 Cr, HDFC Bank: ₹70,792 Cr</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Returns profile — ROE vs ROCE (%)</p>
+      <div class="legend-row">
+        <span><span class="leg-dot" style="background:#185FA5;"></span>RIL</span>
+        <span><span class="leg-dot" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:180px;">
+        <canvas id="roeChart" role="img" aria-label="Bar chart comparing ROE and ROCE for RIL and HDFC Bank">RIL ROE 8.77%, ROCE 9.18%; HDFC Bank ROE 13%, ROCE 12%</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Valuation — P/E & P/B ratios</p>
+      <div class="legend-row">
+        <span><span class="leg-dot" style="background:#185FA5;"></span>RIL</span>
+        <span><span class="leg-dot" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:180px;">
+        <canvas id="valChart" role="img" aria-label="Bar chart comparing PE and PB ratios for RIL and HDFC Bank">RIL PE 24, PB 2; HDFC Bank PE 19, PB 2.8</canvas>
+      </div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Shareholding pattern (%)</p>
+      <div style="position:relative;height:180px;">
+        <canvas id="holdChart" role="img" aria-label="Grouped bar chart showing promoter, FII, DII, public holdings for RIL and HDFC Bank">RIL: Promoter 50%, FII 18.7%, DII 20.6%, Public 10.7%; HDFC Bank: Promoter 0%, FII ~53%, DII ~20%, Public ~27%</canvas>
+      </div>
+    </div>
+  </div>
+
+  <p class="section-title">Where each leads</p>
+  <div class="verdict-grid">
+    <div class="verdict-card">
+      <p class="verdict-head" style="color:#185FA5;">🔵 Reliance Industries leads in</p>
+      <ul class="verdict-list">
+        <li>Sheer revenue scale (₹9.65L Cr)</li>
+        <li>Promoter skin-in-the-game (50% holding)</li>
+        <li>Diversification across 5 business verticals</li>
+        <li>New-age bets: Jio, Reliance Retail expansion</li>
+        <li>Meta AI data center JV — new growth signal</li>
+      </ul>
+    </div>
+    <div class="verdict-card">
+      <p class="verdict-head" style="color:#0F6E56;">🟢 HDFC Bank leads in</p>
+      <ul class="verdict-list">
+        <li>Return quality — higher ROE & ROCE</li>
+        <li>Dividend yield (1.1% vs 0.4%)</li>
+        <li>Asset quality (Gross NPA at just 1.33%)</li>
+        <li>Valuation comfort — lower P/E (~19x)</li>
+        <li>Banking franchise — 37% pvt bank market share</li>
+      </ul>
+    </div>
+  </div>
+
+  <p class="section-title">Watch points</p>
+  <table class="compare-table">
+    <thead><tr><th>Risk / concern</th><th>Reliance</th><th>HDFC Bank</th></tr></thead>
+    <tbody>
+      <tr><td>Return on equity</td><td><span class="badge badge-warn">Low — 8.77% (3Y avg)</span></td><td><span class="badge badge-ok">Acceptable — ~13%</span></td></tr>
+      <tr><td>Profit growth pace</td><td><span class="badge badge-warn">Slowing — 2.4% YoY</span></td><td><span class="badge badge-ok">Steady — 6.7%</span></td></tr>
+      <tr><td>NIM pressure</td><td>N/A</td><td><span class="badge badge-warn">Declining — 3.35% Q1FY26</span></td></tr>
+      <tr><td>Capex cycle</td><td><span class="badge badge-warn">Heavy; FCF compressed</span></td><td><span class="badge badge-gray">N/A</span></td></tr>
+      <tr><td>Stock performance (1Y)</td><td><span class="badge badge-warn">▼ 9.1%</span></td><td><span class="badge badge-warn">▼ 7.4%</span></td></tr>
+    </tbody>
+  </table>
+
+  <p class="disclaimer">
+    This is a fundamental view for educational purposes only. It is not investment advice and not a buy/sell/hold recommendation. Verify all figures independently at Screener.in, Tickertape, or BSE/NSE filings. The final decision is yours.
+  </p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const rilBlue = '#185FA5';
+const hdfcTeal = '#0F6E56';
+const rilBlueLt = 'rgba(24,95,165,0.15)';
+const hdfcTealLt = 'rgba(15,110,86,0.15)';
+
+new Chart(document.getElementById('profitChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Net Profit FY25 (₹ Cr)'],
+    datasets: [
+      { label: 'Reliance Industries', data: [69648], backgroundColor: rilBlue, borderRadius: 4, borderSkipped: false },
+      { label: 'HDFC Bank', data: [70792], backgroundColor: hdfcTeal, borderRadius: 4, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ' ₹' + c.raw.toLocaleString('en-IN') + ' Cr' } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 12 } } },
+      y: { ticks: { callback: (v) => '₹' + (v/1000).toFixed(0) + 'k', font: { size: 11 } }, grid: { color: 'rgba(128,128,128,0.1)' } }
+    }
+  }
+});
+
+new Chart(document.getElementById('roeChart'), {
+  type: 'bar',
+  data: {
+    labels: ['ROE (%)', 'ROCE (%)'],
+    datasets: [
+      { label: 'Reliance', data: [8.77, 9.18], backgroundColor: rilBlue, borderRadius: 4, borderSkipped: false },
+      { label: 'HDFC Bank', data: [13.0, 12.0], backgroundColor: hdfcTeal, borderRadius: 4, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false }, tooltip: { callbacks: { label: (c) => ' ' + c.raw.toFixed(2) + '%' } } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { ticks: { callback: (v) => v + '%', font: { size: 11 } }, grid: { color: 'rgba(128,128,128,0.1)' }, max: 18 }
+    }
+  }
+});
+
+new Chart(document.getElementById('valChart'), {
+  type: 'bar',
+  data: {
+    labels: ['P/E Ratio', 'P/B Ratio'],
+    datasets: [
+      { label: 'Reliance', data: [24, 2.0], backgroundColor: rilBlue, borderRadius: 4, borderSkipped: false },
+      { label: 'HDFC Bank', data: [19, 2.8], backgroundColor: hdfcTeal, borderRadius: 4, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { ticks: { font: { size: 11 } }, grid: { color: 'rgba(128,128,128,0.1)' }, max: 30 }
+    }
+  }
+});
+
+new Chart(document.getElementById('holdChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Promoter', 'FII', 'DII', 'Public'],
+    datasets: [
+      { label: 'Reliance', data: [50.0, 18.67, 20.55, 10.78], backgroundColor: rilBlue, borderRadius: 4, borderSkipped: false },
+      { label: 'HDFC Bank', data: [0, 53, 20, 27], backgroundColor: hdfcTeal, borderRadius: 4, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'bottom', labels: { font: { size: 11 }, boxWidth: 10, padding: 8, color: '#888' } },
+      tooltip: { callbacks: { label: (c) => ' ' + c.raw + '%' } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { ticks: { callback: (v) => v + '%', font: { size: 11 } }, grid: { color: 'rgba(128,128,128,0.1)' }, max: 60 }
+    }
+  }
+});
+</script>
