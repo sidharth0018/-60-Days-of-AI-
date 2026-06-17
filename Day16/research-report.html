@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Day 16 — Reliance vs HDFC Bank | ABTalks Claude AI Challenge</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #185FA5;
+      --teal: #0F6E56;
+      --blue-lt: #E6F1FB;
+      --teal-lt: #E1F5EE;
+      --warn-lt: #FAEEDA;
+      --warn: #854F0B;
+      --ok-lt: #EAF3DE;
+      --ok: #3B6D11;
+      --bg: #f8f8f6;
+      --card: #ffffff;
+      --text: #1a1a18;
+      --muted: #6b6b67;
+      --border: rgba(0,0,0,0.10);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+    .page { max-width: 960px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+
+    /* Header */
+    .header { border-bottom: 1px solid var(--border); padding-bottom: 1.5rem; margin-bottom: 2rem; }
+    .challenge-tag { display: inline-block; background: var(--blue-lt); color: var(--blue); font-size: 12px; font-weight: 500; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; }
+    .header h1 { font-size: 26px; font-weight: 600; color: var(--text); line-height: 1.3; }
+    .header p { font-size: 14px; color: var(--muted); margin-top: 6px; }
+    .date-badge { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    /* Stock cards */
+    .stock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+    .stock-card { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.25rem; }
+    .stock-card.ril { border-top: 4px solid var(--blue); }
+    .stock-card.hdfc { border-top: 4px solid var(--teal); }
+    .stock-name { font-size: 16px; font-weight: 600; color: var(--text); }
+    .stock-sector { font-size: 12px; color: var(--muted); margin: 2px 0 12px; }
+    .price-big { font-size: 28px; font-weight: 700; color: var(--text); }
+    .change-neg { font-size: 13px; color: #c0392b; margin-left: 6px; }
+    .range { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .mini { background: var(--bg); border-radius: var(--radius-sm); padding: 8px 10px; }
+    .mini-label { font-size: 11px; color: var(--muted); }
+    .mini-val { font-size: 14px; font-weight: 600; color: var(--text); }
+
+    /* Section headings */
+    .sec-title { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin: 2rem 0 10px; }
+
+    /* Compare table */
+    .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; background: var(--card); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); }
+    .compare-table th { padding: 10px 14px; background: var(--bg); color: var(--muted); font-weight: 500; font-size: 12px; text-align: left; border-bottom: 1px solid var(--border); }
+    .compare-table th:nth-child(2) { color: var(--blue); text-align: right; }
+    .compare-table th:nth-child(3) { color: var(--teal); text-align: right; }
+    .compare-table td { padding: 9px 14px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .compare-table td:nth-child(2), .compare-table td:nth-child(3) { text-align: right; }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table tr:hover { background: rgba(0,0,0,0.015); }
+    .badge { display: inline-block; font-size: 11px; padding: 2px 7px; border-radius: 4px; margin-left: 4px; }
+    .bw { background: var(--warn-lt); color: var(--warn); }
+    .bo { background: var(--ok-lt); color: var(--ok); }
+    .bg { background: var(--bg); color: var(--muted); }
+    .bb { background: var(--blue-lt); color: var(--blue); }
+
+    /* Charts */
+    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+    .chart-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .chart-title { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+    .legend-row { display: flex; gap: 14px; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .leg { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; }
+
+    /* Verdict */
+    .verdict-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 2rem; }
+    .verdict-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; }
+    .verdict-head { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+    .verdict-list { list-style: none; }
+    .verdict-list li { font-size: 13px; color: var(--muted); padding: 3px 0; }
+    .verdict-list li::before { content: "→ "; color: #bbb; }
+
+    /* Insights */
+    .insights { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 2rem; }
+    .insight-row { display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); align-items: flex-start; }
+    .insight-row:last-child { border-bottom: none; }
+    .insight-num { font-size: 18px; font-weight: 700; color: var(--blue); min-width: 28px; }
+    .insight-text { font-size: 13px; color: var(--text); line-height: 1.6; }
+    .insight-text strong { color: var(--text); font-weight: 600; }
+
+    /* Disclaimer */
+    .disclaimer { background: #fff8e1; border: 1px solid #ffe082; border-radius: var(--radius-sm); padding: 1rem 1.25rem; font-size: 12px; color: #7a6012; line-height: 1.7; margin-top: 2rem; }
+
+    /* Footer */
+    .footer { text-align: center; margin-top: 2.5rem; font-size: 12px; color: var(--muted); }
+    .footer a { color: var(--blue); text-decoration: none; }
+
+    @media (max-width: 640px) {
+      .stock-grid, .charts-grid, .verdict-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <span class="challenge-tag">ABTalks · Day 16 of 60 · Claude AI Challenge</span>
+    <h1>Reliance Industries vs HDFC Bank<br>Fundamental Research Report</h1>
+    <p>Stock comparison using Claude AI's /stock-fundamental-research skill · Live web data</p>
+    <p class="date-badge">📅 June 17, 2026 &nbsp;|&nbsp; Data: FY2025 annual results + Q4FY25 filings &nbsp;|&nbsp; Sources: Screener · Tickertape · BSE · Business Standard</p>
+  </div>
+
+  <!-- Stock header cards -->
+  <div class="stock-grid">
+    <div class="stock-card ril">
+      <p class="stock-name">Reliance Industries</p>
+      <p class="stock-sector">NSE: RELIANCE · Conglomerate — Energy · Retail · Telecom</p>
+      <div>
+        <span class="price-big">₹1,331</span>
+        <span class="change-neg">▼ 9.1% (1Y)</span>
+      </div>
+      <p class="range">52W: ₹1,253 – ₹1,612</p>
+      <div class="mini-grid">
+        <div class="mini"><div class="mini-label">Market Cap</div><div class="mini-val">₹17.7L Cr</div></div>
+        <div class="mini"><div class="mini-label">P/E (TTM)</div><div class="mini-val">~24x</div></div>
+        <div class="mini"><div class="mini-label">EPS (FY25)</div><div class="mini-val">₹51.47</div></div>
+        <div class="mini"><div class="mini-label">Face Value</div><div class="mini-val">₹10</div></div>
+      </div>
+    </div>
+    <div class="stock-card hdfc">
+      <p class="stock-name">HDFC Bank</p>
+      <p class="stock-sector">NSE: HDFCBANK · Banking & Financial Services (Private)</p>
+      <div>
+        <span class="price-big">₹1,935</span>
+        <span class="change-neg">▼ 7.4% (1Y)</span>
+      </div>
+      <p class="range">52W: ₹1,440 – ₹1,971</p>
+      <div class="mini-grid">
+        <div class="mini"><div class="mini-label">Market Cap</div><div class="mini-val">₹11.97L Cr</div></div>
+        <div class="mini"><div class="mini-label">P/E (TTM)</div><div class="mini-val">~19x</div></div>
+        <div class="mini"><div class="mini-label">EPS (FY25)</div><div class="mini-val">₹92.81</div></div>
+        <div class="mini"><div class="mini-label">Face Value</div><div class="mini-val">₹1</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts -->
+  <p class="sec-title">Visual comparison</p>
+  <div class="charts-grid">
+    <div class="chart-card">
+      <p class="chart-title">Net profit FY25 (₹ Cr)</p>
+      <div class="legend-row">
+        <span><span class="leg" style="background:#185FA5;"></span>Reliance</span>
+        <span><span class="leg" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="c1" role="img" aria-label="RIL: 69648 Cr, HDFC Bank: 70792 Cr">RIL ₹69,648 Cr vs HDFC ₹70,792 Cr</canvas></div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Return quality — ROE & ROCE (%)</p>
+      <div class="legend-row">
+        <span><span class="leg" style="background:#185FA5;"></span>Reliance</span>
+        <span><span class="leg" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="c2" role="img" aria-label="ROE and ROCE comparison">RIL ROE 8.77%, ROCE 9.18%; HDFC ROE 13%, ROCE 12%</canvas></div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Valuation multiples — P/E & P/B</p>
+      <div class="legend-row">
+        <span><span class="leg" style="background:#185FA5;"></span>Reliance</span>
+        <span><span class="leg" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="c3" role="img" aria-label="PE and PB ratio comparison">RIL PE 24, PB 2.0; HDFC PE 19, PB 2.8</canvas></div>
+    </div>
+    <div class="chart-card">
+      <p class="chart-title">Shareholding pattern (%)</p>
+      <div class="legend-row">
+        <span><span class="leg" style="background:#185FA5;"></span>Reliance</span>
+        <span><span class="leg" style="background:#0F6E56;"></span>HDFC Bank</span>
+      </div>
+      <div style="position:relative;height:200px;"><canvas id="c4" role="img" aria-label="Shareholding pattern comparison">RIL: Promoter 50%, FII 18.7%, DII 20.6%, Public 10.7%; HDFC: Promoter 0%, FII 53%, DII 20%, Public 27%</canvas></div>
+    </div>
+  </div>
+
+  <!-- Compare table -->
+  <p class="sec-title">Side-by-side fundamentals</p>
+  <table class="compare-table" style="margin-bottom:2rem;">
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Reliance Industries (RIL)</th>
+        <th>HDFC Bank</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Revenue (FY25)</td><td>₹9.65L Cr</td><td>₹2.73L Cr</td></tr>
+      <tr><td>Net Profit (FY25)</td><td>₹69,648 Cr</td><td>₹70,792 Cr</td></tr>
+      <tr><td>Profit growth (YoY)</td><td>2.4% <span class="badge bw">Slowing</span></td><td>6.7% <span class="badge bo">Steady</span></td></tr>
+      <tr><td>ROE (3Y avg)</td><td>8.77% <span class="badge bw">Below 10%</span></td><td>~13% <span class="badge bo">Healthy</span></td></tr>
+      <tr><td>ROCE</td><td>9.18%</td><td>~12%</td></tr>
+      <tr><td>P/E Ratio</td><td>~24x</td><td>~19x <span class="badge bb">Below hist. avg</span></td></tr>
+      <tr><td>P/B Ratio</td><td>2.0x</td><td>2.8x</td></tr>
+      <tr><td>Dividend Yield</td><td>₹5.5/sh (0.4%)</td><td>₹22/sh (1.1%) <span class="badge bo">Higher yield</span></td></tr>
+      <tr><td>Promoter Holding</td><td>50% <span class="badge bo">Stable</span></td><td>0% (no promoter)</td></tr>
+      <tr><td>FII Holding</td><td>18.67%</td><td>~53%</td></tr>
+      <tr><td>Gross NPA</td><td>N/A (non-bank)</td><td>1.33% <span class="badge bo">Controlled</span></td></tr>
+      <tr><td>Net NPA</td><td>N/A</td><td>0.43% <span class="badge bo">Very low</span></td></tr>
+      <tr><td>NIM</td><td>N/A</td><td>3.46–3.54% <span class="badge bw">Under pressure</span></td></tr>
+      <tr><td>Capital Adequacy (CAR)</td><td>N/A</td><td>19.6% <span class="badge bo">Strong</span></td></tr>
+      <tr><td>1Y Stock Return</td><td>▼ 9.1%</td><td>▼ 7.4%</td></tr>
+      <tr><td>5Y Stock Return</td><td>+29.8%</td><td>+~30%</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Verdict -->
+  <p class="sec-title">Where each company leads</p>
+  <div class="verdict-grid">
+    <div class="verdict-card">
+      <p class="verdict-head" style="color:var(--blue);">🔵 Reliance Industries leads in</p>
+      <ul class="verdict-list">
+        <li>Sheer revenue scale — ₹9.65L Cr (India's largest)</li>
+        <li>Promoter conviction — 50% holding, zero pledging</li>
+        <li>Diversification across 5 major business verticals</li>
+        <li>New-age growth bets: Jio 5G, Reliance Retail expansion</li>
+        <li>AI data center JV with Meta — 168 MW in Jamnagar</li>
+      </ul>
+    </div>
+    <div class="verdict-card">
+      <p class="verdict-head" style="color:var(--teal);">🟢 HDFC Bank leads in</p>
+      <ul class="verdict-list">
+        <li>Return quality — ROE ~13% vs RIL's 8.77%</li>
+        <li>Dividend income — 1.1% yield vs 0.4%</li>
+        <li>Asset quality — Gross NPA 1.33%, Net NPA 0.43%</li>
+        <li>Valuation comfort — cheaper at ~19x P/E</li>
+        <li>Banking moat — 37% private sector advances market share</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Key learnings -->
+  <p class="sec-title">Key learnings from this session</p>
+  <div class="insights">
+    <div class="insight-row">
+      <span class="insight-num">01</span>
+      <p class="insight-text"><strong>Skill files = reusable SOPs for AI.</strong> The /stock-fundamental-research skill encoded source priority, a 20-metric checklist, interpretation thresholds, and output formats — so Claude didn't need to be re-prompted with rules each time.</p>
+    </div>
+    <div class="insight-row">
+      <span class="insight-num">02</span>
+      <p class="insight-text"><strong>Structured output from noisy data.</strong> Claude queried 8+ sources (Screener, Tickertape, TipRanks, Business Standard, BSE filings) and normalized everything into one clean comparison — the core skill in data analytics.</p>
+    </div>
+    <div class="insight-row">
+      <span class="insight-num">03</span>
+      <p class="insight-text"><strong>Compare mode forces clarity.</strong> Putting two companies side-by-side reveals patterns invisible in standalone analysis — like HDFC Bank matching RIL's net profit on 1/3rd the revenue.</p>
+    </div>
+    <div class="insight-row">
+      <span class="insight-num">04</span>
+      <p class="insight-text"><strong>Research discipline = prompt discipline.</strong> Flagging unavailable data, citing every figure, using fixed thresholds (ROE >15% good, <10% weak) — these guardrails prevent hallucination and build trust in AI output.</p>
+    </div>
+  </div>
+
+  <div class="disclaimer">
+    ⚠️ <strong>Disclaimer:</strong> All content in this report is for <strong>educational purposes only</strong>. It is not investment advice and not a buy/sell/hold recommendation. Verify all figures independently at Screener.in, NSE, or BSE official filings before making any financial decision. The final decision is always yours.
+  </div>
+
+  <div class="footer">
+    <p>Built with Claude AI · ABTalks 60-Day Challenge · Day 16</p>
+    <p style="margin-top:6px;"><a href="https://github.com/sidharth0018" target="_blank">github.com/sidharth0018</a> &nbsp;|&nbsp; #ABTalks #ClaudeAI #Day16of60</p>
+  </div>
+
+</div>
+
+<script>
+const ril = '#185FA5', hdfc = '#0F6E56';
+const opts = (yLabel) => ({
+  responsive: true, maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+  scales: {
+    x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+    y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { font: { size: 11 }, callback: yLabel } }
+  }
+});
+
+new Chart(document.getElementById('c1'), {
+  type: 'bar',
+  data: {
+    labels: ['Net Profit FY25 (₹ Cr)'],
+    datasets: [
+      { label: 'RIL', data: [69648], backgroundColor: ril, borderRadius: 5, borderSkipped: false },
+      { label: 'HDFC Bank', data: [70792], backgroundColor: hdfc, borderRadius: 5, borderSkipped: false }
+    ]
+  },
+  options: { ...opts(v => '₹' + Math.round(v/1000) + 'k'), plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('c2'), {
+  type: 'bar',
+  data: {
+    labels: ['ROE (%)', 'ROCE (%)'],
+    datasets: [
+      { label: 'RIL', data: [8.77, 9.18], backgroundColor: ril, borderRadius: 5, borderSkipped: false },
+      { label: 'HDFC Bank', data: [13.0, 12.0], backgroundColor: hdfc, borderRadius: 5, borderSkipped: false }
+    ]
+  },
+  options: { ...opts(v => v + '%'), scales: { ...opts().scales, y: { ...opts().scales.y, max: 18 } } }
+});
+
+new Chart(document.getElementById('c3'), {
+  type: 'bar',
+  data: {
+    labels: ['P/E Ratio', 'P/B Ratio'],
+    datasets: [
+      { label: 'RIL', data: [24, 2.0], backgroundColor: ril, borderRadius: 5, borderSkipped: false },
+      { label: 'HDFC Bank', data: [19, 2.8], backgroundColor: hdfc, borderRadius: 5, borderSkipped: false }
+    ]
+  },
+  options: { ...opts(v => v), scales: { ...opts().scales, y: { ...opts().scales.y, max: 30 } } }
+});
+
+new Chart(document.getElementById('c4'), {
+  type: 'bar',
+  data: {
+    labels: ['Promoter', 'FII', 'DII', 'Public'],
+    datasets: [
+      { label: 'RIL', data: [50.0, 18.67, 20.55, 10.78], backgroundColor: ril, borderRadius: 5, borderSkipped: false },
+      { label: 'HDFC Bank', data: [0, 53, 20, 27], backgroundColor: hdfc, borderRadius: 5, borderSkipped: false }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: true, position: 'bottom', labels: { font: { size: 11 }, boxWidth: 10 } } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 11 } } },
+      y: { grid: { color: 'rgba(0,0,0,0.05)' }, ticks: { callback: v => v + '%', font: { size: 11 } }, max: 60 }
+    }
+  }
+});
+</script>
+</body>
+</html>
