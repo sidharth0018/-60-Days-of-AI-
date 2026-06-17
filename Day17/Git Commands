@@ -1,0 +1,11 @@
+git init
+
+git add .
+
+git commit -m "Day 16: Fuel Analytics Dashboard using Claude AI"
+
+git branch -M main
+
+git remote add origin https://github.com/sidharth0018/fuel-analytics-dashboard.git
+
+git push -u origin main
