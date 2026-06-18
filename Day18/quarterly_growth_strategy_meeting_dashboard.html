@@ -1,0 +1,180 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:15px;color:var(--color-text-primary);line-height:1.6}
+.wrap{padding:1.5rem 0}
+.page-title{font-size:20px;font-weight:500;margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.section{margin-bottom:2rem}
+.section-header{font-size:13px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin-bottom:.75rem;display:flex;align-items:center;gap:8px}
+.section-header i{font-size:16px}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:1.5rem}
+.metric-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem 1rem}
+.metric-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:4px}
+.metric-val{font-size:22px;font-weight:500}
+.metric-val.green{color:var(--color-text-success)}
+.metric-val.red{color:var(--color-text-danger)}
+.metric-val.warn{color:var(--color-text-warning)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1rem 1.25rem}
+.takeaway-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.takeaway-card{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.85rem 1rem;border-left:3px solid}
+.tc-warn{border-color:#EF9F27}
+.tc-info{border-color:#378ADD}
+.tc-success{border-color:#639922}
+.tc-danger{border-color:#E24B4A}
+.tc-purple{border-color:#534AB7}
+.takeaway-card p{font-size:13px;color:var(--color-text-secondary);margin-top:4px;line-height:1.5}
+.takeaway-card strong{font-size:13px;font-weight:500}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{font-weight:500;font-size:12px;color:var(--color-text-secondary);text-align:left;padding:8px 10px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+td{padding:9px 10px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:3px 9px;border-radius:var(--border-radius-md);font-weight:500;white-space:nowrap}
+.b-high{background:#FAECE7;color:#712B13}
+.b-med{background:#FAEEDA;color:#633806}
+.b-low{background:#EAF3DE;color:#3B6D11}
+.b-open{background:#E6F1FB;color:#0C447C}
+.b-pending{background:#EEEDFE;color:#3C3489}
+.b-conflict{background:#FCEBEB;color:#791F1F}
+.speaker-row{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:500;flex-shrink:0}
+.av-ceo{background:#EEEDFE;color:#3C3489}
+.av-sales{background:#E1F5EE;color:#085041}
+.av-cfo{background:#FAEEDA;color:#633806}
+.av-vpm{background:#FBEAF0;color:#72243E}
+.av-cto{background:#FAECE7;color:#712B13}
+.av-pd{background:#E6F1FB;color:#0C447C}
+.av-cs{background:#EAF3DE;color:#3B6D11}
+.speaker-content{flex:1}
+.speaker-name{font-size:12px;font-weight:500;margin-bottom:2px}
+.speaker-items{font-size:13px;color:var(--color-text-secondary);line-height:1.5}
+.risk-item{display:flex;gap:10px;padding:.6rem 0;border-bottom:0.5px solid var(--color-border-tertiary);align-items:flex-start}
+.risk-item:last-child{border-bottom:none}
+.risk-text{font-size:13px;line-height:1.5}
+.risk-owner{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.oq-item{padding:.65rem 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.oq-item:last-child{border-bottom:none}
+.oq-q{font-size:13px;line-height:1.5}
+.oq-context{font-size:11px;color:var(--color-text-secondary);margin-top:3px}
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.filter-btn{font-size:12px;padding:4px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;color:var(--color-text-primary)}
+.filter-btn.active{background:var(--color-background-secondary);font-weight:500}
+.hidden{display:none}
+</style>
+
+<h2 class="sr-only">Quarterly Growth Strategy Meeting — action planner dashboard</h2>
+
+<div class="wrap">
+  <p class="page-title"><i class="ti ti-chart-bar" aria-hidden="true"></i> Quarterly Growth Strategy Meeting</p>
+  <p class="page-sub">Meeting transcript analysis &nbsp;·&nbsp; All items sourced directly from transcript</p>
+
+  <div class="cards-grid">
+    <div class="metric-card"><div class="metric-label">Q2 revenue growth</div><div class="metric-val red">12%</div></div>
+    <div class="metric-card"><div class="metric-label">Target growth</div><div class="metric-val warn">18%</div></div>
+    <div class="metric-card"><div class="metric-label">Contracts closed</div><div class="metric-val">9 / 14</div></div>
+    <div class="metric-card"><div class="metric-label">Website traffic ↑</div><div class="metric-val green">+34%</div></div>
+    <div class="metric-card"><div class="metric-label">Customer retention</div><div class="metric-val green">94%</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-bulb" aria-hidden="true"></i> Key takeaways</div>
+    <div class="takeaway-grid">
+      <div class="takeaway-card tc-danger"><strong>Revenue gap</strong><p>Q2 grew 12% vs 18% target. 5 enterprise deals slipped due to procurement delays and security reviews.</p></div>
+      <div class="takeaway-card tc-warn"><strong>Engineering capacity</strong><p>Team is near capacity with analytics dashboard (Aug). Adding website work may require contractors — no cost estimate yet.</p></div>
+      <div class="takeaway-card tc-info"><strong>Performance is urgent</strong><p>Dashboard loading issues are driving support tickets AND being raised by sales prospects. Treated as business priority.</p></div>
+      <div class="takeaway-card tc-success"><strong>Marketing improving</strong><p>Website traffic up 34% QoQ. Conversion still low — redesign and simplified demo request flow planned.</p></div>
+      <div class="takeaway-card tc-purple"><strong>Hiring deferred</strong><p>All headcount decisions postponed until Q3 forecasts are finalized.</p></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-list-check" aria-hidden="true"></i> Action items</div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="filterTasks('all',this)">All</button>
+      <button class="filter-btn" onclick="filterTasks('high',this)">🔴 High</button>
+      <button class="filter-btn" onclick="filterTasks('medium',this)">🟠 Medium</button>
+      <button class="filter-btn" onclick="filterTasks('low',this)">🟢 Low</button>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table id="task-table">
+        <thead><tr><th>Task</th><th>Owner</th><th>Deadline</th><th>Status</th><th>Priority</th></tr></thead>
+        <tbody>
+          <tr data-priority="high"><td>Investigate and fix reporting performance / dashboard loading issues</td><td>CTO / Engineering</td><td>Not specified</td><td><span class="badge b-high">🔴 In progress</span></td><td><span class="badge b-high">High</span></td></tr>
+          <tr data-priority="high"><td>Get cost estimate for website redesign work (architecture review)</td><td>CTO</td><td>Before next approval</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-high">High</span></td></tr>
+          <tr data-priority="high"><td>Finalize Q3 revenue forecasts</td><td>CFO</td><td>Not specified</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-high">High</span></td></tr>
+          <tr data-priority="medium"><td>Complete engineering milestone review for analytics dashboard</td><td>CTO / Engineering</td><td>Before August release</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-med">Medium</span></td></tr>
+          <tr data-priority="medium"><td>Revisit annual customer conference budget after vendor proposals</td><td>CFO / VP Marketing</td><td>Next month</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-med">Medium</span></td></tr>
+          <tr data-priority="medium"><td>Follow up on all open items</td><td>CEO / Leadership team</td><td>Next week's meeting</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-med">Medium</span></td></tr>
+          <tr data-priority="low"><td>Receive final vendor proposals for customer conference</td><td>VP Marketing</td><td>Before next month</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-low">Low</span></td></tr>
+          <tr data-priority="low"><td>Plan website redesign and simplify demo-request flow</td><td>VP Marketing</td><td>Not specified</td><td><span class="badge b-pending">⏳ Pending</span></td><td><span class="badge b-low">Low</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;margin-bottom:2rem">
+    <div class="section">
+      <div class="section-header"><i class="ti ti-help-circle" aria-hidden="true"></i> Open questions</div>
+      <div class="card" style="padding:.75rem 1.25rem">
+        <div class="oq-item"><div class="oq-q">❓ Will the 5 slipped enterprise deals close in Q3?</div><div class="oq-context">Owner: Head of Sales — affects annual revenue target</div></div>
+        <div class="oq-item"><div class="oq-q">❓ Can the August analytics dashboard date be confirmed?</div><div class="oq-context">Owner: CTO — milestone review pending</div></div>
+        <div class="oq-item"><div class="oq-q">❓ Should the analytics dashboard be announced at the conference?</div><div class="oq-context">Deferred until CTO confirms release date</div></div>
+        <div class="oq-item"><div class="oq-q">❓ Will additional contractors be needed for website work?</div><div class="oq-context">Depends on cost estimate from architecture review</div></div>
+        <div class="oq-item"><div class="oq-q">❓ What is the final headcount plan for next year?</div><div class="oq-context">Postponed until Q3 forecasts are finalized</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Risks & blockers</div>
+      <div class="card" style="padding:.75rem 1.25rem">
+        <div class="risk-item"><div><div class="risk-text">⚠️ If slipped deals move again, annual revenue target may be missed</div><div class="risk-owner">CFO flagged</div></div></div>
+        <div class="risk-item"><div><div class="risk-text">⚠️ Engineering near capacity — adding website work risks both deliverables</div><div class="risk-owner">CTO flagged</div></div></div>
+        <div class="risk-item"><div><div class="risk-text">⚠️ August dashboard date not guaranteed — no public commitments until milestone review</div><div class="risk-owner">CEO decision</div></div></div>
+        <div class="risk-item"><div><div class="risk-text">⚠️ Reporting performance issues are affecting sales conversion and retention simultaneously</div><div class="risk-owner">Head of Sales + Customer Success</div></div></div>
+        <div class="risk-item"><div><div class="risk-text">⚠️ Architecture review not completed — no cost estimate for website work yet</div><div class="risk-owner">CTO</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-git-merge" aria-hidden="true"></i> Conflicts</div>
+    <div class="card" style="padding:.75rem 1.25rem">
+      <div class="risk-item"><div><span class="badge b-conflict" style="margin-bottom:4px">⚠️ Conflict</span><div class="risk-text">Engineering bandwidth vs website redesign: Product Director flagged timeline risk against August dashboard; CTO confirmed capacity is tight — these two workstreams compete directly.</div></div></div>
+      <div class="risk-item"><div><span class="badge b-conflict" style="margin-bottom:4px">⚠️ Conflict</span><div class="risk-text">Conference announcement vs unconfirmed release date: Head of Sales wants to announce dashboard at conference; CTO cannot guarantee August date.</div></div></div>
+      <div class="risk-item"><div><span class="badge b-conflict" style="margin-bottom:4px">⚠️ Conflict</span><div class="risk-text">Department headcount requests are misaligned — different figures submitted. Deferred until Q3 forecast is settled.</div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-users" aria-hidden="true"></i> Speaker summary</div>
+    <div class="card" style="padding:.75rem 1.25rem">
+      <div class="speaker-row"><div class="avatar av-ceo">CEO</div><div class="speaker-content"><div class="speaker-name">CEO</div><div class="speaker-items">Raised Q2 gap vs 18% target · asked about deal slippage, conversion, and performance · directed cost estimate before approval · postponed hiring · deferred conference budget · blocked public dashboard announcement</div></div></div>
+      <div class="speaker-row"><div class="avatar av-sales">HS</div><div class="speaker-content"><div class="speaker-name">Head of Sales</div><div class="speaker-items">Reported 9/14 contracts closed · cited procurement delays and security reviews · noted prospects are also raising reporting performance concerns · proposed announcing dashboard at conference</div></div></div>
+      <div class="speaker-row"><div class="avatar av-cfo">CFO</div><div class="speaker-content"><div class="speaker-name">CFO</div><div class="speaker-items">Flagged revenue forecast risk if deals slip again · asked for contractor cost estimate · raised misaligned headcount requests · needs final vendor proposals before approving conference budget</div></div></div>
+      <div class="speaker-row"><div class="avatar av-vpm">VPM</div><div class="speaker-content"><div class="speaker-name">VP Marketing</div><div class="speaker-items">Reported 34% website traffic increase · acknowledged low conversion rates · planning website redesign and demo-request simplification · raised conference budget approval</div></div></div>
+      <div class="speaker-row"><div class="avatar av-cto">CTO</div><div class="speaker-content"><div class="speaker-name">CTO</div><div class="speaker-items">Confirmed engineering near capacity · architecture review not completed · cannot guarantee August dashboard date · acknowledged and is investigating reporting performance issues</div></div></div>
+      <div class="speaker-row"><div class="avatar av-pd">PD</div><div class="speaker-content"><div class="speaker-name">Product Director</div><div class="speaker-items">Warned about engineering timeline pressure · agreed reporting performance may outweigh planned feature releases · flagged August date risk</div></div></div>
+      <div class="speaker-row"><div class="avatar av-cs">CS</div><div class="speaker-content"><div class="speaker-name">Customer Success Lead</div><div class="speaker-items">Reported 94% retention · flagged spike in support tickets mostly related to reporting performance and dashboard loading times</div></div></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-header"><i class="ti ti-notes" aria-hidden="true"></i> Additional notes</div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--color-text-secondary);line-height:1.6">Decisions in this meeting: no new spending approved without cost estimate · no public announcements on dashboard release · hiring decisions deferred to post-Q3 forecast · conference budget revisited next month. Next touchpoint: leadership meeting next week.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+function filterTasks(priority, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#task-table tbody tr').forEach(row => {
+    if (priority === 'all' || row.dataset.priority === priority) {
+      row.classList.remove('hidden');
+    } else {
+      row.classList.add('hidden');
+    }
+  });
+}
+</script>

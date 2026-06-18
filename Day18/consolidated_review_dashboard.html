@@ -1,0 +1,253 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary);line-height:1.6}
+.wrap{padding:1rem 0}
+.nav{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:10px}
+.ntab{font-size:12px;padding:5px 13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;color:var(--color-text-secondary)}
+.ntab.on{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
+.pane{display:none}.pane.on{display:block}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:8px;margin-bottom:1.5rem}
+.mc{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
+.mc .l{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.mc .v{font-size:20px;font-weight:500}
+.v.red{color:var(--color-text-danger)}.v.grn{color:var(--color-text-success)}.v.amb{color:var(--color-text-warning)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.9rem 1.1rem;margin-bottom:.75rem}
+.sh{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:.1rem 0 .6rem;display:flex;align-items:center;gap:5px}
+.sh i{font-size:15px}
+.badge{display:inline-flex;align-items:center;font-size:10px;padding:2px 7px;border-radius:var(--border-radius-md);font-weight:500;white-space:nowrap}
+.bhi{background:#FAECE7;color:#712B13}.bmd{background:#FAEEDA;color:#633806}.blo{background:#EAF3DE;color:#3B6D11}
+.bop{background:#E6F1FB;color:#0C447C}.bpd{background:#EEEDFE;color:#3C3489}.bcf{background:#FCEBEB;color:#791F1F}
+.bbl{background:#FCEBEB;color:#791F1F}
+.src{font-size:10px;padding:1px 6px;border-radius:var(--border-radius-md);font-weight:500;border:0.5px solid}
+.s1{background:#EEEDFE;color:#3C3489;border-color:#AFA9EC}
+.s2{background:#E1F5EE;color:#085041;border-color:#5DCAA5}
+.s3{background:#FAEEDA;color:#633806;border-color:#EF9F27}
+.s4{background:#E6F1FB;color:#0C447C;border-color:#85B7EB}
+.s5{background:#F1EFE8;color:#444441;border-color:#B4B2A9}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed}
+th{font-weight:500;font-size:11px;color:var(--color-text-secondary);text-align:left;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top;word-break:break-word}
+tr:last-child td{border-bottom:none}
+tr.done td{opacity:.5;text-decoration:line-through}
+.row{padding:.55rem 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.row:last-child{border-bottom:none}
+.row .sub{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.sumcard{border-left:3px solid;padding:.7rem .9rem;background:var(--color-background-secondary);margin-bottom:6px;border-radius:0}
+.sc-bd{border-color:#378ADD}.sc-gr{border-color:#639922}.sc-am{border-color:#EF9F27}.sc-re{border-color:#E24B4A}.sc-pu{border-color:#534AB7}
+.sumcard .title{font-size:12px;font-weight:500;margin-bottom:3px}
+.sumcard p{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.ftrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.85rem}
+.fb{font-size:11px;padding:3px 10px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;color:var(--color-text-secondary)}
+.fb.on{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500}
+.hidden{display:none}
+.progress-wrap{display:flex;align-items:center;gap:8px;margin-bottom:.5rem}
+.progress-label{font-size:12px;min-width:130px;color:var(--color-text-secondary)}
+.bar-bg{flex:1;height:5px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.bar-fill{height:5px;border-radius:3px}
+.bg-red{background:#E24B4A}.bg-amb{background:#EF9F27}.bg-grn{background:#639922}.bg-blu{background:#378ADD}.bg-pur{background:#534AB7}
+.count-pill{font-size:11px;font-weight:500;min-width:20px;text-align:right;color:var(--color-text-secondary)}
+</style>
+
+<h2 class="sr-only">Consolidated review dashboard — all summaries, action items, risks, blockers, and open questions across 5 sources</h2>
+
+<div class="wrap">
+  <p style="font-size:16px;font-weight:500;margin-bottom:4px"><i class="ti ti-layout-dashboard" aria-hidden="true"></i> Consolidated review</p>
+  <p style="font-size:12px;color:var(--color-text-secondary);margin-bottom:1.25rem">All summaries, action items, risks, blockers and open questions across 5 sources — Meeting transcript · Brain dump · Bullet notes · Voice memo · WhatsApp chat</p>
+
+  <div class="metrics">
+    <div class="mc"><div class="l">Total action items</div><div class="v">37</div></div>
+    <div class="mc"><div class="l">High priority</div><div class="v red">14</div></div>
+    <div class="mc"><div class="l">Medium priority</div><div class="v amb">14</div></div>
+    <div class="mc"><div class="l">Low priority</div><div class="v grn">9</div></div>
+    <div class="mc"><div class="l">Open questions</div><div class="v">17</div></div>
+    <div class="mc"><div class="l">Risks / blockers</div><div class="v red">16</div></div>
+    <div class="mc"><div class="l">Conflicts</div><div class="v red">7</div></div>
+    <div class="mc"><div class="l">Sources</div><div class="v">5</div></div>
+  </div>
+
+  <div class="nav">
+    <button class="ntab on" onclick="sw('s0',this)"><i class="ti ti-file-text" style="font-size:13px" aria-hidden="true"></i> Summaries</button>
+    <button class="ntab" onclick="sw('s1',this)"><i class="ti ti-list-check" style="font-size:13px" aria-hidden="true"></i> Action items</button>
+    <button class="ntab" onclick="sw('s2',this)"><i class="ti ti-alert-triangle" style="font-size:13px" aria-hidden="true"></i> Risks & blockers</button>
+    <button class="ntab" onclick="sw('s3',this)"><i class="ti ti-help-circle" style="font-size:13px" aria-hidden="true"></i> Open questions</button>
+    <button class="ntab" onclick="sw('s4',this)"><i class="ti ti-git-merge" style="font-size:13px" aria-hidden="true"></i> Conflicts</button>
+    <button class="ntab" onclick="sw('s5',this)"><i class="ti ti-chart-pie" style="font-size:13px" aria-hidden="true"></i> Overview</button>
+  </div>
+
+  <div id="s0" class="pane on">
+    <div class="sh"><i class="ti ti-file-text" aria-hidden="true"></i> One-line summary per source</div>
+    <div class="sumcard sc-pu"><div class="title"><span class="src s5">Meeting transcript</span> &nbsp;Quarterly Growth Strategy Meeting</div><p>Q2 revenue grew 12% vs 18% target; 5 enterprise deals slipped; engineering near capacity; reporting performance is a simultaneous sales and retention problem; hiring and conference budget deferred.</p></div>
+    <div class="sumcard sc-bd"><div class="title"><span class="src s1">Brain dump</span> &nbsp;Internship, deadlines, LeetCode, challenge backlog</div><p>Internship applications blocked by outdated resume; EMG arm deadline unconfirmed; LeetCode stalled 10+ days; LinkedIn Day 17 post and GitHub Day 16 README pending; train ticket and ₹400 reimbursement to Rohan outstanding.</p></div>
+    <div class="sumcard sc-gr"><div class="title"><span class="src s2">Bullet notes</span> &nbsp;SQL prep session — 18 June</div><p>Window functions and 3 JOIN problems completed; gaps in subqueries, GROUP BY NULL handling, consistent hashing, and pandas groupby; TCS NQT deadline (22 June) unverified; Priya's DBMS notes not yet received.</p></div>
+    <div class="sumcard sc-am"><div class="title"><span class="src s3">Voice memo</span> &nbsp;End-of-day reflection</div><p>Day 17 artifact done but quality perceived as slipping; EMG arm sensor calibration needs redoing — ownership between Sidh and Rahul unresolved; Walk Watt tech fest idea unconfirmed; one job applied, two more targeted this week.</p></div>
+    <div class="sumcard sc-re"><div class="title"><span class="src s4">WhatsApp chat</span> &nbsp;Project team — demo day prep</div><p>Demo day date disputed (28 July vs 1 August); Rahul's hardware slides blank; software demo video due Friday; 3D-printed casing missing for 2+ weeks with no backup plan; escalation to professor deferred to Monday.</p></div>
+  </div>
+
+  <div id="s1" class="pane">
+    <div class="ftrow">
+      <button class="fb on" onclick="filterAI('all',this)">All (37)</button>
+      <button class="fb" onclick="filterAI('hi',this)">🔴 High (14)</button>
+      <button class="fb" onclick="filterAI('md',this)">🟠 Medium (14)</button>
+      <button class="fb" onclick="filterAI('lo',this)">🟢 Low (9)</button>
+      <button class="fb" onclick="filterAI('mt',this)">Meeting</button>
+      <button class="fb" onclick="filterAI('bd',this)">Brain dump</button>
+      <button class="fb" onclick="filterAI('bn',this)">Bullet notes</button>
+      <button class="fb" onclick="filterAI('vm',this)">Voice memo</button>
+      <button class="fb" onclick="filterAI('wa',this)">WhatsApp</button>
+    </div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <table>
+        <thead><tr><th style="width:38%">Task</th><th style="width:16%">Owner</th><th style="width:16%">Deadline</th><th style="width:14%">Source</th><th style="width:16%">Priority</th></tr></thead>
+        <tbody id="ai-body">
+          <tr data-p="hi" data-s="mt"><td>Fix reporting performance / dashboard loading</td><td>CTO / Eng</td><td>Not specified</td><td><span class="src s5">Meeting</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="mt"><td>Get architecture cost estimate for website work</td><td>CTO</td><td>Before approval</td><td><span class="src s5">Meeting</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="mt"><td>Finalize Q3 revenue forecasts</td><td>CFO</td><td>Not specified</td><td><span class="src s5">Meeting</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="bd"><td>Update resume before applying to internships</td><td>Sidh</td><td>Not specified</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="bd"><td>Apply to Razorpay and Groww internships</td><td>Sidh</td><td>Before sem ends</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="bd"><td>Confirm EMG arm report deadline with professor</td><td>Sidh</td><td>Immediately</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="bn"><td>Register for TCS NQT (deadline ~22 June, unconfirmed)</td><td>Sidh</td><td>~22 June</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bhi">🔴 Urgent</span></td></tr>
+          <tr data-p="hi" data-s="vm"><td>Decide who handles EMG sensor calibration</td><td>Sidh / Rahul</td><td>Not specified</td><td><span class="src s3">Voice memo</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="wa"><td>Confirm demo day date with Prof Sharma</td><td>Sidh</td><td>Today</td><td><span class="src s4">WhatsApp</span></td><td><span class="badge bhi">🔴 Urgent</span></td></tr>
+          <tr data-p="hi" data-s="wa"><td>Complete hardware slides section</td><td>Rahul</td><td>Wednesday</td><td><span class="src s4">WhatsApp</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="wa"><td>Monitor 3D casing arrival; decide escalation by Monday</td><td>Rahul / Team</td><td>Monday</td><td><span class="src s4">WhatsApp</span></td><td><span class="badge bhi">🔴 Watch</span></td></tr>
+          <tr data-p="hi" data-s="bd"><td>Finish LinkedIn Day 17 post</td><td>Sidh</td><td>Tonight / tomorrow</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="bd"><td>Submit EMG arm report</td><td>Sidh</td><td>14th or 17th</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="hi" data-s="wa"><td>Decide whether to tell professor about missing casing</td><td>Team</td><td>Monday</td><td><span class="src s4">WhatsApp</span></td><td><span class="badge bhi">🔴 High</span></td></tr>
+          <tr data-p="md" data-s="mt"><td>Complete engineering milestone review for dashboard</td><td>CTO / Eng</td><td>Before August</td><td><span class="src s5">Meeting</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="mt"><td>Revisit conference budget after vendor proposals</td><td>CFO / VPM</td><td>Next month</td><td><span class="src s5">Meeting</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="mt"><td>Follow up on open items — leadership meeting</td><td>CEO / All</td><td>Next week</td><td><span class="src s5">Meeting</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bd"><td>Resume LeetCode practice</td><td>Sidh</td><td>Not specified</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bd"><td>Complete GitHub README for Day 16</td><td>Sidh</td><td>Not specified</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bd"><td>Book train ticket for July holidays</td><td>Sidh</td><td>Before it fills up</td><td><span class="src s1">Brain dump</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bn"><td>Practice more subquery problems</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bn"><td>Cover GROUP BY edge cases (NULL handling)</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bn"><td>Attempt HackerRank SQL challenge</td><td>Sidh</td><td>This week</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bn"><td>Revisit consistent hashing (system design)</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="bn"><td>Revisit CAP theorem notes</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="vm"><td>Improve design quality in upcoming challenge artifacts</td><td>Sidh</td><td>Ongoing</td><td><span class="src s3">Voice memo</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="vm"><td>Apply to 2 more jobs this week</td><td>Sidh</td><td>This week</td><td><span class="src s3">Voice memo</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="md" data-s="wa"><td>Finish software demo video</td><td>Sidh</td><td>Friday</td><td><span class="src s4">WhatsApp</span></td><td><span class="badge bmd">🟠 Medium</span></td></tr>
+          <tr data-p="lo" data-s="mt"><td>Receive final vendor proposals for conference</td><td>VP Marketing</td><td>Before next month</td><td><span class="src s5">Meeting</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+          <tr data-p="lo" data-s="mt"><td>Plan website redesign and simplify demo-request flow</td><td>VP Marketing</td><td>Not specified</td><td><span class="src s5">Meeting</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+          <tr data-p="lo" data-s="bd"><td>Format and submit data structures assignment</td><td>Sidh</td><td>Friday</td><td><span class="src s1">Brain dump</span></td><td><span class="badge blo">🟢 Nearly done</span></td></tr>
+          <tr data-p="lo" data-s="bd"><td>Reimburse Rohan ₹400</td><td>Sidh</td><td>Not specified</td><td><span class="src s1">Brain dump</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+          <tr data-p="lo" data-s="bn"><td>Watch pandas .groupby() tutorial</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+          <tr data-p="lo" data-s="bn"><td>Cover indexing + query optimization (next session)</td><td>Sidh</td><td>Next session</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge blo">🟢 Planned</span></td></tr>
+          <tr data-p="lo" data-s="bn"><td>Ask Priya for DBMS notes</td><td>Sidh</td><td>Not specified</td><td><span class="src s2">Bullet notes</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+          <tr data-p="lo" data-s="vm"><td>Redo EMG sensor calibration (if assigned to Sidh)</td><td>Not decided</td><td>Not specified</td><td><span class="src s3">Voice memo</span></td><td><span class="badge bpd">⏳ Pending decision</span></td></tr>
+          <tr data-p="lo" data-s="mt"><td>Avoid public dashboard announcement until milestone review</td><td>CEO / All</td><td>Until confirmed</td><td><span class="src s5">Meeting</span></td><td><span class="badge blo">🟢 Low</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="s2" class="pane">
+    <div class="sh"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Risks</div>
+    <div class="card" style="padding:.75rem 1.1rem;margin-bottom:.75rem">
+      <div class="row">⚠️ Annual revenue target may be missed if 5 slipped enterprise deals move again <div class="sub"><span class="src s5">Meeting</span> · Owner: CFO</div></div>
+      <div class="row">⚠️ Engineering near capacity — website work competes directly with August dashboard <div class="sub"><span class="src s5">Meeting</span> · Owner: CTO</div></div>
+      <div class="row">⚠️ Reporting performance issues affect sales conversion and customer retention simultaneously <div class="sub"><span class="src s5">Meeting</span> · Head of Sales + Customer Success</div></div>
+      <div class="row">⚠️ Internship application stalled — resume not updated yet, semester end approaching <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ Train ticket may fill up — booking not yet done <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ LeetCode stalled 10+ days — affects interview prep momentum <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ TCS NQT deadline ~22 June unconfirmed — may miss it without action <div class="sub"><span class="src s2">Bullet notes</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ Subqueries explicitly self-assessed as weak — active gap in SQL prep <div class="sub"><span class="src s2">Bullet notes</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ Artifact quality self-assessed as declining — design time insufficient per day <div class="sub"><span class="src s3">Voice memo</span> · Owner: Sidh</div></div>
+      <div class="row">⚠️ EMG calibration ownership unresolved — could delay final year project progress <div class="sub"><span class="src s3">Voice memo</span> · Owner: Sidh / Rahul</div></div>
+      <div class="row">⚠️ Walk Watt tech fest idea has no official agreement — risk of last-minute scramble <div class="sub"><span class="src s3">Voice memo</span> · Owner: Not specified</div></div>
+    </div>
+
+    <div class="sh"><i class="ti ti-ban" aria-hidden="true"></i> Blockers</div>
+    <div class="card" style="padding:.75rem 1.1rem">
+      <div class="row"><span class="badge bbl" style="margin-bottom:3px">Blocker</span> Architecture review not completed — no cost estimate for website work, approval blocked <div class="sub"><span class="src s5">Meeting</span> · Owner: CTO</div></div>
+      <div class="row"><span class="badge bbl" style="margin-bottom:3px">Blocker</span> August dashboard release date unconfirmed — no public announcements until milestone review done <div class="sub"><span class="src s5">Meeting</span> · Owner: CTO</div></div>
+      <div class="row"><span class="badge bbl" style="margin-bottom:3px">Blocker</span> Resume not updated — blocks all internship applications <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row"><span class="badge bbl" style="margin-bottom:3px">Blocker</span> EMG arm report deadline unconfirmed — can't plan submission without confirmed date <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row"><span class="badge bbl" style="margin-bottom:3px">Blocker</span> 3D-printed casing not arrived — 2 weeks overdue, no backup plan; blocks demo day readiness <div class="sub"><span class="src s4">WhatsApp</span> · Owner: Rahul</div></div>
+    </div>
+  </div>
+
+  <div id="s3" class="pane">
+    <div class="sh"><i class="ti ti-help-circle" aria-hidden="true"></i> All open questions (17)</div>
+    <div class="card" style="padding:.75rem 1.1rem">
+      <div class="row">❓ Will the 5 slipped enterprise deals close in Q3? <div class="sub"><span class="src s5">Meeting</span> · Owner: Head of Sales</div></div>
+      <div class="row">❓ Can the August analytics dashboard release date be confirmed? <div class="sub"><span class="src s5">Meeting</span> · Owner: CTO</div></div>
+      <div class="row">❓ Should analytics dashboard be announced at the customer conference? <div class="sub"><span class="src s5">Meeting</span> · Deferred until CTO confirms date</div></div>
+      <div class="row">❓ Will additional contractors be needed for website work? <div class="sub"><span class="src s5">Meeting</span> · Depends on architecture review</div></div>
+      <div class="row">❓ What is the final headcount plan for next year? <div class="sub"><span class="src s5">Meeting</span> · Deferred until Q3 forecast</div></div>
+      <div class="row">❓ Is the EMG arm report due on the 14th or the 17th? <div class="sub"><span class="src s1">Brain dump</span> · Needs professor confirmation</div></div>
+      <div class="row">❓ Walk Watt live graph addition — confirmed task or just an idea? <div class="sub"><span class="src s1">Brain dump</span> · Described as unconfirmed</div></div>
+      <div class="row">❓ Is the TCS NQT deadline really 22 June? <div class="sub"><span class="src s2">Bullet notes</span> · Needs verification before acting</div></div>
+      <div class="row">❓ Has Priya shared her DBMS notes yet? <div class="sub"><span class="src s2">Bullet notes</span> · She mentioned sharing them</div></div>
+      <div class="row">❓ Who handles EMG arm sensor calibration — Sidh or Rahul? <div class="sub"><span class="src s3">Voice memo</span> · Not yet decided</div></div>
+      <div class="row">❓ Will Walk Watt be shown at the tech fest in August? <div class="sub"><span class="src s3">Voice memo</span> · Idea only, no official agreement</div></div>
+      <div class="row">❓ What was the name of the startup Sidh applied to today? <div class="sub"><span class="src s3">Voice memo</span> · Not recalled in memo</div></div>
+      <div class="row">❓ Is demo day on 28 July or 1 August? <div class="sub"><span class="src s4">WhatsApp</span> · Sidh to confirm with Prof Sharma today</div></div>
+      <div class="row">❓ Will the 3D casing arrive before demo day? <div class="sub"><span class="src s4">WhatsApp</span> · 2 weeks overdue</div></div>
+      <div class="row">❓ Should the professor be told about the missing casing now? <div class="sub"><span class="src s4">WhatsApp</span> · Decision deferred to Monday</div></div>
+      <div class="row">❓ What are the correct headcount figures across departments? <div class="sub"><span class="src s5">Meeting</span> · Different numbers submitted — no reconciliation yet</div></div>
+      <div class="row">❓ Will conversion rates improve with the planned website changes? <div class="sub"><span class="src s5">Meeting</span> · Outcome unknown until redesign shipped</div></div>
+    </div>
+  </div>
+
+  <div id="s4" class="pane">
+    <div class="sh"><i class="ti ti-git-merge" aria-hidden="true"></i> Conflicts (7 total)</div>
+    <div class="card" style="padding:.75rem 1.1rem;margin-bottom:.75rem">
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Deadline conflict</span><br>Demo day date: Rahul has 28 July, Sidh and Priya have 1 August. Neither version confirmed. <div class="sub"><span class="src s4">WhatsApp</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Resource conflict</span><br>Engineering bandwidth: website redesign vs August dashboard delivery competing for same team. <div class="sub"><span class="src s5">Meeting</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Announcement conflict</span><br>Head of Sales wants dashboard announced at conference; CTO cannot guarantee August date. <div class="sub"><span class="src s5">Meeting</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Headcount conflict</span><br>Department headcount requests are misaligned — different figures submitted, not reconciled. <div class="sub"><span class="src s5">Meeting</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Ownership conflict</span><br>EMG arm sensor calibration: Rahul flagged it but neither Sidh nor Rahul has claimed ownership. <div class="sub"><span class="src s3">Voice memo</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ No backup plan conflict</span><br>3D casing missing 2 weeks — team has no confirmed contingency; demo day readiness at risk. <div class="sub"><span class="src s4">WhatsApp</span></div></div>
+      <div class="row"><span class="badge bcf" style="margin-bottom:3px">⚠️ Deadline conflict</span><br>EMG arm report: personal notes say 14th, professor may have shifted to 17th — not confirmed. <div class="sub"><span class="src s1">Brain dump</span></div></div>
+    </div>
+    <div class="card" style="background:var(--color-background-secondary);border:none;padding:.75rem 1rem">
+      <p style="font-size:12px;color:var(--color-text-secondary);line-height:1.6"><i class="ti ti-info-circle" style="font-size:14px;vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>None of these conflicts have been resolved in the source notes. They are surfaced here exactly as found — resolution is the owner's responsibility.</p>
+    </div>
+  </div>
+
+  <div id="s5" class="pane">
+    <div class="sh"><i class="ti ti-chart-pie" aria-hidden="true"></i> Action items by source</div>
+    <div class="card" style="margin-bottom:.75rem;padding:.9rem 1.1rem">
+      <div class="progress-wrap"><span class="progress-label"><span class="src s5">Meeting transcript</span></span><div class="bar-bg"><div class="bar-fill bg-pur" style="width:43%"></div></div><span class="count-pill">8 items</span></div>
+      <div class="progress-wrap"><span class="progress-label"><span class="src s1">Brain dump</span></span><div class="bar-bg"><div class="bar-fill bg-blu" style="width:54%"></div></div><span class="count-pill">10 items</span></div>
+      <div class="progress-wrap"><span class="progress-label"><span class="src s2">Bullet notes</span></span><div class="bar-bg"><div class="bar-fill bg-grn" style="width:49%"></div></div><span class="count-pill">9 items</span></div>
+      <div class="progress-wrap"><span class="progress-label"><span class="src s3">Voice memo</span></span><div class="bar-bg"><div class="bar-fill bg-amb" style="width:22%"></div></div><span class="count-pill">4 items</span></div>
+      <div class="progress-wrap"><span class="progress-label"><span class="src s4">WhatsApp chat</span></span><div class="bar-bg"><div class="bar-fill bg-red" style="width:32%"></div></div><span class="count-pill">6 items (all high/med)</span></div>
+    </div>
+
+    <div class="sh"><i class="ti ti-flag" aria-hidden="true"></i> Most urgent items across all sources</div>
+    <div class="card" style="padding:.75rem 1.1rem;margin-bottom:.75rem">
+      <div class="row"><span class="badge bhi">🔴 Today</span> Confirm demo day date with Prof Sharma <div class="sub"><span class="src s4">WhatsApp</span> · Owner: Sidh</div></div>
+      <div class="row"><span class="badge bhi">🔴 ~22 June</span> Register for TCS NQT (verify deadline first) <div class="sub"><span class="src s2">Bullet notes</span> · Owner: Sidh</div></div>
+      <div class="row"><span class="badge bhi">🔴 Tonight</span> Finish and post LinkedIn Day 17 post <div class="sub"><span class="src s1">Brain dump</span> · Owner: Sidh</div></div>
+      <div class="row"><span class="badge bhi">🔴 Wednesday</span> Rahul completes hardware slides for demo <div class="sub"><span class="src s4">WhatsApp</span> · Owner: Rahul</div></div>
+      <div class="row"><span class="badge bhi">🔴 Friday</span> Software demo video ready + DS assignment submitted <div class="sub"><span class="src s4">WhatsApp</span> + <span class="src s1">Brain dump</span></div></div>
+      <div class="row"><span class="badge bhi">🔴 Monday</span> 3D casing decision — escalate to professor or wait <div class="sub"><span class="src s4">WhatsApp</span> · Owner: Team</div></div>
+    </div>
+
+    <div style="margin-top:1rem;display:flex;gap:8px;flex-wrap:wrap">
+      <button onclick="sendPrompt('Give me a day-by-day action plan for the next 7 days based on all the action items and deadlines in this review.')">Build 7-day plan ↗</button>
+      <button onclick="sendPrompt('Which risks from the consolidated review are most likely to cause project failure? Rank and explain them.')">Rank critical risks ↗</button>
+      <button onclick="sendPrompt('Resolve all conflicts from the consolidated review — suggest the best course of action for each one.')">Resolve conflicts ↗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function sw(id,btn){
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.ntab').forEach(b=>b.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  btn.classList.add('on');
+}
+function filterAI(f,btn){
+  document.querySelectorAll('.fb').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('#ai-body tr').forEach(row=>{
+    const p=row.dataset.p, s=row.dataset.s;
+    const show = f==='all'||f===p||f===s;
+    row.classList.toggle('hidden',!show);
+  });
+}
+</script>

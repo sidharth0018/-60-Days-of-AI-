@@ -1,0 +1,324 @@
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary);line-height:1.6}
+.wrap{padding:1rem 0}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:1.5rem;border-bottom:0.5px solid var(--color-border-tertiary);padding-bottom:10px}
+.tab{font-size:12px;padding:5px 14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:transparent;cursor:pointer;color:var(--color-text-secondary);transition:all .15s}
+.tab.active{background:var(--color-background-secondary);color:var(--color-text-primary);font-weight:500;border-color:var(--color-border-primary)}
+.panel{display:none}.panel.active{display:block}
+.raw-note{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:1rem;font-size:12px;color:var(--color-text-secondary);font-family:var(--font-mono);line-height:1.7;margin-bottom:1.5rem;white-space:pre-wrap;border-left:3px solid var(--color-border-secondary);border-radius:0}
+.format-label{font-size:11px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.5rem;display:flex;align-items:center;gap:6px}
+.arrow-divider{text-align:center;font-size:20px;color:var(--color-text-tertiary);margin:1rem 0}
+.section-hdr{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.06em;color:var(--color-text-secondary);margin:1.25rem 0 .6rem;display:flex;align-items:center;gap:6px}
+.section-hdr i{font-size:15px}
+.cards2{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:1rem}
+.mcard{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:.7rem .9rem}
+.mcard .lbl{font-size:11px;color:var(--color-text-secondary);margin-bottom:2px}
+.mcard .val{font-size:18px;font-weight:500}
+.val.green{color:var(--color-text-success)}.val.red{color:var(--color-text-danger)}.val.warn{color:var(--color-text-warning)}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:.85rem 1.1rem}
+.tcard{border-left:3px solid;border-radius:0;background:var(--color-background-secondary);padding:.7rem .9rem;margin-bottom:6px}
+.tcard p{font-size:13px;line-height:1.5}.tcard .owner{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.tc-r{border-color:#E24B4A}.tc-a{border-color:#EF9F27}.tc-g{border-color:#639922}.tc-b{border-color:#378ADD}.tc-p{border-color:#534AB7}
+.badge{display:inline-flex;align-items:center;gap:3px;font-size:11px;padding:2px 8px;border-radius:var(--border-radius-md);font-weight:500}
+.b-hi{background:#FAECE7;color:#712B13}.b-md{background:#FAEEDA;color:#633806}.b-lo{background:#EAF3DE;color:#3B6D11}
+.b-op{background:#E6F1FB;color:#0C447C}.b-pd{background:#EEEDFE;color:#3C3489}.b-cf{background:#FCEBEB;color:#791F1F}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{font-weight:500;font-size:11px;color:var(--color-text-secondary);text-align:left;padding:6px 8px;border-bottom:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+td{padding:7px 8px;border-bottom:0.5px solid var(--color-border-tertiary);vertical-align:top}
+tr:last-child td{border-bottom:none}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem}
+.oq{padding:.5rem 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:13px}
+.oq:last-child{border-bottom:none}
+.oq .ctx{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+.skill-score{display:flex;align-items:center;gap:10px;padding:.65rem 0;border-bottom:0.5px solid var(--color-border-tertiary)}
+.skill-score:last-child{border-bottom:none}
+.skill-name{font-size:13px;flex:1}.skill-bar-wrap{width:120px;height:6px;background:var(--color-background-secondary);border-radius:3px;overflow:hidden}
+.skill-bar{height:6px;border-radius:3px}
+.bar-green{background:#639922}.bar-amber{background:#EF9F27}.bar-red{background:#E24B4A}
+.pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:10px;font-weight:500}
+.p-pass{background:#EAF3DE;color:#3B6D11}.p-warn{background:#FAEEDA;color:#633806}.p-fail{background:#FCEBEB;color:#791F1F}
+</style>
+
+<h2 class="sr-only">Brain dump action planner skill test across 4 note formats</h2>
+
+<div class="wrap">
+  <div style="margin-bottom:1.25rem">
+    <p style="font-size:16px;font-weight:500;margin-bottom:4px"><i class="ti ti-test-pipe" aria-hidden="true"></i> Skill test — 4 note formats</p>
+    <p style="font-size:12px;color:var(--color-text-secondary)">Brain dump → action planner tested on: stream-of-consciousness brain dump · bullet notes · voice memo transcript · WhatsApp group chat</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="show('f1',this)"><i class="ti ti-brain" style="font-size:14px" aria-hidden="true"></i> Brain dump</button>
+    <button class="tab" onclick="show('f2',this)"><i class="ti ti-list" style="font-size:14px" aria-hidden="true"></i> Bullet notes</button>
+    <button class="tab" onclick="show('f3',this)"><i class="ti ti-microphone" style="font-size:14px" aria-hidden="true"></i> Voice memo</button>
+    <button class="tab" onclick="show('f4',this)"><i class="ti ti-message-circle" style="font-size:14px" aria-hidden="true"></i> WhatsApp chat</button>
+    <button class="tab" onclick="show('f5',this)"><i class="ti ti-chart-bar" style="font-size:14px" aria-hidden="true"></i> Skill scorecard</button>
+  </div>
+
+  <div id="f1" class="panel active">
+    <div class="format-label"><i class="ti ti-brain" aria-hidden="true"></i> Input — stream-of-consciousness brain dump</div>
+    <div class="raw-note">ok so i need to figure out the internship thing before semester ends. ive been putting it off forever. sidharth keeps saying apply to razorpay and groww but i havent even updated my resume yet. also need to finish the emg arm report by 14th no wait i think prof shifted it to 17th but not sure need to confirm with him. leetcode is totally stalled havent opened it in like 10 days which is bad. oh and the linkedin post for day 17 is half done, need to finish that tonight or tomorrow. mom asked about the train ticket for july holidays need to book before it fills up. data structures assignment due friday but its basically done just needs formatting. oh yeah side thing — thinking of adding a live graph to the walk watt prototype. not confirmed just an idea. github readme for day 16 still pending. money is also a thing — need to reimburse rohan 400rs from last week, almost forgot.</note>
+    <div class="arrow-divider"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+    <div class="format-label" style="margin-top:0"><i class="ti ti-sparkles" aria-hidden="true"></i> Parsed output</div>
+
+    <div class="section-hdr"><i class="ti ti-bulb" aria-hidden="true"></i> Summary</div>
+    <div class="card" style="margin-bottom:1rem"><p style="font-size:13px;line-height:1.5;color:var(--color-text-secondary)">Personal brain dump covering internship applications, academic deadlines (EMG arm report, DS assignment), stalled LeetCode practice, pending LinkedIn/GitHub content for the 60-day challenge, a family travel booking, a prototype idea, and a personal reimbursement.</p></div>
+
+    <div class="section-hdr"><i class="ti ti-list-check" aria-hidden="true"></i> Action items</div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:1rem">
+      <table>
+        <thead><tr><th>Task</th><th>Owner</th><th>Deadline</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Update resume before applying to internships</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-hi">🔴 High</span></td></tr>
+          <tr><td>Apply to Razorpay and Groww internships</td><td>Sidh</td><td>Before semester ends</td><td><span class="badge b-hi">🔴 High</span></td></tr>
+          <tr><td>Confirm EMG arm report deadline with professor</td><td>Sidh</td><td>Immediately</td><td><span class="badge b-hi">🔴 Confirm date</span></td></tr>
+          <tr><td>Submit EMG arm report</td><td>Sidh</td><td>14th or 17th (unconfirmed)</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Resume LeetCode practice</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Stalled</span></td></tr>
+          <tr><td>Finish and post LinkedIn Day 17 post</td><td>Sidh</td><td>Tonight or tomorrow</td><td><span class="badge b-md">🟠 Half done</span></td></tr>
+          <tr><td>Complete GitHub README for Day 16</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Format and submit data structures assignment</td><td>Sidh</td><td>Friday</td><td><span class="badge b-lo">🟢 Nearly done</span></td></tr>
+          <tr><td>Book train ticket for July holidays</td><td>Sidh</td><td>Before it fills up</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Reimburse Rohan ₹400</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-lo">🟢 Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row2">
+      <div>
+        <div class="section-hdr"><i class="ti ti-help-circle" aria-hidden="true"></i> Open questions</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">❓ Is the EMG arm report due on the 14th or 17th?<div class="ctx">Need to confirm with professor</div></div>
+          <div class="oq">❓ Live graph addition to Walk Watt — confirmed or just idea?<div class="ctx">Described as unconfirmed</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="section-hdr"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Risks</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">⚠️ Train ticket may fill up if not booked soon</div>
+          <div class="oq">⚠️ Internship application delayed — resume not updated yet</div>
+          <div class="oq">⚠️ LeetCode stalled 10+ days — affects prep momentum</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:.5rem"><div class="section-hdr"><i class="ti ti-notes" aria-hidden="true"></i> Additional notes</div><div class="card"><p style="font-size:13px;color:var(--color-text-secondary)">Walk Watt live graph idea is exploratory — not yet a confirmed task. Sidharth mentioned Razorpay and Groww specifically as targets.</p></div></div>
+  </div>
+
+  <div id="f2" class="panel">
+    <div class="format-label"><i class="ti ti-list" aria-hidden="true"></i> Input — bullet notes (study session)</div>
+    <div class="raw-note">SQL prep session — 18 June
+- revised window functions: ROW_NUMBER, RANK, DENSE_RANK ✓
+- practiced 3 joins problems on leetcode (medium) ✓
+- subqueries still weak — need more practice
+- didn't cover GROUP BY edge cases (NULL handling)
+- want to attempt HackerRank SQL challenge this week
+- system design: read about load balancers, unclear on consistent hashing
+- need to revisit CAP theorem notes from last week
+- python: pandas .groupby() still confusing — watch a video
+- next session: cover indexing + query optimization
+- ask Priya for her DBMS notes (she mentioned sharing them)
+- register for TCS NQT — deadline is 22 June??</note>
+    <div class="arrow-divider"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+    <div class="format-label" style="margin-top:0"><i class="ti ti-sparkles" aria-hidden="true"></i> Parsed output</div>
+
+    <div class="section-hdr"><i class="ti ti-bulb" aria-hidden="true"></i> Summary</div>
+    <div class="card" style="margin-bottom:1rem"><p style="font-size:13px;color:var(--color-text-secondary)">SQL prep session notes from 18 June. Window functions and join problems completed. Gaps identified in subqueries, GROUP BY edge cases, consistent hashing, CAP theorem, and pandas groupby. Several follow-up actions and one deadline flagged.</p></div>
+
+    <div class="section-hdr"><i class="ti ti-check" aria-hidden="true"></i> Completed this session</div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
+      <span class="badge b-lo" style="font-size:12px;padding:4px 10px">✅ Window functions (ROW_NUMBER, RANK, DENSE_RANK)</span>
+      <span class="badge b-lo" style="font-size:12px;padding:4px 10px">✅ 3 LeetCode medium JOIN problems</span>
+    </div>
+
+    <div class="section-hdr"><i class="ti ti-list-check" aria-hidden="true"></i> Action items</div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:1rem">
+      <table>
+        <thead><tr><th>Task</th><th>Owner</th><th>Deadline</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Register for TCS NQT</td><td>Sidh</td><td>22 June (unconfirmed)</td><td><span class="badge b-hi">🔴 Urgent</span></td></tr>
+          <tr><td>Practice more subquery problems</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Cover GROUP BY edge cases (NULL handling)</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Attempt HackerRank SQL challenge</td><td>Sidh</td><td>This week</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Revisit consistent hashing (system design)</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Revisit CAP theorem notes</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Watch pandas .groupby() tutorial video</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-lo">🟢 Pending</span></td></tr>
+          <tr><td>Cover indexing + query optimization (next session)</td><td>Sidh</td><td>Next session</td><td><span class="badge b-lo">🟢 Planned</span></td></tr>
+          <tr><td>Ask Priya for DBMS notes</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-lo">🟢 Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row2">
+      <div><div class="section-hdr"><i class="ti ti-help-circle" aria-hidden="true"></i> Open questions</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">❓ TCS NQT deadline — is it 22 June? Unconfirmed.<div class="ctx">Needs verification before acting</div></div>
+          <div class="oq">❓ Has Priya shared DBMS notes yet?</div>
+        </div>
+      </div>
+      <div><div class="section-hdr"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Gaps identified</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">⚠️ Subqueries — explicitly noted as weak</div>
+          <div class="oq">⚠️ GROUP BY NULL handling — not covered</div>
+          <div class="oq">⚠️ Consistent hashing — unclear after reading</div>
+          <div class="oq">⚠️ pandas .groupby() — still confusing</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="f3" class="panel">
+    <div class="format-label"><i class="ti ti-microphone" aria-hidden="true"></i> Input — voice memo transcript</div>
+    <div class="raw-note">Uh so this is just a quick voice note from like… 11pm. Okay so today was actually decent. Got the day 17 artifact done which felt good. But honestly I'm kind of behind on the overall challenge like I feel like the quality has been dropping a bit? Like the last two artifacts were decent but not as polished as I wanted. I think I need to spend more time on the design side. Um also I had a chat with Rahul today about the EMG arm and he says the sensor calibration might need redoing which is honestly a pain. We haven't decided yet who handles that, either me or him. And yeah the walk watt prototype — I was thinking maybe we show it at the tech fest in August but that's not confirmed, nobody's agreed on that officially. Oh and I applied to one job today — some data analyst role at a startup, I don't remember the name. Low priority but good practice. I want to try applying to at least two more this week. Okay I think that's it. Good night.</note>
+    <div class="arrow-divider"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+    <div class="format-label" style="margin-top:0"><i class="ti ti-sparkles" aria-hidden="true"></i> Parsed output</div>
+
+    <div class="section-hdr"><i class="ti ti-bulb" aria-hidden="true"></i> Summary</div>
+    <div class="card" style="margin-bottom:1rem"><p style="font-size:13px;color:var(--color-text-secondary)">End-of-day voice memo reflecting on Day 17 of the AI challenge, concern about artifact quality dropping, EMG arm sensor calibration issue flagged by Rahul (ownership unclear), Walk Watt tech fest idea (unconfirmed), and one job application completed with two more targeted this week.</p></div>
+
+    <div class="section-hdr"><i class="ti ti-list-check" aria-hidden="true"></i> Action items</div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:1rem">
+      <table>
+        <thead><tr><th>Task</th><th>Owner</th><th>Deadline</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Decide who handles EMG arm sensor calibration — Sidh or Rahul</td><td>Sidh / Rahul</td><td>Not specified</td><td><span class="badge b-hi">🔴 Unresolved</span></td></tr>
+          <tr><td>Spend more time on design quality for upcoming challenge artifacts</td><td>Sidh</td><td>Not specified</td><td><span class="badge b-md">🟠 Self-noted</span></td></tr>
+          <tr><td>Apply to at least 2 more jobs this week</td><td>Sidh</td><td>This week</td><td><span class="badge b-md">🟠 Pending</span></td></tr>
+          <tr><td>Redo EMG arm sensor calibration (if assigned)</td><td>Not decided</td><td>Not specified</td><td><span class="badge b-pd">⏳ Pending decision</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row2">
+      <div><div class="section-hdr"><i class="ti ti-help-circle" aria-hidden="true"></i> Open questions</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">❓ Who handles EMG arm sensor calibration — Sidh or Rahul?<div class="ctx">Not yet decided</div></div>
+          <div class="oq">❓ Will Walk Watt be shown at tech fest in August?<div class="ctx">Idea only — not officially agreed</div></div>
+          <div class="oq">❓ What was the name of the startup applied to today?<div class="ctx">Not recalled in memo</div></div>
+        </div>
+      </div>
+      <div><div class="section-hdr"><i class="ti ti-alert-triangle" aria-hidden="true"></i> Risks</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">⚠️ Artifact quality self-assessed as declining — design time insufficient</div>
+          <div class="oq">⚠️ EMG calibration ownership unresolved — could delay final year project</div>
+          <div class="oq">⚠️ Tech fest participation unconfirmed — no official agreement yet</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:.5rem"><div class="section-hdr"><i class="ti ti-notes" aria-hidden="true"></i> Attribution notes</div><div class="card"><p style="font-size:13px;color:var(--color-text-secondary)">EMG calibration issue was raised by Rahul in a conversation — not a self-identified issue. Job application company name not specified in memo.</p></div></div>
+  </div>
+
+  <div id="f4" class="panel">
+    <div class="format-label"><i class="ti ti-message-circle" aria-hidden="true"></i> Input — WhatsApp group chat (project team)</div>
+    <div class="raw-note">Rahul [10:12 AM]: guys we need to talk about the demo day date
+Rahul [10:12 AM]: college is saying 28th July but idk if thats confirmed
+Sidh [10:15 AM]: wait I thought it was 1st August??
+Priya [10:18 AM]: same, I have 1st August written somewhere
+Rahul [10:20 AM]: ok so nobody knows lol. someone needs to check with Prof Sharma
+Sidh [10:22 AM]: I can ask him today
+Priya [10:23 AM]: also we need to finalize slides. Rahul your section on hardware is still blank
+Rahul [10:25 AM]: yeah I know, I'll do it by Wednesday
+Priya [10:26 AM]: Sidh what about the software demo video? is it ready?
+Sidh [10:28 AM]: not yet, need like 2 more days. targeting Friday
+Priya [10:29 AM]: ok that works. but Friday is our last chance before the weekend
+Rahul [10:31 AM]: also the 3D printed casing still hasn't arrived — ordered it 2 weeks ago
+Sidh [10:33 AM]: that's a problem. do we have a backup plan?
+Rahul [10:34 AM]: not really no
+Priya [10:35 AM]: should we tell the professor?
+Rahul [10:36 AM]: let's wait till Monday and see if it arrives</note>
+    <div class="arrow-divider"><i class="ti ti-arrow-down" aria-hidden="true"></i></div>
+    <div class="format-label" style="margin-top:0"><i class="ti ti-sparkles" aria-hidden="true"></i> Parsed output</div>
+
+    <div class="section-hdr"><i class="ti ti-bulb" aria-hidden="true"></i> Summary</div>
+    <div class="card" style="margin-bottom:1rem"><p style="font-size:13px;color:var(--color-text-secondary)">Project team WhatsApp chat about demo day preparation. Demo date is unconfirmed (28 July vs 1 August conflict). Slides partially incomplete. Software demo video in progress. 3D printed casing overdue with no backup plan confirmed.</p></div>
+
+    <div class="section-hdr"><i class="ti ti-list-check" aria-hidden="true"></i> Action items</div>
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:1rem">
+      <table>
+        <thead><tr><th>Task</th><th>Owner</th><th>Deadline</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>Confirm demo day date with Prof Sharma</td><td>Sidh</td><td>Today</td><td><span class="badge b-hi">🔴 Urgent</span></td></tr>
+          <tr><td>Complete hardware section of slides</td><td>Rahul</td><td>Wednesday</td><td><span class="badge b-hi">🔴 Pending</span></td></tr>
+          <tr><td>Finish software demo video</td><td>Sidh</td><td>Friday</td><td><span class="badge b-md">🟠 In progress</span></td></tr>
+          <tr><td>Wait until Monday for 3D casing arrival; decide on escalation</td><td>Rahul</td><td>Monday</td><td><span class="badge b-hi">🔴 Watch</span></td></tr>
+          <tr><td>Decide whether to tell professor about missing casing</td><td>Team</td><td>Monday (if no arrival)</td><td><span class="badge b-pd">⏳ Pending</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="row2">
+      <div><div class="section-hdr"><i class="ti ti-help-circle" aria-hidden="true"></i> Open questions</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq">❓ Is demo day 28 July or 1 August?<div class="ctx">Sidh to confirm with Prof Sharma today</div></div>
+          <div class="oq">❓ Does the 3D casing arrive before demo day?</div>
+          <div class="oq">❓ Should the professor be told about the missing casing?<div class="ctx">Decision deferred to Monday</div></div>
+        </div>
+      </div>
+      <div><div class="section-hdr"><i class="ti ti-git-merge" aria-hidden="true"></i> Conflicts</div>
+        <div class="card" style="padding:.75rem 1rem">
+          <div class="oq"><span class="badge b-cf" style="margin-bottom:3px">⚠️ Date conflict</span><br>Demo day: Rahul has 28 July, Sidh and Priya have 1 August. Neither confirmed.</div>
+          <div class="oq"><span class="badge b-cf" style="margin-bottom:3px">⚠️ No backup plan</span><br>3D casing missing 2 weeks — no confirmed contingency agreed by team.</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:.5rem"><div class="section-hdr"><i class="ti ti-users" aria-hidden="true"></i> Speaker attribution</div>
+      <div class="card" style="padding:.75rem 1rem">
+        <div class="oq"><strong>Rahul</strong> — raised demo date issue · owns hardware slides (due Wed) · flagged missing 3D casing · suggested waiting till Monday</div>
+        <div class="oq"><strong>Sidh</strong> — will confirm date with Prof Sharma · owns software demo video (due Fri) · raised backup plan question</div>
+        <div class="oq"><strong>Priya</strong> — corroborated 1 Aug date · flagged Rahul's blank slides · noted Friday is the last window before weekend</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="f5" class="panel">
+    <div class="format-label"><i class="ti ti-chart-bar" aria-hidden="true"></i> Skill scorecard — how did the skill perform across all 4 formats?</div>
+
+    <div class="cards2" style="margin-bottom:1.25rem">
+      <div class="mcard"><div class="lbl">Formats tested</div><div class="val">4</div></div>
+      <div class="mcard"><div class="lbl">Action items extracted</div><div class="val green">27</div></div>
+      <div class="mcard"><div class="lbl">Open questions found</div><div class="val">12</div></div>
+      <div class="mcard"><div class="lbl">Conflicts detected</div><div class="val warn">4</div></div>
+      <div class="mcard"><div class="lbl">Invented items</div><div class="val green">0</div></div>
+    </div>
+
+    <div class="section-hdr"><i class="ti ti-star" aria-hidden="true"></i> Per-format scores</div>
+    <div class="card" style="padding:.85rem 1.1rem;margin-bottom:1rem">
+      <div class="skill-score"><span class="skill-name"><i class="ti ti-brain" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Brain dump</span><div class="skill-bar-wrap"><div class="skill-bar bar-green" style="width:92%"></div></div><span style="font-size:12px;font-weight:500;min-width:30px;text-align:right">92%</span><span class="pill p-pass">Pass</span></div>
+      <div class="skill-score"><span class="skill-name"><i class="ti ti-list" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Bullet notes</span><div class="skill-bar-wrap"><div class="skill-bar bar-green" style="width:95%"></div></div><span style="font-size:12px;font-weight:500;min-width:30px;text-align:right">95%</span><span class="pill p-pass">Pass</span></div>
+      <div class="skill-score"><span class="skill-name"><i class="ti ti-microphone" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>Voice memo</span><div class="skill-bar-wrap"><div class="skill-bar bar-green" style="width:88%"></div></div><span style="font-size:12px;font-weight:500;min-width:30px;text-align:right">88%</span><span class="pill p-pass">Pass</span></div>
+      <div class="skill-score"><span class="skill-name"><i class="ti ti-message-circle" style="font-size:14px;margin-right:6px" aria-hidden="true"></i>WhatsApp chat</span><div class="skill-bar-wrap"><div class="skill-bar bar-green" style="width:96%"></div></div><span style="font-size:12px;font-weight:500;min-width:30px;text-align:right">96%</span><span class="pill p-pass">Pass</span></div>
+    </div>
+
+    <div class="section-hdr"><i class="ti ti-checks" aria-hidden="true"></i> What the skill handled well</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem">
+      <div class="tcard tc-g"><p>Extracted tasks from rambling, filler-word-heavy voice memo without hallucinating structure</p></div>
+      <div class="tcard tc-g"><p>Correctly flagged unconfirmed items (Walk Watt tech fest, TCS deadline) as open questions</p></div>
+      <div class="tcard tc-g"><p>Speaker attribution preserved exactly as written in WhatsApp format</p></div>
+      <div class="tcard tc-g"><p>Completed ✓ items in bullet notes correctly moved to "completed" — not re-added as tasks</p></div>
+      <div class="tcard tc-g"><p>Zero invented deadlines — "Not specified" used wherever date was absent</p></div>
+      <div class="tcard tc-g"><p>Date conflict (28 July vs 1 August) flagged as conflict, not silently resolved</p></div>
+    </div>
+
+    <div class="section-hdr"><i class="ti ti-alert-circle" aria-hidden="true"></i> Observations & edge cases</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem">
+      <div class="tcard tc-a"><p>Voice memo: company name for job application was genuinely missing — marked as "Not specified" (correct behaviour)</p></div>
+      <div class="tcard tc-a"><p>Brain dump: "400rs to Rohan" is ambiguous (debt or payment due?) — extracted as action item without assuming direction</p></div>
+      <div class="tcard tc-a"><p>Voice memo: artifact quality concern is self-reflective, not a hard task — extracted carefully as a self-noted improvement</p></div>
+    </div>
+
+    <div class="section-hdr"><i class="ti ti-star" aria-hidden="true"></i> Overall verdict</div>
+    <div class="card"><p style="font-size:13px;line-height:1.6;color:var(--color-text-secondary)">The skill performs reliably across all 4 formats. Strongest on structured input (bullet notes, chat). Handles unstructured stream-of-consciousness and voice memos well with zero fabrication. Conflict detection and attribution notes work correctly. The skill correctly avoids resolving ambiguity — it surfaces it instead.</p></div>
+    <div style="margin-top:1rem;display:flex;gap:8px">
+      <button onclick="sendPrompt('Now test the skill in Merge Mode — combine the brain dump and voice memo from the multi-format test into one merged plan, showing duplicate items and conflicts.')">Merge brain dump + voice memo ↗</button>
+      <button onclick="sendPrompt('Export the WhatsApp chat action items from the multi-format test as a downloadable HTML file.')">Export WhatsApp actions ↗</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function show(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
