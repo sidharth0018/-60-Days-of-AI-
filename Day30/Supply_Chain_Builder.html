@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Supply Chain Builder</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+body{margin:0;background:#0f172a;color:#e5e7eb;font-family:Arial}
+.container{max-width:1100px;margin:auto;padding:24px}
+.card{background:#1e293b;border-radius:16px;padding:20px;margin:18px 0;transition:.3s}
+.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(0,0,0,.35)}
+button{padding:12px 18px;margin:8px;border:none;border-radius:10px;background:#2563eb;color:#fff;cursor:pointer}
+button:hover{background:#1d4ed8}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.bar{height:12px;background:#334155;border-radius:999px;overflow:hidden}
+.fill{height:100%;background:#22c55e;transition:width .6s}
+.metric{font-size:14px}
+h1,h2,h3{margin-top:0}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const companies=[
+{industry:"Electronics",product:"Smartphones",countries:"India, UAE, Germany",demand:"High"},
+{industry:"Food",product:"Organic Snacks",countries:"India, Nepal",demand:"Medium"},
+{industry:"Fashion",product:"Sports Shoes",countries:"USA, UK, India",demand:"High"},
+{industry:"Pharma",product:"Medicines",countries:"India, Africa",demand:"Critical"}
+];
+const explain={
+supplier:"Suppliers provide raw materials. One supplier is cheaper but risky. Multiple suppliers improve resilience but cost more.",
+factory:"Factory location affects manufacturing cost, taxes, labor, and delivery time.",
+warehouse:"Warehouses store products before customers receive them.",
+transport:"Transport changes speed, cost, and environmental impact.",
+inventory:"Inventory means how much stock you keep ready."
+}
+function rand(){return companies[Math.floor(Math.random()*companies.length)]}
+function Progress({label,val}){
+return <div className="metric"><b>{label}</b> {val}
+<div className="bar"><div className="fill" style={{width:val+"%"}}/></div></div>}
+function App(){
+const[newGame,setNew]=React.useState(rand());
+const[step,setStep]=React.useState(0);
+const[m,setM]=React.useState({cost:50,speed:50,risk:50,sat:50,sus:50});
+const[c,setC]=React.useState({});
+const choose=(k,v)=>{
+let x={...m};
+if(k==="supplier"){
+if(v==="Single"){x.cost+=10;x.risk+=20}else{x.cost-=5;x.risk-=15;x.sat+=10}
+}
+if(k==="factory"){
+if(v==="Near Market"){x.speed+=15;x.cost-=5}else{x.cost+=10;x.speed-=10}
+}
+if(k==="warehouse"){
+if(v==="Central"){x.cost+=5}else{x.speed+=10;x.cost-=5}
+}
+if(k==="transport"){
+if(v==="Air"){x.speed+=20;x.cost+=20;x.sus-=15}
+if(v==="Sea"){x.speed-=10;x.cost-=10;x.sus+=10}
+if(v==="Rail"){x.sus+=10;x.cost-=5}
+if(v==="Road"){x.speed+=5}
+}
+if(k==="inventory"){
+if(v==="Low"){x.cost+=10;x.risk+=15}
+if(v==="Balanced"){x.sat+=10}
+if(v==="High"){x.cost-=10;x.risk-=10}
+}
+Object.keys(x).forEach(i=>x[i]=Math.max(0,Math.min(100,x[i])));
+setM(x);setC({...c,[k]:v});setStep(step+1);
+}
+const score=Math.round((100-m.cost+m.speed+100-m.risk+m.sat+m.sus)/5);
+if(step===0)return <div className="container"><div className="card"><h1>Supply Chain Builder</h1><p>A supply chain is the journey of a product from raw material to the customer. Every decision changes cost, speed, risk and customer happiness.</p><button onClick={()=>setStep(1)}>Start Learning</button></div></div>;
+if(step===1)return <Screen title="Your Company"><p><b>Industry:</b> {newGame.industry}<br/><b>Product:</b> {newGame.product}<br/><b>Countries:</b> {newGame.countries}<br/><b>Demand:</b> {newGame.demand}</p><button onClick={()=>setStep(2)}>Build Supply Chain</button></Screen>;
+const metrics=<div className="grid">
+<Progress label="Cost Efficiency" val={100-m.cost}/>
+<Progress label="Delivery Speed" val={m.speed}/>
+<Progress label="Low Risk" val={100-m.risk}/>
+<Progress label="Customer Satisfaction" val={m.sat}/>
+<Progress label="Sustainability" val={m.sus}/>
+</div>;
+if(step===2)return <Screen title="Choose Suppliers">{metrics}<p>{explain.supplier}</p><button onClick={()=>choose("supplier","Single")}>Single Supplier</button><button onClick={()=>choose("supplier","Multiple")}>Multiple Suppliers</button></Screen>;
+if(step===3)return <Screen title="Factory Location">{metrics}<p>{explain.factory}</p><button onClick={()=>choose("factory","Near Market")}>Near Market</button><button onClick={()=>choose("factory","Low Cost Region")}>Low Cost Region</button></Screen>;
+if(step===4)return <Screen title="Warehouse Strategy">{metrics}<p>{explain.warehouse}</p><button onClick={()=>choose("warehouse","Central")}>Central Warehouse</button><button onClick={()=>choose("warehouse","Regional")}>Regional Warehouses</button></Screen>;
+if(step===5)return <Screen title="Transportation">{metrics}<p>{explain.transport}</p>{["Road","Rail","Sea","Air"].map(v=><button key={v} onClick={()=>choose("transport",v)}>{v}</button>)}</Screen>;
+if(step===6)return <Screen title="Inventory Strategy">{metrics}<p>{explain.inventory}</p>{["Low","Balanced","High"].map(v=><button key={v} onClick={()=>choose("inventory",v)}>{v}</button>)}</Screen>;
+return <div className="container">
+<div className="card">
+<h2>Executive Dashboard</h2>
+{metrics}
+<h3>Overall Supply Chain Score: {score}/100</h3>
+<p><b>Strengths:</b> {m.speed>60?"Fast delivery ":""}{m.sus>60?"Sustainable ":""}{m.sat>60?"Happy customers":""}</p>
+<p><b>Weaknesses:</b> {m.cost>60?"High cost ":""}{m.risk>60?"High risk":""}</p>
+<p><b>Biggest Risk:</b> {m.risk>60?"Supply disruption":"Demand fluctuations"}</p>
+<ul>
+<li>Diversify suppliers if risk is high.</li>
+<li>Use rail or sea where possible to improve sustainability.</li>
+<li>Maintain balanced inventory to avoid stockouts and excess stock.</li>
+</ul>
+<button onClick={()=>{setNew(rand());setM({cost:50,speed:50,risk:50,sat:50,sus:50});setC({});setStep(1);}}>Replay</button>
+</div>
+</div>;
+}
+function Screen({title,children}){return <div className="container"><div className="card"><h2>{title}</h2>{children}</div></div>}
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
