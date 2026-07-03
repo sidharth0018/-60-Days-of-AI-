@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Integrity Analyzer</title>
+<style>
+  :root{
+    --bg:#141210;
+    --bg2:#1c1815;
+    --card:#211c18;
+    --card2:#26201b;
+    --border:#3a2f26;
+    --text:#f2ece4;
+    --muted:#b3a89c;
+    --orange:#d97757;
+    --orange-light:#f0a684;
+    --orange-dim:rgba(217,119,87,0.15);
+    --green:#7cbf8a;
+    --red:#e07a6b;
+    --yellow:#e0b86b;
+    --radius:16px;
+    --shadow: 0 10px 40px rgba(0,0,0,0.4);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(217,119,87,0.08), transparent 40%),
+      radial-gradient(circle at 85% 100%, rgba(217,119,87,0.05), transparent 45%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Georgia', 'Iowan Old Style', 'Times New Roman', serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  .ui{font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;}
+  ::selection{background:var(--orange); color:#1a1310;}
+
+  .wrap{
+    max-width:900px;
+    margin:0 auto;
+    padding:32px 20px 100px;
+  }
+
+  header.top{
+    text-align:center;
+    margin-bottom:36px;
+    animation:fadeDown .7s ease;
+  }
+  header.top .kicker{
+    font-family:'Courier New', monospace;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--orange-light);
+    margin-bottom:10px;
+  }
+  header.top h1{
+    font-size:2.4rem;
+    margin:0 0 8px;
+    font-weight:700;
+    letter-spacing:-0.5px;
+  }
+  header.top p{
+    color:var(--muted);
+    font-size:1rem;
+    max-width:560px;
+    margin:0 auto;
+  }
+
+  @keyframes fadeDown{
+    from{opacity:0; transform:translateY(-14px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes fadeUp{
+    from{opacity:0; transform:translateY(18px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+  @keyframes popIn{
+    from{opacity:0; transform:scale(.96);}
+    to{opacity:1; transform:scale(1);}
+  }
+  @keyframes shimmer{
+    0%{background-position:-200% 0;}
+    100%{background-position:200% 0;}
+  }
+
+  .progress-track{
+    height:6px;
+    background:var(--card2);
+    border-radius:6px;
+    overflow:hidden;
+    margin-bottom:36px;
+    border:1px solid var(--border);
+  }
+  .progress-fill{
+    height:100%;
+    background:linear-gradient(90deg, var(--orange), var(--orange-light));
+    border-radius:6px;
+    transition:width .6s cubic-bezier(.4,0,.2,1);
+  }
+
+  .stepper{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin-bottom:30px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .step-dot{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:12px;
+    color:var(--muted);
+    padding:6px 12px;
+    border-radius:20px;
+    border:1px solid var(--border);
+    background:var(--card);
+    transition:all .3s ease;
+  }
+  .step-dot.active{
+    color:var(--orange-light);
+    border-color:var(--orange);
+    background:var(--orange-dim);
+  }
+  .step-dot.done{
+    color:var(--green);
+    border-color:rgba(124,191,138,0.4);
+  }
+
+  .metrics{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:12px;
+    margin-bottom:36px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .metric-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:14px 12px;
+    text-align:center;
+    transition:transform .3s ease, border-color .3s ease;
+  }
+  .metric-card:hover{
+    transform:translateY(-3px);
+    border-color:var(--orange);
+  }
+  .metric-label{
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .metric-value{
+    font-size:1.4rem;
+    font-weight:700;
+    color:var(--orange-light);
+  }
+  .metric-bar{
+    height:4px;
+    background:var(--bg2);
+    border-radius:4px;
+    margin-top:8px;
+    overflow:hidden;
+  }
+  .metric-bar-fill{
+    height:100%;
+    border-radius:4px;
+    transition:width .8s ease;
+  }
+
+  @media(max-width:640px){
+    .metrics{grid-template-columns:repeat(2,1fr);}
+  }
+
+  .card{
+    background:linear-gradient(160deg, var(--card), var(--card2));
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    padding:28px;
+    margin-bottom:24px;
+    box-shadow:var(--shadow);
+    animation:fadeUp .5s ease;
+  }
+  .card h2{
+    margin-top:0;
+    font-size:1.4rem;
+    color:var(--text);
+  }
+  .card h3{
+    color:var(--orange-light);
+    font-size:1rem;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    margin-bottom:6px;
+  }
+
+  .concept-box{
+    background:var(--orange-dim);
+    border-left:3px solid var(--orange);
+    padding:16px 18px;
+    border-radius:8px;
+    margin-bottom:22px;
+    font-size:.95rem;
+    color:#f0ded3;
+  }
+  .concept-box b{color:var(--orange-light);}
+
+  .article-mock{
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px;
+    margin:18px 0;
+  }
+  .article-mock .tag{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display:inline-block;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--muted);
+    background:var(--card);
+    padding:3px 10px;
+    border-radius:20px;
+    margin-bottom:12px;
+    border:1px solid var(--border);
+  }
+  .headline{
+    font-size:1.5rem;
+    font-weight:700;
+    line-height:1.3;
+    margin:0 0 14px;
+    color:var(--text);
+  }
+  .article-body{
+    color:var(--muted);
+    font-size:.98rem;
+  }
+  .social-post{
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:22px;
+    margin:18px 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .social-post .handle{
+    font-weight:700;
+    color:var(--orange-light);
+    margin-bottom:10px;
+    font-size:.9rem;
+  }
+  .social-post .caption{
+    font-size:1.05rem;
+    color:var(--text);
+  }
+
+  .highlight{
+    background:rgba(224,122,107,0.25);
+    color:var(--orange-light);
+    padding:1px 4px;
+    border-radius:4px;
+    font-weight:600;
+    cursor:help;
+    border-bottom:2px dotted var(--orange);
+  }
+
+  .btn-row{
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:18px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  button{
+    font-family:inherit;
+    cursor:pointer;
+    border:none;
+    border-radius:10px;
+    padding:12px 22px;
+    font-size:.95rem;
+    font-weight:600;
+    transition:all .2s ease;
+  }
+  .btn-primary{
+    background:linear-gradient(135deg, var(--orange), #c56744);
+    color:#1a1310;
+    box-shadow:0 4px 14px rgba(217,119,87,0.35);
+  }
+  .btn-primary:hover{
+    transform:translateY(-2px);
+    box-shadow:0 8px 20px rgba(217,119,87,0.45);
+  }
+  .btn-primary:disabled{
+    opacity:.4;
+    cursor:not-allowed;
+    transform:none;
+    box-shadow:none;
+  }
+  .btn-secondary{
+    background:var(--card2);
+    color:var(--text);
+    border:1px solid var(--border);
+  }
+  .btn-secondary:hover{
+    border-color:var(--orange);
+    color:var(--orange-light);
+  }
+  .choice-btn{
+    background:var(--card2);
+    color:var(--text);
+    border:1px solid var(--border);
+    padding:14px 20px;
+    flex:1;
+    min-width:120px;
+    text-align:center;
+  }
+  .choice-btn:hover{
+    border-color:var(--orange);
+    background:var(--orange-dim);
+    transform:translateY(-2px);
+  }
+  .choice-btn.selected{
+    background:var(--orange);
+    color:#1a1310;
+    border-color:var(--orange);
+  }
+
+  textarea, input[type=text]{
+    width:100%;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    border-radius:10px;
+    color:var(--text);
+    padding:12px 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-size:.95rem;
+    resize:vertical;
+    min-height:70px;
+  }
+  textarea:focus, input[type=text]:focus{
+    outline:none;
+    border-color:var(--orange);
+  }
+
+  .word-picker{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:10px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .word-chip{
+    background:var(--card2);
+    border:1px solid var(--border);
+    color:var(--muted);
+    padding:6px 12px;
+    border-radius:20px;
+    font-size:.85rem;
+    cursor:pointer;
+    transition:all .2s ease;
+  }
+  .word-chip:hover{border-color:var(--orange);}
+  .word-chip.picked{
+    background:var(--orange);
+    color:#1a1310;
+    border-color:var(--orange);
+  }
+
+  .reveal{
+    margin-top:22px;
+    padding-top:22px;
+    border-top:1px dashed var(--border);
+    animation:fadeUp .5s ease;
+  }
+  .score-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    background:var(--bg2);
+    border:1px solid var(--border);
+    padding:10px 18px;
+    border-radius:30px;
+    margin-bottom:16px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .score-badge .num{
+    font-size:1.6rem;
+    font-weight:800;
+    color:var(--orange-light);
+  }
+  .badge-row{
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-bottom:14px;
+  }
+  .pill{
+    font-size:.78rem;
+    padding:5px 12px;
+    border-radius:20px;
+    background:var(--card2);
+    border:1px solid var(--border);
+    color:var(--muted);
+  }
+  .pill.warn{color:var(--red); border-color:rgba(224,122,107,0.5);}
+  .pill.good{color:var(--green); border-color:rgba(124,191,138,0.5);}
+
+  .rewrite-box{
+    background:rgba(124,191,138,0.08);
+    border-left:3px solid var(--green);
+    padding:16px 18px;
+    border-radius:8px;
+    margin:16px 0;
+  }
+  .rewrite-box b{color:var(--green);}
+
+  .takeaway{
+    background:var(--orange-dim);
+    border-radius:10px;
+    padding:16px 18px;
+    margin-top:14px;
+    font-size:.95rem;
+  }
+  .takeaway b{color:var(--orange-light);}
+
+  .dash-hero{
+    text-align:center;
+    padding:40px 20px;
+  }
+  .big-score{
+    font-size:4.5rem;
+    font-weight:800;
+    background:linear-gradient(135deg, var(--orange-light), var(--orange));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .dash-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:18px;
+    margin-top:10px;
+  }
+  @media(max-width:640px){
+    .dash-grid{grid-template-columns:1fr;}
+  }
+  .habit-list{
+    list-style:none;
+    padding:0;
+    margin:0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  .habit-list li{
+    display:flex;
+    gap:12px;
+    padding:12px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .habit-list li:last-child{border-bottom:none;}
+  .habit-num{
+    flex-shrink:0;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    background:var(--orange-dim);
+    color:var(--orange-light);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.8rem;
+    font-weight:700;
+  }
+
+  .redflag-box{
+    background:rgba(224,122,107,0.1);
+    border:1px solid rgba(224,122,107,0.4);
+    border-radius:12px;
+    padding:18px;
+  }
+
+  footer.sig{
+    text-align:center;
+    color:var(--muted);
+    font-size:.8rem;
+    margin-top:40px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+
+  .fade-hidden{display:none;}
+
+  .spin-emoji{
+    display:inline-block;
+    animation:spin 2s linear infinite;
+  }
+  @keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">ABTalks · Media Literacy Lab</div>
+    <h1>🔎 Media Integrity Analyzer</h1>
+    <p>Learn to spot manipulation, hype, and emotional bait — by discovering it yourself, one scenario at a time.</p>
+  </header>
+
+  <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:8%"></div></div>
+
+  <div class="stepper ui" id="stepper"></div>
+
+  <div class="metrics ui" id="metrics"></div>
+
+  <div id="app"></div>
+
+  <footer class="sig">Built for self-paced media literacy practice · All scenarios are fictional and generated for learning purposes</footer>
+</div>
+
+<script>
+(function(){
+
+const headlineScenarios = [
+  {
+    tag:"BREAKING · Health",
+    headline:"Doctors HORRIFIED: This Common Breakfast Food Is 'Basically Poison,' New Study Claims",
+    body:"A new study out of a small regional university has sparked outrage after researchers linked moderate consumption of a popular breakfast cereal to unspecified 'long-term health concerns.' The study, which observed 40 participants over six weeks, did not establish causation but noted a correlation researchers described as 'worth investigating further.' Nutrition experts not involved in the study urged caution, noting the sample size was too small to draw firm conclusions.",
+    misleading: ["HORRIFIED","'Basically Poison,'"],
+    accuracy: 32,
+    explanation:"The headline uses shock words ('HORRIFIED', 'poison') that dramatically overstate a small, inconclusive 40-person study. The article itself admits no causation was established — the headline erases that nuance entirely to drive clicks.",
+    fairHeadline:"Small Study Finds Possible Link Between Cereal and Health Concerns — Experts Urge Caution",
+    takeaway:"Extreme emotional language in a headline is often a signal that the underlying evidence is thinner than it sounds. Always check the sample size and whether 'linked to' actually means 'causes.'"
+  },
+  {
+    tag:"TECH · Viral",
+    headline:"This One App Is Secretly Spying on 100 Million Users — And No One Is Talking About It",
+    body:"A popular productivity app has come under scrutiny after a security researcher found that it collects standard device diagnostics, a practice disclosed in the app's public privacy policy and consistent with most apps in its category. The company said the data is used to fix crashes and improve performance, and that it does not sell personal data to third parties. The researcher who flagged the issue said the practice was 'fairly standard, but worth users knowing about.'",
+    misleading: ["Secretly Spying","no one is talking about it"],
+    accuracy: 28,
+    explanation:"The word 'spying' implies covert surveillance, but the article confirms this data collection was publicly disclosed in the privacy policy — the opposite of secret. 'No one is talking about it' is also false framing designed to manufacture urgency.",
+    fairHeadline:"App's Standard Diagnostic Data Collection Draws Renewed Attention From Security Researcher",
+    takeaway:"Words like 'secretly' and 'no one is talking about it' are common manufactured-urgency tactics. Check whether the practice was actually disclosed before assuming a cover-up."
+  },
+  {
+    tag:"FINANCE · Trending",
+    headline:"This 24-Year-Old Turned $500 Into $2 Million — Here's the 'Secret' Banks Don't Want You to Know",
+    body:"A young investor gained online attention after posting about early gains in a volatile asset. In follow-up interviews, the individual acknowledged the results came from a high-risk, high-volatility trade during an unusually favorable market window, and cautioned that most attempts at similar trades result in losses. Financial advisors interviewed for this piece emphasized that such outcomes are rare exceptions, not replicable strategies.",
+    misleading:["'Secret' Banks Don't Want You to Know"],
+    accuracy: 22,
+    explanation:"There is no 'secret' — the article itself says this was a rare, high-risk outcome the investor doesn't recommend repeating. Framing normal market volatility as a hidden banking conspiracy is a classic engagement-bait technique.",
+    fairHeadline:"Young Investor's Rare High-Risk Trade Paid Off — Advisors Warn It's Not a Repeatable Strategy",
+    takeaway:"Phrases like 'what banks don't want you to know' almost always signal financial clickbait. Real financial institutions don't have secret strategies being hidden from the public — legitimate advice is rarely dramatic."
+  }
+];
+
+const emotionScenarios = [
+  {
+    tag:"Instagram Reel Caption",
+    handle:"@dreamlifewithcoach",
+    caption:"POV: You're still scrolling instead of building the life you deserve. While you 'think about it,' someone else is already living YOUR dream. The window is closing. Don't say I didn't warn you. 🔥⏳",
+    emotionalWords:["still scrolling","YOUR dream","window is closing","Don't say I didn't warn you"],
+    audience:"Young adults feeling behind in career, finances, or life milestones — especially those scrolling social media late at night.",
+    intendedEmotion:"Urgency mixed with guilt and FOMO (fear of missing out), designed to short-circuit careful decision-making.",
+    technique:"Scarcity + Guilt-Tripping — implies a closing window of opportunity and frames inaction as a personal failure, pushing viewers toward an impulsive click (often to a paid course or product).",
+    neutralRewrite:"Building toward long-term goals takes consistent effort over time. If you've been meaning to start something, a small first step today can help — there's no single 'window' that determines your future.",
+    takeaway:"Manufactured urgency ('window is closing') and guilt ('don't say I didn't warn you') are common sales tactics. Real opportunities rarely vanish in the next 24 hours — pause before reacting to time pressure online."
+  },
+  {
+    tag:"Social Post · Trending",
+    handle:"@newsflash.now",
+    caption:"They don't want you to see this. Local family loses EVERYTHING overnight because of a rule you've probably never even heard of. Share before this gets taken down. 😡",
+    emotionalWords:["They don't want you to see this","loses EVERYTHING","before this gets taken down"],
+    audience:"Users who react strongly to injustice narratives and are likely to share content quickly without verifying it, amplifying reach.",
+    intendedEmotion:"Outrage and protective anger, paired with urgency to share before 'losing access' to the content.",
+    technique:"Outrage Bait + Manufactured Suppression — implies hidden censorship ('taken down') to boost shares and make the claim feel more credible and urgent than it is.",
+    neutralRewrite:"A family reportedly experienced a significant financial loss connected to a lesser-known regulation. Details and sourcing for this claim are unclear and worth verifying before sharing.",
+    takeaway:"Posts urging you to 'share before it's deleted' are designed to bypass your critical thinking through urgency and outrage. Pause and verify the source before resharing emotionally charged claims."
+  },
+  {
+    tag:"Article Excerpt · Lifestyle",
+    handle:"Wellness Weekly (Sponsored Content)",
+    caption:"Every day you wait is another day your body ages faster than it should. Thousands have already made the switch — will you be the one left behind, watching everyone else glow while you stay the same?",
+    emotionalWords:["ages faster than it should","left behind","glow while you stay the same"],
+    audience:"Adults with insecurities about aging or appearance, particularly those exposed to frequent comparison-driven content.",
+    intendedEmotion:"Insecurity and social comparison anxiety, pushing toward a purchase to 'catch up' with an implied peer group.",
+    technique:"Social Proof + Fear of Inadequacy — claims 'thousands have already made the switch' to create peer pressure, paired with appearance-based fear to drive urgency.",
+    neutralRewrite:"This product is being marketed with claims about anti-aging benefits. As with most wellness products, individual results vary and such claims are typically not independently verified.",
+    takeaway:"Beware of ads that frame a purchase as the only way to avoid being 'left behind.' Genuine product value doesn't need to be sold through insecurity or comparison to others."
+  }
+];
+
+let state = {
+  step: 1,
+  headlineIdx: Math.floor(Math.random()*headlineScenarios.length),
+  emotionIdx: Math.floor(Math.random()*emotionScenarios.length),
+  clickChoice: null,
+  userMisleadingGuess: "",
+  pickedWords: [],
+  feelingText: "",
+  metrics: { headlineAccuracy: null, sourceReliability: 62, emotionalManipulation: null, audienceTargeting: null }
+};
+
+const app = document.getElementById('app');
+const stepperEl = document.getElementById('stepper');
+const metricsEl = document.getElementById('metrics');
+const progressFill = document.getElementById('progressFill');
+
+const steps = [
+  {id:1,label:"Welcome"},
+  {id:2,label:"Concept: Headlines"},
+  {id:3,label:"Challenge 1"},
+  {id:4,label:"Reveal"},
+  {id:5,label:"Concept: Emotion"},
+  {id:6,label:"Challenge 2"},
+  {id:7,label:"Reveal"},
+  {id:8,label:"Dashboard"},
+];
+
+function renderStepper(){
+  stepperEl.innerHTML = steps.map(s=>{
+    let cls = "step-dot";
+    if(s.id < state.step) cls += " done";
+    else if(s.id === state.step) cls += " active";
+    return `<div class="${cls}">${s.id < state.step ? '✓' : s.id}</div>`;
+  }).join('');
+  progressFill.style.width = (state.step/8*100) + "%";
+}
+
+function metricBar(val, color){
+  if(val===null) return `<div class="metric-value">—</div><div class="metric-bar"><div class="metric-bar-fill" style="width:0%;background:${color}"></div></div>`;
+  return `<div class="metric-value">${val}%</div><div class="metric-bar"><div class="metric-bar-fill" style="width:${val}%;background:${color}"></div></div>`;
+}
+
+function renderMetrics(){
+  const m = state.metrics;
+  metricsEl.innerHTML = `
+    <div class="metric-card"><div class="metric-label">Headline Accuracy</div>${metricBar(m.headlineAccuracy,'var(--orange)')}</div>
+    <div class="metric-card"><div class="metric-label">Source Reliability</div>${metricBar(m.sourceReliability,'var(--yellow)')}</div>
+    <div class="metric-card"><div class="metric-label">Emotional Manipulation</div>${metricBar(m.emotionalManipulation,'var(--red)')}</div>
+    <div class="metric-card"><div class="metric-label">Audience Targeting</div>${metricBar(m.audienceTargeting,'var(--green)')}</div>
+  `;
+}
+
+function goTo(step){
+  state.step = step;
+  render();
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function highlightText(text, phrases){
+  let out = text;
+  phrases.forEach(p=>{
+    const re = new RegExp(p.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'g');
+    out = out.replace(re, `<span class="highlight" title="Flagged: exaggerated or manipulative phrasing">${p}</span>`);
+  });
+  return out;
+}
+
+function render(){
+  renderStepper();
+  renderMetrics();
+
+  if(state.step===1) return renderIntro();
+  if(state.step===2) return renderHeadlineExplain();
+  if(state.step===3) return renderHeadlineChallenge();
+  if(state.step===4) return renderHeadlineReveal();
+  if(state.step===5) return renderEmotionExplain();
+  if(state.step===6) return renderEmotionChallenge();
+  if(state.step===7) return renderEmotionReveal();
+  if(state.step===8) return renderDashboard();
+}
+
+function renderIntro(){
+  app.innerHTML = `
+    <div class="card">
+      <h2>Welcome to the Lab 🧪</h2>
+      <p>You're about to go through two short, interactive challenges designed to sharpen the way you read headlines and social content. This isn't a quiz you can "fail" — it's a guided discovery experience.</p>
+      <div class="concept-box">
+        <b>Why this matters:</b> Every day, algorithms show you content optimized for clicks and engagement, not accuracy. Learning to spot the techniques behind that content is one of the most useful skills you can build for navigating the internet.
+      </div>
+      <p style="color:var(--muted); font-size:.9rem;">You'll analyze a fictional headline, then a fictional social post — thinking through each one before we reveal the analysis.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(2)">Begin →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderHeadlineExplain(){
+  app.innerHTML = `
+    <div class="card">
+      <h2>Challenge 1: Headline Detective 🕵️</h2>
+      <div class="concept-box">
+        <b>The concept:</b> Headlines are often written by editors trying to maximize clicks, not necessarily by the journalist who wrote the story. This can create a gap between what a headline implies and what the article actually says.
+        <br><br>
+        <b>Why it matters:</b> Most people only read the headline — studies suggest a large share of shared articles are never even opened. That means misleading headlines shape public opinion even when the article itself is more careful and nuanced.
+        <br><br>
+        <b>Everyday life:</b> This shows up constantly in news apps, YouTube thumbnails, and shared links in group chats — a shocking headline spreads far faster than its more boring, accurate correction.
+      </div>
+      <p>Below, you'll see a fictional headline and article. Read them carefully, then answer honestly.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(3)">Show me the headline →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderHeadlineChallenge(){
+  const s = headlineScenarios[state.headlineIdx];
+  app.innerHTML = `
+    <div class="card">
+      <h2>Read this carefully</h2>
+      <div class="article-mock">
+        <div class="tag">${s.tag}</div>
+        <div class="headline">${s.headline}</div>
+        <div class="article-body">${s.body}</div>
+      </div>
+
+      <h3>Would you click this?</h3>
+      <div class="btn-row" id="clickChoiceRow">
+        ${["Yes","Maybe","No"].map(opt=>`<button class="choice-btn" data-val="${opt}" onclick="__app.selectClick('${opt}')">${opt}</button>`).join('')}
+      </div>
+
+      <h3 style="margin-top:24px;">Which parts feel exaggerated or misleading?</h3>
+      <p style="color:var(--muted); font-size:.85rem; margin-top:-6px;">Type a word or phrase from the headline that feels off to you.</p>
+      <input type="text" id="misleadInput" placeholder="e.g. a specific word or phrase..." value="${state.userMisleadingGuess}" oninput="__app.updateGuess(this.value)">
+
+      <div class="btn-row">
+        <button class="btn-primary" id="revealBtn1" onclick="__app.goTo(4)" ${state.clickChoice ? '' : 'disabled'}>Reveal Analysis →</button>
+      </div>
+    </div>
+  `;
+  if(state.clickChoice){
+    document.querySelectorAll('#clickChoiceRow .choice-btn').forEach(b=>{
+      if(b.dataset.val === state.clickChoice) b.classList.add('selected');
+    });
+  }
+}
+
+function renderHeadlineReveal(){
+  const s = headlineScenarios[state.headlineIdx];
+  state.metrics.headlineAccuracy = s.accuracy;
+  renderMetrics();
+
+  const scoreColor = s.accuracy < 40 ? 'var(--red)' : s.accuracy < 70 ? 'var(--yellow)' : 'var(--green)';
+
+  app.innerHTML = `
+    <div class="card">
+      <h2>Analysis: Headline Accuracy Score</h2>
+      <div class="score-badge"><span class="num" style="color:${scoreColor}">${s.accuracy}%</span><span style="color:var(--muted); font-size:.85rem;">accurate to the actual article</span></div>
+
+      <div class="badge-row">
+        <span class="pill ${state.clickChoice==='Yes' ? 'warn':'good'}">You said: ${state.clickChoice}</span>
+        ${state.userMisleadingGuess ? `<span class="pill">Your guess: "${state.userMisleadingGuess}"</span>` : ''}
+      </div>
+
+      <h3>Headline with flagged phrases</h3>
+      <div class="article-mock">
+        <div class="tag">${s.tag}</div>
+        <div class="headline">${highlightText(s.headline, s.misleading)}</div>
+      </div>
+
+      <h3>Why this is misleading</h3>
+      <p style="color:var(--muted);">${s.explanation}</p>
+
+      <div class="rewrite-box">
+        <b>A fairer headline would be:</b><br>
+        "${s.fairHeadline}"
+      </div>
+
+      <div class="takeaway">
+        <b>Key takeaway:</b> ${s.takeaway}
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(5)">Continue to Challenge 2 →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderEmotionExplain(){
+  app.innerHTML = `
+    <div class="card">
+      <h2>Challenge 2: Emotion Detector 💭</h2>
+      <div class="concept-box">
+        <b>The concept:</b> Content creators and advertisers often craft language specifically to trigger an emotional reaction — fear, urgency, outrage, envy — because emotional content spreads faster and drives more action than neutral information.
+        <br><br>
+        <b>Why it matters:</b> When you're in a heightened emotional state, you're less likely to fact-check or think critically. That's exactly the state a lot of viral content and advertising is designed to put you in.
+        <br><br>
+        <b>Everyday life:</b> This shows up in influencer captions, ads disguised as posts, and "share this before it's too late" content — all engineered to get a reaction before you get a chance to think.
+      </div>
+      <p>You'll read a fictional post below. Notice how it makes you feel before you analyze it.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(6)">Show me the post →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderEmotionChallenge(){
+  const s = emotionScenarios[state.emotionIdx];
+  const words = s.emotionalWords;
+  app.innerHTML = `
+    <div class="card">
+      <h2>Read this post</h2>
+      <div class="social-post">
+        <div class="handle">${s.handle}</div>
+        <div class="tag">${s.tag}</div>
+        <div class="caption" style="margin-top:10px;">${s.caption}</div>
+      </div>
+
+      <h3>How did this make you feel?</h3>
+      <textarea id="feelingInput" placeholder="e.g. anxious, excited, guilty, annoyed..." oninput="__app.updateFeeling(this.value)">${state.feelingText}</textarea>
+
+      <h3 style="margin-top:20px;">Which words or phrases influenced that feeling?</h3>
+      <p style="color:var(--muted); font-size:.85rem; margin-top:-6px;">Tap any that stood out to you.</p>
+      <div class="word-picker" id="wordPicker">
+        ${words.map((w,i)=>`<div class="word-chip ${state.pickedWords.includes(w)?'picked':''}" onclick="__app.toggleWord('${w.replace(/'/g,"\\'")}')">${w}</div>`).join('')}
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(7)" ${state.feelingText.trim() ? '' : 'disabled'} id="revealBtn2">Reveal Analysis →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderEmotionReveal(){
+  const s = emotionScenarios[state.emotionIdx];
+  const manipulationScore = 78;
+  const audienceScore = 85;
+  state.metrics.emotionalManipulation = manipulationScore;
+  state.metrics.audienceTargeting = audienceScore;
+  renderMetrics();
+
+  app.innerHTML = `
+    <div class="card">
+      <h2>Analysis: Emotional Manipulation</h2>
+
+      <div class="badge-row">
+        <span class="pill warn">Manipulation Score: ${manipulationScore}%</span>
+        <span class="pill">Your feeling: "${state.feelingText}"</span>
+        <span class="pill">${state.pickedWords.length} phrase(s) flagged by you</span>
+      </div>
+
+      <h3>Post with emotional triggers highlighted</h3>
+      <div class="social-post">
+        <div class="handle">${s.handle}</div>
+        <div class="caption" style="margin-top:10px;">${highlightText(s.caption, s.emotionalWords)}</div>
+      </div>
+
+      <h3>Target audience</h3>
+      <p style="color:var(--muted);">${s.audience}</p>
+
+      <h3>Intended emotional response</h3>
+      <p style="color:var(--muted);">${s.intendedEmotion}</p>
+
+      <h3>Manipulation technique</h3>
+      <p style="color:var(--muted);">${s.technique}</p>
+
+      <div class="rewrite-box">
+        <b>Neutral, de-hyped rewrite:</b><br>
+        "${s.neutralRewrite}"
+      </div>
+
+      <div class="takeaway">
+        <b>Key takeaway:</b> ${s.takeaway}
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.goTo(8)">See my Media Integrity Dashboard →</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderDashboard(){
+  const m = state.metrics;
+  const overall = Math.round((m.headlineAccuracy + m.sourceReliability + (100-m.emotionalManipulation) + (100-m.audienceTargeting)) / 4);
+  const scoreColor = overall < 40 ? 'var(--red)' : overall < 70 ? 'var(--yellow)' : 'var(--green)';
+
+  const hs = headlineScenarios[state.headlineIdx];
+  const es = emotionScenarios[state.emotionIdx];
+
+  app.innerHTML = `
+    <div class="card">
+      <div class="dash-hero">
+        <div class="kicker ui" style="color:var(--muted); letter-spacing:2px; font-size:11px; text-transform:uppercase; margin-bottom:10px;">Media Integrity Dashboard</div>
+        <div class="big-score">${overall}</div>
+        <div style="color:var(--muted);">Overall Media Integrity Awareness Score</div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card" style="margin:0;">
+          <h3>What you learned</h3>
+          <p style="color:var(--muted); font-size:.92rem;">You practiced spotting the gap between a sensational headline and the calmer reality of the article, and identified language engineered to trigger urgency, guilt, or outrage in social content.</p>
+        </div>
+        <div class="card redflag-box" style="margin:0;">
+          <h3 style="color:var(--red);">Biggest red flag spotted</h3>
+          <p style="color:var(--muted); font-size:.92rem;">In the headline challenge, the phrase(s) <b style="color:var(--orange-light);">${hs.misleading.join(', ')}</b> were designed to provoke reaction rather than inform. In the emotion challenge, <b style="color:var(--orange-light);">${es.technique.split('—')[0].trim()}</b> was used to bypass careful thinking.</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin:24px 0 0;">
+        <h3>Three practical media literacy habits</h3>
+        <ul class="habit-list">
+          <li><div class="habit-num">1</div><div><b>Pause before you react.</b> If a headline or post makes you feel a strong emotion instantly, that's often by design — take a breath before sharing or clicking.</div></li>
+          <li><div class="habit-num">2</div><div><b>Read past the headline.</b> Check whether the article actually supports the claim in the title, especially around words like "secret," "shocking," or "banned."</div></li>
+          <li><div class="habit-num">3</div><div><b>Ask who benefits.</b> Consider who gains from you feeling urgency, fear, or envy — a click, a sale, or a share — before you act on that feeling.</div></li>
+        </ul>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn-primary" onclick="__app.restart()">🔁 Replay with new scenarios</button>
+      </div>
+    </div>
+  `;
+}
+
+const __app = {
+  goTo(step){ goTo(step); },
+  selectClick(val){
+    state.clickChoice = val;
+    document.querySelectorAll('#clickChoiceRow .choice-btn').forEach(b=>{
+      b.classList.toggle('selected', b.dataset.val === val);
+    });
+    const btn = document.getElementById('revealBtn1');
+    if(btn) btn.disabled = false;
+  },
+  updateGuess(val){ state.userMisleadingGuess = val; },
+  updateFeeling(val){
+    state.feelingText = val;
+    const btn = document.getElementById('revealBtn2');
+    if(btn) btn.disabled = !val.trim();
+  },
+  toggleWord(w){
+    const idx = state.pickedWords.indexOf(w);
+    if(idx>-1) state.pickedWords.splice(idx,1);
+    else state.pickedWords.push(w);
+    document.querySelectorAll('#wordPicker .word-chip').forEach(chip=>{
+      chip.classList.toggle('picked', state.pickedWords.includes(chip.textContent));
+    });
+  },
+  restart(){
+    let newHeadlineIdx, newEmotionIdx;
+    do { newHeadlineIdx = Math.floor(Math.random()*headlineScenarios.length); } while(newHeadlineIdx === state.headlineIdx && headlineScenarios.length>1);
+    do { newEmotionIdx = Math.floor(Math.random()*emotionScenarios.length); } while(newEmotionIdx === state.emotionIdx && emotionScenarios.length>1);
+    state = {
+      step: 1,
+      headlineIdx: newHeadlineIdx,
+      emotionIdx: newEmotionIdx,
+      clickChoice: null,
+      userMisleadingGuess: "",
+      pickedWords: [],
+      feelingText: "",
+      metrics: { headlineAccuracy: null, sourceReliability: 62, emotionalManipulation: null, audienceTargeting: null }
+    };
+    render();
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+};
+window.__app = __app;
+
+render();
+
+})();
+</script>
+</body>
+</html>
