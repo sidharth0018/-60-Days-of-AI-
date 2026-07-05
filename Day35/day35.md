@@ -1,40 +1,34 @@
-# 🧩 Prompt Puzzle — Master AI Prompting Through Play
-### Day 35 of #ABTalks60DayClaudeAIChallenge
+# Day 35: Prompt Puzzle — Master AI Prompting Through Play
 
-An interactive, single-file HTML game that teaches AI prompt engineering through drag-and-drop puzzles, prompt-cleaning challenges, and "choose the best prompt" quizzes — built entirely offline with vanilla JS.
+**Challenge Day:** 35 / 60
+**Domain Focus:** Data Analysis / Data Science (Intermediate difficulty scenarios)
+**Build Type:** Single-file HTML/CSS/vanilla JS interactive game
+**Time Spent:** ~[1392sec]
 
-## 🎯 What It Does
-Prompt Puzzle turns prompt engineering theory into a playable game. Users pick a domain (Data Analysis / Data Science, Marketing, Software Dev, Creative Writing) and a difficulty level, then work through 6 scenarios across 3 challenge types:
+## 🎯 Goal
+Build an offline, single-file HTML application that teaches prompt engineering through gamified challenges, specifically using Data Analyst / Data Science scenarios (data cleaning, EDA, SQL, model explanation, KPI design, A/B testing) — both to sharpen my own prompting skills and to have a portfolio piece that shows applied product thinking.
 
-1. **Build the Prompt** — drag correct prompt blocks into place while avoiding distractor blocks that sound helpful but weaken output quality.
-2. **Clean the Prompt** — take a bloated, over-engineered prompt and strip it down to its essential, high-signal components.
-3. **Choose the Best Prompt** — pick the optimized version from a set of weak / optimized / over-engineered options.
+## 🛠️ What I Built
+- 6 randomized scenarios covering: sales data cleaning, EDA summaries, SQL query generation, predictive model explanation, dashboard KPI definition, and A/B test interpretation
+- 3 challenge types: Build the Prompt (drag-and-drop), Clean the Prompt (strip over-engineered prompts), Choose the Best Prompt (multiple choice)
+- Live scoring engine: accuracy, time, moves, wrong placements, hints used, optimization bonus
+- Full "Prompt Performance Report" screen: score, rating, rank, Prompt DNA radar-style tags, personalized feedback, next milestone, and a final optimized prompt example
+- Premium dark UI with gradient accents, floating toast notifications, hover/drag micro-interactions, and animated progress bar
 
-At the end, users get a full **Prompt Performance Report**: score, rating, rank, a "Prompt DNA" visualization (Specificity, Structure, Efficiency, Speed), personalized feedback, and a final optimized prompt example.
+## 🐛 Bug I Hit & Fixed
+Ran into a blank white page after first generation — turned out to be a single incorrectly escaped apostrophe inside a JS string that broke the whole `<script>` block. Diagnosed it by extracting the JS with a Python regex and running `node --check` on it, found the exact line/character, and fixed it by switching to double-quoted strings. Full details in `LEARNINGS.md`.
 
-## 🖥️ Tech Stack
-- Pure HTML, CSS, vanilla JavaScript (no frameworks, no CDN dependencies)
-- Single-file architecture — works fully offline, just open the `.html` file
-- Native drag-and-drop API + click-to-add fallback for mobile
-- Object-based scenario data structure for easy content scaling
+## 💡 Key Prompt Engineering Principles Reinforced
+- **Specificity + Context** beats vague asks (naming exact columns/tables changes everything)
+- **Role framing** calibrates tone and depth ("act as a senior data analyst" vs no role)
+- **Audience framing** determines jargon level and length
+- **Output format requests** (numbered lists, word limits, code w/ comments) make output immediately usable
+- **Decision-oriented prompting** (ask for a recommendation, not just analysis) drives action
 
-## 🎮 How to Use
-1. Download `prompt-puzzle.html`
-2. Open it in any browser — no server, no internet required
-3. Answer the two setup questions (domain + difficulty)
-4. Play through all scenarios and review your Performance Report
-5. Hit Replay for a freshly randomized run
+## 🔗 Links
+- Live file: `prompt-puzzle.html` (open directly in any browser, works fully offline)
+- Part of: [60-Day Claude AI Mastery Challenge](https://github.com/sidharth0018) by Sidh
 
-## 📊 Scoring System
-- **Accuracy** — correctness of block placement / prompt choice
-- **Time** — small penalty for slow decisions
-- **Moves** — total interactions tracked
-- **Wrong Placements** — distractor blocks dragged in (penalty)
-- **Hints Used** — optional help at a point cost
-- **Optimization Bonus** — extra points for clean, hint-free, mistake-free runs
-
-## 🧠 Why I Built This
-As someone actively prepping for Data Analyst / Data Science roles, I wanted a tool that makes the *difference between a weak prompt and an optimized one* concrete and visceral — not just theoretical. Building it also forced me to articulate prompt engineering principles (specificity, role framing, output formatting, audience framing) clearly enough to teach them.
-
-## 🔗 Part of the Challenge
-Day 35 of my 60-Day Claude AI Mastery Challenge — one AI-assisted, fully documented app every day.
+## ⏭️ Next Steps
+- Consider adding a Power BI/Tableau-specific scenario set (direct skill-gap practice)
+- Possibly extract the scenario-authoring pattern into a reusable "scenario builder" skill for future challenge days
