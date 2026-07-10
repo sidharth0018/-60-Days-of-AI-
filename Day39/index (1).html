@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PDF Splitter & Merger Lite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+<style>
+body{margin:0;font-family:Inter,sans-serif;background:#0f172a;color:#fff}
+header{padding:24px;text-align:center;background:#111827}
+.container{max-width:900px;margin:auto;padding:24px}
+.card{background:#1e293b;padding:20px;border-radius:16px;margin:20px 0}
+input,button{padding:10px;border-radius:8px;border:none}
+input{width:100%;margin:8px 0}
+button{background:#3b82f6;color:#fff;font-weight:700;cursor:pointer}
+small{color:#cbd5e1}
+</style>
+</head>
+<body>
+<header><h1>PDF Splitter & Merger Lite</h1><p>Client-side processing with pdf-lib</p></header>
+<div class="container">
+<div class="card">
+<h2>Split PDF</h2>
+<input type="file" id="splitFile" accept="application/pdf">
+<input type="text" id="pages" placeholder="Pages e.g. 1,3,5-8">
+<button onclick="splitPDF()">Split & Download</button>
+<small>Supports comma-separated pages and ranges.</small>
+</div>
+
+<div class="card">
+<h2>Merge PDFs</h2>
+<input type="file" id="mergeFiles" multiple accept="application/pdf">
+<button onclick="mergePDFs()">Merge & Download</button>
+</div>
+</div>
+
+<script>
+async function splitPDF(){
+ const file=document.getElementById("splitFile").files[0];
+ if(!file){alert("Select a PDF.");return;}
+ const text=document.getElementById("pages").value.trim();
+ if(!text){alert("Enter pages.");return;}
+ const bytes=await file.arrayBuffer();
+ const src=await PDFLib.PDFDocument.load(bytes);
+ const out=await PDFLib.PDFDocument.create();
+ let list=[];
+ text.split(",").forEach(p=>{
+   p=p.trim();
+   if(p.includes("-")){
+      let[a,b]=p.split("-").map(Number);
+      for(let i=a;i<=b;i++) list.push(i);
+   }else list.push(Number(p));
+ });
+ list=[...new Set(list)].filter(n=>n>=1&&n<=src.getPageCount());
+ const copied=await out.copyPages(src,list.map(x=>x-1));
+ copied.forEach(p=>out.addPage(p));
+ const pdf=await out.save();
+ download(pdf,"split.pdf");
+}
+async function mergePDFs(){
+ const files=[...document.getElementById("mergeFiles").files];
+ if(!files.length){alert("Select PDFs.");return;}
+ const out=await PDFLib.PDFDocument.create();
+ for(const f of files){
+   const src=await PDFLib.PDFDocument.load(await f.arrayBuffer());
+   const pages=await out.copyPages(src,src.getPageIndices());
+   pages.forEach(p=>out.addPage(p));
+ }
+ download(await out.save(),"merged.pdf");
+}
+function download(bytes,name){
+ const blob=new Blob([bytes],{type:"application/pdf"});
+ const a=document.createElement("a");
+ a.href=URL.createObjectURL(blob);
+ a.download=name;
+ a.click();
+ URL.revokeObjectURL(a.href);
+}
+</script>
+</body>
+</html>
