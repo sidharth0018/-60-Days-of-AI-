@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Learning Studio — Pandas DataFrames</title>
+<style>
+:root{
+  --bg:#0f1117; --bg2:#161925; --card:#1c2030; --card2:#232842;
+  --border:#2c3149; --text:#e8eaf2; --text-dim:#a2a8c0; --text-dim2:#6f7590;
+  --accent:#7c5cff; --accent2:#22d3ee; --accent3:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+  --grad1:linear-gradient(135deg,#7c5cff,#22d3ee);
+  --grad2:linear-gradient(135deg,#22c55e,#22d3ee);
+  --shadow:0 10px 30px rgba(0,0,0,.35);
+  --radius:16px;
+}
+[data-theme="light"]{
+  --bg:#f5f6fb; --bg2:#ffffff; --card:#ffffff; --card2:#eef0fb;
+  --border:#dde1f3; --text:#1c2030; --text-dim:#4a4f6b; --text-dim2:#7a7f9a;
+  --shadow:0 10px 30px rgba(30,30,60,.08);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+body{
+  font-family:'Segoe UI',system-ui,-apple-system,sans-serif;
+  background:var(--bg); color:var(--text);
+  transition:background .3s,color .3s;
+  min-height:100vh;
+  line-height:1.6;
+}
+::selection{background:var(--accent); color:#fff;}
+.container{max-width:980px; margin:0 auto; padding:20px;}
+/* Top bar */
+.topbar{
+  position:sticky; top:0; z-index:100;
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  backdrop-filter:blur(10px);
+}
+.topbar-inner{
+  max-width:980px; margin:0 auto; padding:12px 20px;
+  display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;
+}
+.brand{display:flex; align-items:center; gap:10px; font-weight:700; font-size:1.05rem;}
+.brand-icon{
+  width:34px; height:34px; border-radius:9px; background:var(--grad1);
+  display:flex; align-items:center; justify-content:center; font-size:18px;
+}
+.topbar-right{display:flex; align-items:center; gap:14px;}
+.progress-pill{
+  display:flex; align-items:center; gap:8px; font-size:.8rem; color:var(--text-dim);
+  background:var(--card2); padding:6px 12px; border-radius:20px; border:1px solid var(--border);
+}
+.progress-bar-mini{width:80px; height:6px; background:var(--border); border-radius:4px; overflow:hidden;}
+.progress-bar-mini-fill{height:100%; background:var(--grad1); width:0%; transition:width .4s;}
+.theme-toggle{
+  cursor:pointer; width:38px; height:38px; border-radius:50%; border:1px solid var(--border);
+  background:var(--card2); display:flex; align-items:center; justify-content:center; font-size:16px;
+  transition:transform .2s;
+}
+.theme-toggle:hover{transform:scale(1.08);}
+/* Hero / Intro */
+.hero{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  padding:32px; margin:24px 0; box-shadow:var(--shadow); position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; top:-60px; right:-60px; width:220px; height:220px;
+  background:var(--grad1); opacity:.15; border-radius:50%; filter:blur(20px);
+}
+.badge{
+  display:inline-block; background:var(--grad1); color:#fff; font-size:.72rem; font-weight:700;
+  padding:5px 12px; border-radius:20px; letter-spacing:.5px; text-transform:uppercase; margin-bottom:14px;
+}
+.hero h1{font-size:1.9rem; margin-bottom:10px; line-height:1.25;}
+.hero p.subtitle{color:var(--text-dim); font-size:1rem; max-width:640px; margin-bottom:20px;}
+.info-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin:22px 0;}
+.info-card{
+  background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:14px 16px;
+}
+.info-card .label{font-size:.72rem; color:var(--text-dim2); text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;}
+.info-card .value{font-size:.92rem; font-weight:600;}
+.obj-list{list-style:none; margin:16px 0;}
+.obj-list li{
+  display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; font-size:.93rem; color:var(--text-dim);
+}
+.obj-list li::before{content:'✓'; color:var(--accent3); font-weight:900; flex-shrink:0;}
+.reward-box{
+  margin-top:20px; background:var(--card2); border:1px dashed var(--accent); border-radius:12px;
+  padding:16px; display:flex; gap:14px; align-items:center;
+}
+.reward-icon{font-size:28px;}
+.reward-box .rtext{font-size:.87rem; color:var(--text-dim);}
+.btn{
+  display:inline-flex; align-items:center; gap:8px; background:var(--grad1); color:#fff; border:none;
+  padding:13px 26px; border-radius:10px; font-size:.95rem; font-weight:700; cursor:pointer;
+  transition:transform .15s, box-shadow .15s; box-shadow:0 6px 18px rgba(124,92,255,.35);
+}
+.btn:hover{transform:translateY(-2px); box-shadow:0 10px 24px rgba(124,92,255,.45);}
+.btn:disabled{opacity:.4; cursor:not-allowed; transform:none; box-shadow:none;}
+.btn.secondary{background:var(--card2); color:var(--text); border:1px solid var(--border); box-shadow:none;}
+.btn.secondary:hover{transform:translateY(-2px); box-shadow:var(--shadow);}
+.btn.small{padding:8px 16px; font-size:.82rem;}
+/* Module cards */
+.module{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+  margin:22px 0; overflow:hidden; box-shadow:var(--shadow);
+  opacity:1; transition:opacity .3s;
+}
+.module.locked{opacity:.5; pointer-events:none; filter:grayscale(.6);}
+.module-header{
+  padding:22px 26px; display:flex; align-items:center; justify-content:space-between; gap:12px;
+  background:var(--card2); border-bottom:1px solid var(--border); cursor:pointer; flex-wrap:wrap;
+}
+.module-header .mh-left{display:flex; align-items:center; gap:14px;}
+.module-num{
+  width:40px; height:40px; border-radius:10px; background:var(--grad1); color:#fff; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.module-title h2{font-size:1.15rem;}
+.module-title .diff{font-size:.72rem; color:var(--text-dim2); text-transform:uppercase; letter-spacing:.5px;}
+.chev{transition:transform .3s; color:var(--text-dim);}
+.module.open .chev{transform:rotate(180deg);}
+.module-body{max-height:0; overflow:hidden; transition:max-height .4s ease;}
+.module.open .module-body{max-height:20000px;}
+.module-content{padding:26px;}
+.section-label{
+  font-size:.72rem; font-weight:800; text-transform:uppercase; letter-spacing:.8px; color:var(--accent2);
+  margin:24px 0 10px; display:flex; align-items:center; gap:8px;
+}
+.section-label:first-child{margin-top:0;}
+p.body-text{color:var(--text-dim); font-size:.94rem; margin-bottom:10px;}
+.code-block{
+  background:#0b0d14; border:1px solid var(--border); border-radius:10px; padding:16px;
+  font-family:'Consolas','Monaco',monospace; font-size:.85rem; overflow-x:auto; margin:12px 0; color:#c9d1ff;
+  white-space:pre;
+}
+[data-theme="light"] .code-block{background:#1c2030; color:#dfe3ff;}
+.code-comment{color:#6f7590;}
+.analogy-box{
+  background:var(--card2); border-left:4px solid var(--accent2); border-radius:8px; padding:14px 16px;
+  margin:12px 0; font-size:.9rem; color:var(--text-dim);
+}
+.analogy-box b{color:var(--accent2);}
+.compare-table{width:100%; border-collapse:collapse; margin:12px 0; font-size:.85rem;}
+.compare-table th, .compare-table td{
+  border:1px solid var(--border); padding:9px 12px; text-align:left;
+}
+.compare-table th{background:var(--card2); color:var(--accent2);}
+.misconception{
+  background:rgba(239,68,68,.08); border:1px solid rgba(239,68,68,.3); border-radius:8px;
+  padding:12px 16px; margin:10px 0; font-size:.87rem; color:var(--text-dim);
+}
+.misconception b{color:var(--danger);}
+.takeaway-box{
+  background:rgba(34,197,94,.08); border:1px solid rgba(34,197,94,.3); border-radius:10px;
+  padding:14px 18px; margin:14px 0;
+}
+.takeaway-box ul{margin-left:18px; font-size:.88rem; color:var(--text-dim);}
+.exercise-box{
+  background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:16px; margin:12px 0;
+}
+.exercise-box textarea{
+  width:100%; min-height:80px; background:var(--bg); color:var(--text); border:1px solid var(--border);
+  border-radius:8px; padding:10px; font-family:monospace; font-size:.83rem; margin-top:8px; resize:vertical;
+}
+.reveal-btn{
+  background:transparent; border:1px solid var(--accent); color:var(--accent); padding:6px 14px;
+  border-radius:8px; font-size:.8rem; cursor:pointer; margin-top:8px;
+}
+.reveal-content{display:none; margin-top:10px;}
+.reveal-content.show{display:block;}
+svg text{fill:var(--text); font-family:'Segoe UI',sans-serif;}
+.diagram-wrap{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:14px; margin:12px 0; overflow-x:auto;}
+/* Quiz */
+.quiz-box{
+  background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:22px; margin-top:26px;
+}
+.quiz-box h3{margin-bottom:14px; font-size:1.05rem; display:flex; align-items:center; gap:8px;}
+.quiz-q{margin-bottom:20px; padding-bottom:18px; border-bottom:1px solid var(--border);}
+.quiz-q:last-of-type{border-bottom:none;}
+.quiz-q p.qtext{font-weight:600; margin-bottom:10px; font-size:.92rem;}
+.quiz-options{display:flex; flex-direction:column; gap:8px;}
+.quiz-opt{
+  padding:10px 14px; border:1px solid var(--border); border-radius:8px; cursor:pointer; font-size:.87rem;
+  transition:all .15s; background:var(--bg);
+}
+.quiz-opt:hover{border-color:var(--accent);}
+.quiz-opt.selected{border-color:var(--accent); background:rgba(124,92,255,.12);}
+.quiz-opt.correct{border-color:var(--accent3); background:rgba(34,197,94,.15);}
+.quiz-opt.incorrect{border-color:var(--danger); background:rgba(239,68,68,.15);}
+.quiz-opt.disabled{pointer-events:none;}
+.qexplain{
+  margin-top:8px; font-size:.83rem; color:var(--text-dim); background:var(--bg); padding:10px 12px;
+  border-radius:8px; display:none;
+}
+.qexplain.show{display:block;}
+.quiz-summary{
+  margin-top:16px; padding:16px; border-radius:10px; text-align:center; font-weight:700; display:none;
+}
+.quiz-summary.show{display:block;}
+.quiz-summary.pass{background:rgba(34,197,94,.15); color:var(--accent3);}
+.quiz-summary.fail{background:rgba(245,158,11,.15); color:var(--warn);}
+/* final section */
+.final-section{
+  background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:28px; margin:24px 0;
+  box-shadow:var(--shadow);
+}
+.resource-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; margin-top:10px;}
+.resource-card{background:var(--card2); border:1px solid var(--border); border-radius:10px; padding:14px;}
+.resource-card h4{font-size:.85rem; color:var(--accent2); margin-bottom:8px;}
+.resource-card ul{list-style:none; font-size:.83rem; color:var(--text-dim);}
+.resource-card li{margin-bottom:6px; padding-left:14px; position:relative;}
+.resource-card li::before{content:'—'; position:absolute; left:0; color:var(--text-dim2);}
+.tag{
+  display:inline-block; background:var(--card2); border:1px solid var(--border); border-radius:6px;
+  padding:4px 10px; font-size:.78rem; margin:3px; color:var(--text-dim);
+}
+.print-btn{margin-top:10px;}
+.confetti{position:fixed; inset:0; pointer-events:none; z-index:9999;}
+footer{text-align:center; padding:30px; color:var(--text-dim2); font-size:.82rem;}
+@media print{
+  .topbar, .btn, .quiz-box, .theme-toggle{display:none !important;}
+  .module{page-break-inside:avoid;}
+}
+@media (max-width:600px){
+  .hero h1{font-size:1.4rem;}
+  .module-content{padding:18px;}
+}
+</style>
+</head>
+<body data-theme="dark">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="brand"><div class="brand-icon">🐼</div> Interactive Learning Studio</div>
+    <div class="topbar-right">
+      <div class="progress-pill">
+        <span id="progressText">0% complete</span>
+        <div class="progress-bar-mini"><div class="progress-bar-mini-fill" id="progressFill"></div></div>
+      </div>
+      <div class="theme-toggle" id="themeToggle" title="Toggle dark/light">🌙</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- HERO / INTRO -->
+  <div class="hero">
+    <span class="badge">Data Science · Python · Pandas</span>
+    <h1>Pandas DataFrames: Selection, Filtering &amp; Cleaning</h1>
+    <p class="subtitle">A complete, hands-on tutorial that takes you from confidently selecting rows and columns to filtering complex conditions and cleaning messy real-world data — the exact skills tested in Data Analyst interviews.</p>
+
+    <div class="info-grid">
+      <div class="info-card"><div class="label">Estimated Time</div><div class="value">⏱ 70–90 minutes</div></div>
+      <div class="info-card"><div class="label">Prerequisites</div><div class="value">Basic Python syntax</div></div>
+      <div class="info-card"><div class="label">Modules</div><div class="value">4 progressive modules</div></div>
+      <div class="info-card"><div class="label">Outcome</div><div class="value">Job-ready DataFrame skills</div></div>
+    </div>
+
+    <div class="section-label">🎯 Learning Objectives</div>
+    <ul class="obj-list">
+      <li>Select rows/columns precisely using <code>[]</code>, <code>.loc</code>, and <code>.iloc</code></li>
+      <li>Build single and multi-condition filters using boolean masks</li>
+      <li>Detect and handle missing data (NaN) the right way</li>
+      <li>Remove duplicates and fix inconsistent data types</li>
+      <li>Combine selection + filtering + cleaning into real analysis workflows</li>
+    </ul>
+
+    <div class="reward-box">
+      <div class="reward-icon">🏆</div>
+      <div class="rtext"><b>Reward System:</b> Earn XP for every quiz you pass (25 XP/module) and unlock a "Pandas Cleaner" badge plus the Final Challenge after completing all 4 modules. Track your progress live in the top bar.</div>
+    </div>
+
+    <button class="btn" id="startBtn">Start Learning →</button>
+  </div>
+
+  <!-- MODULE 1 -->
+  <div class="module open" id="module1" data-module="1">
+    <div class="module-header" onclick="toggleModule(1)">
+      <div class="mh-left">
+        <div class="module-num">1</div>
+        <div class="module-title"><h2>Foundations of Selection</h2><div class="diff">Beginner · Understanding indexing</div></div>
+      </div>
+      <div class="chev">▼</div>
+    </div>
+    <div class="module-body">
+      <div class="module-content">
+
+        <div class="section-label">📘 Explanation</div>
+        <p class="body-text">A Pandas DataFrame is a 2D labeled table — rows have an <b>index</b>, columns have <b>names</b>. Because both axes are labeled, Pandas gives you three distinct ways to select data, and mixing them up is the #1 source of bugs for beginners.</p>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 640 220" style="width:100%; height:auto;">
+            <rect x="10" y="10" width="620" height="200" rx="10" fill="none" stroke="var(--border)"/>
+            <text x="20" y="30" font-size="12" fill="var(--text-dim2)">DataFrame "df"</text>
+            <!-- header row -->
+            <rect x="20" y="40" width="60" height="30" fill="var(--card2)" stroke="var(--border)"/>
+            <text x="35" y="60" font-size="12">idx</text>
+            <rect x="80" y="40" width="140" height="30" fill="var(--accent)" opacity="0.25" stroke="var(--border)"/>
+            <text x="120" y="60" font-size="12">name</text>
+            <rect x="220" y="40" width="140" height="30" fill="var(--accent2)" opacity="0.25" stroke="var(--border)"/>
+            <text x="260" y="60" font-size="12">age</text>
+            <rect x="360" y="40" width="140" height="30" fill="var(--accent3)" opacity="0.25" stroke="var(--border)"/>
+            <text x="405" y="60" font-size="12">city</text>
+            <!-- rows -->
+            <g font-size="12">
+              <rect x="20" y="70" width="60" height="30" fill="none" stroke="var(--border)"/>
+              <text x="40" y="90">0</text>
+              <rect x="80" y="70" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="95" y="90">Asha</text>
+              <rect x="220" y="70" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="270" y="90">29</text>
+              <rect x="360" y="70" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="380" y="90">Pune</text>
+
+              <rect x="20" y="100" width="60" height="30" fill="none" stroke="var(--border)"/>
+              <text x="40" y="120">1</text>
+              <rect x="80" y="100" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="95" y="120">Ravi</text>
+              <rect x="220" y="100" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="270" y="120">34</text>
+              <rect x="360" y="100" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="380" y="120">Delhi</text>
+
+              <rect x="20" y="130" width="60" height="30" fill="none" stroke="var(--border)"/>
+              <text x="40" y="150">2</text>
+              <rect x="80" y="130" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="95" y="150">Meera</text>
+              <rect x="220" y="130" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="270" y="150">25</text>
+              <rect x="360" y="130" width="140" height="30" fill="none" stroke="var(--border)"/>
+              <text x="380" y="150">Noida</text>
+            </g>
+            <text x="20" y="200" font-size="11" fill="var(--text-dim2)">rows = index labels (0,1,2)   columns = labels (name, age, city)</text>
+          </svg>
+        </div>
+
+        <div class="analogy-box"><b>Analogy:</b> Think of a DataFrame like an Excel sheet where every row has a name-tag (index) and every column has a header. <code>.loc</code> asks "give me the row/column by their name-tag/header", while <code>.iloc</code> asks "give me by their position number, like a seat number, regardless of the label".</div>
+
+        <div class="section-label">🧪 Core Selection Methods</div>
+        <div class="code-block"><span class="code-comment"># Selecting a single column -> returns a Series</span>
+df['age']
+
+<span class="code-comment"># Selecting multiple columns -> returns a DataFrame</span>
+df[['name', 'city']]
+
+<span class="code-comment"># .loc -> label-based selection (row label, column label)</span>
+df.loc[0, 'name']          <span class="code-comment"># single value</span>
+df.loc[0:2, ['name','age']]<span class="code-comment"># slice + column list</span>
+
+<span class="code-comment"># .iloc -> position-based selection (integer index only)</span>
+df.iloc[0, 1]               <span class="code-comment"># row 0, column 1</span>
+df.iloc[0:2, 0:2]           <span class="code-comment"># first 2 rows, first 2 cols</span></div>
+
+        <table class="compare-table">
+          <tr><th>Method</th><th>Selects By</th><th>Slice End Included?</th><th>Use When</th></tr>
+          <tr><td><code>df[]</code></td><td>Column name(s)</td><td>N/A</td><td>Quick column access</td></tr>
+          <tr><td><code>.loc[]</code></td><td>Labels (index/columns)</td><td>Yes (inclusive)</td><td>You know the label names</td></tr>
+          <tr><td><code>.iloc[]</code></td><td>Integer position</td><td>No (exclusive, like Python)</td><td>You know the position, not the label</td></tr>
+        </table>
+
+        <div class="section-label">⚠️ Common Misconceptions</div>
+        <div class="misconception"><b>Myth:</b> "df.loc[0:2] and df.iloc[0:2] return the same rows."<br><b>Reality:</b> <code>.loc[0:2]</code> includes row label 2 (3 rows), while <code>.iloc[0:2]</code> excludes position 2 (2 rows) — because <code>.loc</code> is label-inclusive and <code>.iloc</code> behaves like normal Python slicing.</div>
+        <div class="misconception"><b>Myth:</b> "df['col'] and df.col always work the same."<br><b>Reality:</b> Dot-notation breaks if the column name has spaces, matches a DataFrame method name, or is stored as a variable — so <code>df['col']</code> is the safer, recommended habit.</div>
+
+        <div class="section-label">💪 Practical Exercise</div>
+        <div class="exercise-box">
+          Given a DataFrame <code>df</code> with columns <code>name, age, city</code>, write the code to select the <b>age</b> and <b>city</b> columns for rows at index positions 1 through 3 (inclusive) using <code>.iloc</code>.
+          <textarea placeholder="Type your answer here..."></textarea>
+          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show Solution</button>
+          <div class="reveal-content">
+            <div class="code-block">df.iloc[1:4, [1, 2]]
+<span class="code-comment"># iloc end is exclusive, so 1:4 covers positions 1,2,3</span></div>
+          </div>
+        </div>
+
+        <div class="section-label">✅ Key Takeaways</div>
+        <div class="takeaway-box">
+          <ul>
+            <li><code>df['col']</code> for quick single/multi column access</li>
+            <li><code>.loc</code> = label-based, slice end inclusive</li>
+            <li><code>.iloc</code> = position-based, slice end exclusive</li>
+            <li>Always prefer bracket notation over dot notation for safety</li>
+          </ul>
+        </div>
+
+        <!-- QUIZ 1 -->
+        <div class="quiz-box" id="quiz1">
+          <h3>📝 Module 1 Quiz</h3>
+          <div class="quiz-q" data-correct="1">
+            <p class="qtext">1. Which method uses integer position, not labels?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df.loc[]</div>
+              <div class="quiz-opt">df.iloc[]</div>
+              <div class="quiz-opt">df.at[]</div>
+              <div class="quiz-opt">df.col</div>
+            </div>
+            <div class="qexplain">Correct answer: <b>df.iloc[]</b> — "i" stands for integer/position-based indexing, unaffected by the actual index labels.</div>
+          </div>
+          <div class="quiz-q" data-correct="0">
+            <p class="qtext">2. What does df.loc[0:2] return compared to df.iloc[0:2]?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">loc includes row label 2, iloc excludes position 2</div>
+              <div class="quiz-opt">They always return identical rows</div>
+              <div class="quiz-opt">iloc includes row 2, loc excludes it</div>
+              <div class="quiz-opt">Both raise an error</div>
+            </div>
+            <div class="qexplain">Correct: <b>loc includes row label 2, iloc excludes position 2</b> — loc slicing is label-inclusive; iloc mimics Python's exclusive-end slicing.</div>
+          </div>
+          <div class="quiz-q" data-correct="2">
+            <p class="qtext">3. df['age'] returns a...</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">DataFrame</div>
+              <div class="quiz-opt">List</div>
+              <div class="quiz-opt">Series</div>
+              <div class="quiz-opt">Dictionary</div>
+            </div>
+            <div class="qexplain">Correct: <b>Series</b> — a single column pulled from a DataFrame is a 1D Pandas Series.</div>
+          </div>
+          <div class="quiz-q" data-correct="1">
+            <p class="qtext">4. Why is df['col'] generally safer than df.col?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df.col is slower to type</div>
+              <div class="quiz-opt">Dot notation fails on column names with spaces or matching method names</div>
+              <div class="quiz-opt">df.col only works for numeric columns</div>
+              <div class="quiz-opt">There is no difference</div>
+            </div>
+            <div class="qexplain">Correct: <b>Dot notation fails on column names with spaces or matching method names</b> — e.g. a column named "count" would clash with df.count().</div>
+          </div>
+          <button class="btn small" onclick="submitQuiz(1)">Submit Quiz</button>
+          <div class="quiz-summary" id="summary1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 2 -->
+  <div class="module locked" id="module2" data-module="2">
+    <div class="module-header" onclick="toggleModule(2)">
+      <div class="mh-left">
+        <div class="module-num">2</div>
+        <div class="module-title"><h2>Filtering with Boolean Masks</h2><div class="diff">Beginner–Intermediate · Conditional logic</div></div>
+      </div>
+      <div class="chev">▼</div>
+    </div>
+    <div class="module-body">
+      <div class="module-content">
+
+        <div class="section-label">📘 Explanation</div>
+        <p class="body-text">Filtering means keeping only the rows that satisfy a condition. Pandas does this via <b>boolean masks</b> — an array of True/False values, one per row, that you use to index the DataFrame.</p>
+
+        <div class="analogy-box"><b>Analogy:</b> Imagine every row raises a hand (True) or keeps it down (False) when asked "do you match the condition?". <code>df[mask]</code> only keeps the rows with their hand up.</div>
+
+        <div class="diagram-wrap">
+          <svg viewBox="0 0 640 160" style="width:100%; height:auto;">
+            <text x="10" y="20" font-size="12" fill="var(--text-dim2)">df['age'] > 28</text>
+            <g font-size="12">
+              <rect x="10" y="30" width="80" height="28" fill="none" stroke="var(--border)"/><text x="20" y="49">age=29</text>
+              <rect x="100" y="30" width="60" height="28" fill="rgba(34,197,94,.2)" stroke="var(--accent3)"/><text x="115" y="49">True</text>
+              <rect x="10" y="65" width="80" height="28" fill="none" stroke="var(--border)"/><text x="20" y="84">age=34</text>
+              <rect x="100" y="65" width="60" height="28" fill="rgba(34,197,94,.2)" stroke="var(--accent3)"/><text x="115" y="84">True</text>
+              <rect x="10" y="100" width="80" height="28" fill="none" stroke="var(--border)"/><text x="20" y="119">age=25</text>
+              <rect x="100" y="100" width="60" height="28" fill="rgba(239,68,68,.15)" stroke="var(--danger)"/><text x="112" y="119">False</text>
+            </g>
+            <text x="220" y="30" font-size="12" fill="var(--text-dim2)">df[mask] keeps only True rows →</text>
+            <g font-size="12">
+              <rect x="420" y="30" width="80" height="28" fill="rgba(124,92,255,.15)" stroke="var(--accent)"/><text x="430" y="49">age=29</text>
+              <rect x="420" y="65" width="80" height="28" fill="rgba(124,92,255,.15)" stroke="var(--accent)"/><text x="430" y="84">age=34</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="section-label">🧪 Building Filters</div>
+        <div class="code-block"><span class="code-comment"># Single condition</span>
+df[df['age'] > 28]
+
+<span class="code-comment"># Multiple conditions -> use & / | with parentheses (NOT and/or)</span>
+df[(df['age'] > 25) & (df['city'] == 'Delhi')]
+
+<span class="code-comment"># Negation</span>
+df[~(df['city'] == 'Pune')]
+
+<span class="code-comment"># Membership test</span>
+df[df['city'].isin(['Delhi', 'Pune'])]
+
+<span class="code-comment"># String conditions</span>
+df[df['name'].str.startswith('A')]</div>
+
+        <table class="compare-table">
+          <tr><th>Operator</th><th>Meaning</th><th>Works on Series?</th></tr>
+          <tr><td><code>and / or</code></td><td>Python boolean logic</td><td>❌ No — raises error</td></tr>
+          <tr><td><code>&amp; / |</code></td><td>Element-wise AND/OR</td><td>✅ Yes — required for masks</td></tr>
+          <tr><td><code>~</code></td><td>Element-wise NOT</td><td>✅ Yes</td></tr>
+        </table>
+
+        <div class="section-label">⚠️ Common Misconceptions</div>
+        <div class="misconception"><b>Myth:</b> "I can use `and`/`or` to combine conditions like in normal Python."<br><b>Reality:</b> Pandas conditions produce arrays of booleans, and Python's `and`/`or` only work on single booleans — you must use `&`, `|`, and wrap each condition in parentheses.</div>
+        <div class="misconception"><b>Myth:</b> "Forgetting parentheses is just a style choice."<br><b>Reality:</b> <code>df['age'] > 25 &amp; df['city']=='Delhi'</code> throws an error or gives wrong results because <code>&amp;</code> has higher precedence than <code>&gt;</code> in Python — parentheses are mandatory.</div>
+
+        <div class="section-label">💪 Practical Exercise</div>
+        <div class="exercise-box">
+          Write a filter that keeps rows where <code>age</code> is between 25 and 35 (inclusive) AND <code>city</code> is NOT 'Pune'.
+          <textarea placeholder="Type your answer here..."></textarea>
+          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show Solution</button>
+          <div class="reveal-content">
+            <div class="code-block">df[(df['age'] >= 25) & (df['age'] <= 35) & (df['city'] != 'Pune')]</div>
+          </div>
+        </div>
+
+        <div class="section-label">✅ Key Takeaways</div>
+        <div class="takeaway-box">
+          <ul>
+            <li>Filtering = indexing a DataFrame with a boolean mask</li>
+            <li>Use <code>&amp;</code>, <code>|</code>, <code>~</code> — never <code>and</code>/<code>or</code></li>
+            <li>Always wrap each condition in parentheses</li>
+            <li><code>.isin()</code> is cleaner than chained OR conditions</li>
+          </ul>
+        </div>
+
+        <div class="quiz-box" id="quiz2">
+          <h3>📝 Module 2 Quiz</h3>
+          <div class="quiz-q" data-correct="1">
+            <p class="qtext">1. Which operator correctly combines two Pandas conditions?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">and</div>
+              <div class="quiz-opt">&amp;</div>
+              <div class="quiz-opt">&amp;&amp;</div>
+              <div class="quiz-opt">plus</div>
+            </div>
+            <div class="qexplain">Correct: <b>&amp;</b> — the element-wise AND operator for boolean Series.</div>
+          </div>
+          <div class="quiz-q" data-correct="2">
+            <p class="qtext">2. Why does df[df['age']>25 & df['city']=='Delhi'] often error out?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">age must be a string</div>
+              <div class="quiz-opt">isin() was not used</div>
+              <div class="quiz-opt">Missing parentheses around each condition due to operator precedence</div>
+              <div class="quiz-opt">city column doesn't exist</div>
+            </div>
+            <div class="qexplain">Correct: <b>Missing parentheses around each condition due to operator precedence</b> — & binds tighter than comparison operators.</div>
+          </div>
+          <div class="quiz-q" data-correct="0">
+            <p class="qtext">3. Which is the cleanest way to filter rows where city is Delhi OR Pune OR Noida?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df[df['city'].isin(['Delhi','Pune','Noida'])]</div>
+              <div class="quiz-opt">df[df['city'] and ['Delhi','Pune','Noida']]</div>
+              <div class="quiz-opt">df.city == ['Delhi','Pune','Noida']</div>
+              <div class="quiz-opt">df.filter('Delhi','Pune','Noida')</div>
+            </div>
+            <div class="qexplain">Correct: <b>.isin()</b> — designed exactly for membership checks against a list of values.</div>
+          </div>
+          <div class="quiz-q" data-correct="3">
+            <p class="qtext">4. What does ~ do in a Pandas filter?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">Rounds numbers</div>
+              <div class="quiz-opt">Sorts the DataFrame</div>
+              <div class="quiz-opt">Combines two conditions</div>
+              <div class="quiz-opt">Negates (flips) a boolean condition</div>
+            </div>
+            <div class="qexplain">Correct: <b>Negates (flips) a boolean condition</b> — equivalent to "NOT".</div>
+          </div>
+          <button class="btn small" onclick="submitQuiz(2)">Submit Quiz</button>
+          <div class="quiz-summary" id="summary2"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 3 -->
+  <div class="module locked" id="module3" data-module="3">
+    <div class="module-header" onclick="toggleModule(3)">
+      <div class="mh-left">
+        <div class="module-num">3</div>
+        <div class="module-title"><h2>Cleaning Missing &amp; Messy Data</h2><div class="diff">Intermediate · Data quality</div></div>
+      </div>
+      <div class="chev">▼</div>
+    </div>
+    <div class="module-body">
+      <div class="module-content">
+
+        <div class="section-label">📘 Explanation</div>
+        <p class="body-text">Real datasets are messy: missing values (NaN), duplicate rows, and wrong data types. Cleaning means detecting these issues systematically and deciding whether to fill, drop, or convert.</p>
+
+        <div class="analogy-box"><b>Analogy:</b> Missing values are like blank cells in a paper form — you can throw the whole form away (drop), guess a reasonable answer (fill), or leave a note explaining why it's blank. Pandas gives you a tool for each.</div>
+
+        <div class="section-label">🧪 Detecting &amp; Handling Missing Data</div>
+        <div class="code-block"><span class="code-comment"># Detect missing values</span>
+df.isna().sum()          <span class="code-comment"># count of NaN per column</span>
+df.isna().any(axis=1)    <span class="code-comment"># rows with at least one NaN</span>
+
+<span class="code-comment"># Drop rows/columns with missing data</span>
+df.dropna()                    <span class="code-comment"># drop any row with a NaN</span>
+df.dropna(subset=['age'])      <span class="code-comment"># drop only if 'age' is NaN</span>
+df.dropna(thresh=3)            <span class="code-comment"># keep rows with >=3 non-NaN values</span>
+
+<span class="code-comment"># Fill missing data</span>
+df['age'].fillna(df['age'].mean(), inplace=True)
+df['city'].fillna('Unknown', inplace=True)</div>
+
+        <div class="section-label">🧪 Duplicates &amp; Data Types</div>
+        <div class="code-block"><span class="code-comment"># Duplicates</span>
+df.duplicated().sum()      <span class="code-comment"># count duplicate rows</span>
+df.drop_duplicates(inplace=True)
+
+<span class="code-comment"># Fixing data types</span>
+df['age'] = df['age'].astype(int)
+df['joined'] = pd.to_datetime(df['joined'])
+df.dtypes   <span class="code-comment"># inspect current types</span></div>
+
+        <table class="compare-table">
+          <tr><th>Method</th><th>Purpose</th><th>Risk</th></tr>
+          <tr><td><code>dropna()</code></td><td>Remove missing rows/cols</td><td>Can lose valid data</td></tr>
+          <tr><td><code>fillna()</code></td><td>Replace missing with a value</td><td>Can distort statistics if overused</td></tr>
+          <tr><td><code>drop_duplicates()</code></td><td>Remove repeated rows</td><td>May remove legitimately identical rows</td></tr>
+          <tr><td><code>astype()</code></td><td>Convert column type</td><td>Fails if values aren't convertible</td></tr>
+        </table>
+
+        <div class="section-label">⚠️ Common Misconceptions</div>
+        <div class="misconception"><b>Myth:</b> "Always drop rows with missing values — it's the safest option."<br><b>Reality:</b> Dropping can throw away large portions of usable data. In practice, analysts often use <code>fillna()</code> with mean/median/mode or domain-specific defaults instead.</div>
+        <div class="misconception"><b>Myth:</b> "NaN == NaN is True, so I can filter missing values with df[df['col']==NaN]."<br><b>Reality:</b> NaN is never equal to itself in Pandas/NumPy — you must use <code>df['col'].isna()</code> to detect it.</div>
+
+        <div class="section-label">💪 Practical Exercise</div>
+        <div class="exercise-box">
+          Write code that: (1) fills missing 'age' values with the column median, and (2) drops any remaining duplicate rows.
+          <textarea placeholder="Type your answer here..."></textarea>
+          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show Solution</button>
+          <div class="reveal-content">
+            <div class="code-block">df['age'].fillna(df['age'].median(), inplace=True)
+df.drop_duplicates(inplace=True)</div>
+          </div>
+        </div>
+
+        <div class="section-label">✅ Key Takeaways</div>
+        <div class="takeaway-box">
+          <ul>
+            <li>Use <code>isna()</code> to detect missing values — never compare to NaN directly</li>
+            <li>Choose drop vs fill based on how much data you can afford to lose</li>
+            <li><code>drop_duplicates()</code> keeps the first occurrence by default</li>
+            <li>Always verify types with <code>.dtypes</code> after cleaning</li>
+          </ul>
+        </div>
+
+        <div class="quiz-box" id="quiz3">
+          <h3>📝 Module 3 Quiz</h3>
+          <div class="quiz-q" data-correct="2">
+            <p class="qtext">1. How do you correctly detect missing values in a column?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df['col'] == NaN</div>
+              <div class="quiz-opt">df['col'] == None</div>
+              <div class="quiz-opt">df['col'].isna()</div>
+              <div class="quiz-opt">df['col'].dropna() == True</div>
+            </div>
+            <div class="qexplain">Correct: <b>df['col'].isna()</b> — NaN never equals itself, so comparison operators fail.</div>
+          </div>
+          <div class="quiz-q" data-correct="1">
+            <p class="qtext">2. What's a downside of always using dropna()?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">It's the fastest method available</div>
+              <div class="quiz-opt">It can discard large amounts of otherwise valid data</div>
+              <div class="quiz-opt">It converts data types automatically</div>
+              <div class="quiz-opt">It only works on numeric columns</div>
+            </div>
+            <div class="qexplain">Correct: <b>It can discard large amounts of otherwise valid data</b> — one NaN in a row removes the whole row by default.</div>
+          </div>
+          <div class="quiz-q" data-correct="0">
+            <p class="qtext">3. Which method removes repeated rows from a DataFrame?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">drop_duplicates()</div>
+              <div class="quiz-opt">dropna()</div>
+              <div class="quiz-opt">unique()</div>
+              <div class="quiz-opt">distinct()</div>
+            </div>
+            <div class="qexplain">Correct: <b>drop_duplicates()</b> — removes duplicate rows, keeping the first by default.</div>
+          </div>
+          <div class="quiz-q" data-correct="3">
+            <p class="qtext">4. Which line correctly converts a column of date strings to datetime?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df['joined'].astype('date')</div>
+              <div class="quiz-opt">df['joined'].to_date()</div>
+              <div class="quiz-opt">df['joined'].dt.convert()</div>
+              <div class="quiz-opt">pd.to_datetime(df['joined'])</div>
+            </div>
+            <div class="qexplain">Correct: <b>pd.to_datetime(df['joined'])</b> — the standard Pandas function for parsing date strings.</div>
+          </div>
+          <button class="btn small" onclick="submitQuiz(3)">Submit Quiz</button>
+          <div class="quiz-summary" id="summary3"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODULE 4 -->
+  <div class="module locked" id="module4" data-module="4">
+    <div class="module-header" onclick="toggleModule(4)">
+      <div class="mh-left">
+        <div class="module-num">4</div>
+        <div class="module-title"><h2>Combining Skills: Real Analysis Workflows</h2><div class="diff">Advanced · Mastery &amp; chaining</div></div>
+      </div>
+      <div class="chev">▼</div>
+    </div>
+    <div class="module-body">
+      <div class="module-content">
+
+        <div class="section-label">📘 Explanation</div>
+        <p class="body-text">Real analyst work chains selection, filtering, and cleaning together — often in one readable pipeline using method chaining. Mastery means writing this fluently and knowing when to use <code>.query()</code> versus boolean masks, and how <code>.loc</code> enables safe in-place edits.</p>
+
+        <div class="analogy-box"><b>Analogy:</b> Think of a data pipeline like an assembly line: raw data enters, each station (clean → filter → select) transforms it a bit, and a polished result exits at the end — each step depends on a clean output from the one before it.</div>
+
+        <div class="section-label">🧪 Chaining It All Together</div>
+        <div class="code-block"><span class="code-comment"># Full pipeline: clean, then filter, then select</span>
+result = (
+    df.dropna(subset=['age'])
+      .drop_duplicates()
+      .loc[lambda d: (d['age'] >= 25) & (d['city'] != 'Pune'), ['name', 'age', 'city']]
+)
+
+<span class="code-comment"># .query() -> readable alternative to boolean masks</span>
+df.query("age >= 25 and city != 'Pune'")
+
+<span class="code-comment"># Safe conditional update using .loc (avoids SettingWithCopyWarning)</span>
+df.loc[df['age'] < 18, 'category'] = 'Minor'</div>
+
+        <div class="misconception" style="border-color:rgba(245,158,11,.4); background:rgba(245,158,11,.08);">
+          <b>Pro tip:</b> <span style="color:var(--warn)">SettingWithCopyWarning</span> appears when you edit a filtered slice without <code>.loc</code>. Always use <code>df.loc[condition, 'col'] = value</code> for conditional edits — never <code>df[condition]['col'] = value</code>.
+        </div>
+
+        <div class="section-label">⚠️ Common Misconceptions</div>
+        <div class="misconception"><b>Myth:</b> "df[condition]['col'] = value is a safe way to edit filtered data."<br><b>Reality:</b> This creates a copy in an ambiguous way and triggers SettingWithCopyWarning — the edit may silently fail. Use <code>df.loc[condition, 'col'] = value</code> instead.</div>
+        <div class="misconception"><b>Myth:</b> ".query() is just a slower version of boolean masks with no benefit."<br><b>Reality:</b> <code>.query()</code> is often more readable for complex multi-condition filters and can be faster on large DataFrames because it uses optimized expression evaluation.</div>
+
+        <div class="section-label">💪 Practical Exercise</div>
+        <div class="exercise-box">
+          Write a single chained pipeline that: drops duplicate rows, fills missing 'age' with the mean, then selects 'name' and 'age' for people older than 30.
+          <textarea placeholder="Type your answer here..."></textarea>
+          <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show Solution</button>
+          <div class="reveal-content">
+            <div class="code-block">result = (
+    df.drop_duplicates()
+      .assign(age=lambda d: d['age'].fillna(d['age'].mean()))
+      .loc[lambda d: d['age'] > 30, ['name', 'age']]
+)</div>
+          </div>
+        </div>
+
+        <div class="section-label">✅ Key Takeaways</div>
+        <div class="takeaway-box">
+          <ul>
+            <li>Chain <code>.dropna()</code> → <code>.drop_duplicates()</code> → <code>.loc[filter, cols]</code> for clean pipelines</li>
+            <li>Use <code>.loc[condition, 'col'] = value</code> for safe conditional edits</li>
+            <li><code>.query()</code> is a readable alternative for complex filters</li>
+            <li>Always clean before filtering — dirty data skews conditions</li>
+          </ul>
+        </div>
+
+        <div class="quiz-box" id="quiz4">
+          <h3>📝 Module 4 Quiz</h3>
+          <div class="quiz-q" data-correct="1">
+            <p class="qtext">1. What's the safe way to conditionally update a column?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df[condition]['col'] = value</div>
+              <div class="quiz-opt">df.loc[condition, 'col'] = value</div>
+              <div class="quiz-opt">df.col[condition] = value</div>
+              <div class="quiz-opt">df.update(condition, value)</div>
+            </div>
+            <div class="qexplain">Correct: <b>df.loc[condition, 'col'] = value</b> — avoids SettingWithCopyWarning and guarantees the edit applies to the original DataFrame.</div>
+          </div>
+          <div class="quiz-q" data-correct="2">
+            <p class="qtext">2. Which correctly rewrites df[(df['age']>=25)&(df['city']!='Pune')] using .query()?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">df.query(age>=25, city!='Pune')</div>
+              <div class="quiz-opt">df.query['age>=25 and city!=Pune']</div>
+              <div class="quiz-opt">df.query("age >= 25 and city != 'Pune'")</div>
+              <div class="quiz-opt">df.filter("age>=25 & city!='Pune'")</div>
+            </div>
+            <div class="qexplain">Correct: <b>df.query("age &gt;= 25 and city != 'Pune'")</b> — .query() takes a single readable string expression.</div>
+          </div>
+          <div class="quiz-q" data-correct="0">
+            <p class="qtext">3. In a clean → filter → select pipeline, why clean first?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">Dirty data (NaN, duplicates) can skew or break filter conditions</div>
+              <div class="quiz-opt">Pandas requires cleaning to run first, otherwise it errors</div>
+              <div class="quiz-opt">Cleaning is always faster than filtering</div>
+              <div class="quiz-opt">There's no real reason, order doesn't matter</div>
+            </div>
+            <div class="qexplain">Correct: <b>Dirty data can skew or break filter conditions</b> — e.g. NaN comparisons or duplicate rows distorting counts.</div>
+          </div>
+          <div class="quiz-q" data-correct="3">
+            <p class="qtext">4. What triggers a SettingWithCopyWarning?</p>
+            <div class="quiz-options">
+              <div class="quiz-opt">Using .loc for selection</div>
+              <div class="quiz-opt">Using .query() to filter</div>
+              <div class="quiz-opt">Reading a CSV file</div>
+              <div class="quiz-opt">Editing a filtered slice without .loc</div>
+            </div>
+            <div class="qexplain">Correct: <b>Editing a filtered slice without .loc</b> — Pandas can't guarantee whether you're editing a view or a copy.</div>
+          </div>
+          <button class="btn small" onclick="submitQuiz(4)">Submit Quiz</button>
+          <div class="quiz-summary" id="summary4"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FINAL SECTION -->
+  <div class="final-section locked" id="finalSection">
+    <span class="badge">🏁 Final Challenge</span>
+    <h2 style="margin:12px 0;">Put It All Together</h2>
+    <p class="body-text">You're given a messy employee DataFrame <code>df</code> with columns <code>name, age, department, salary, joined</code>. It has missing ages, duplicate rows, and salary stored as strings like "45000". Write a pipeline that: removes duplicates, fills missing age with the median, converts salary to integer, then returns name and salary for employees in the 'Sales' department earning above 50000, sorted by salary descending.</p>
+    <div class="exercise-box">
+      <textarea placeholder="Write your full pipeline here..."></textarea>
+      <button class="reveal-btn" onclick="this.nextElementSibling.classList.toggle('show')">Show Model Solution</button>
+      <div class="reveal-content">
+        <div class="code-block">result = (
+    df.drop_duplicates()
+      .assign(
+          age=lambda d: d['age'].fillna(d['age'].median()),
+          salary=lambda d: d['salary'].astype(int)
+      )
+      .loc[lambda d: (d['department'] == 'Sales') & (d['salary'] > 50000), ['name', 'salary']]
+      .sort_values('salary', ascending=False)
+)</div>
+      </div>
+    </div>
+
+    <div class="section-label">📋 Cheat Sheet</div>
+    <div class="code-block"><span class="code-comment"># SELECT</span>
+df['col']            df[['a','b']]
+df.loc[r, c]          df.iloc[r, c]
+
+<span class="code-comment"># FILTER</span>
+df[df['x'] > 5]
+df[(cond1) & (cond2)]
+df[df['x'].isin([...])]
+df.query("x > 5 and y == 'A'")
+
+<span class="code-comment"># CLEAN</span>
+df.isna().sum()        df.dropna()
+df['x'].fillna(val)    df.drop_duplicates()
+df['x'].astype(type)   pd.to_datetime(df['x'])
+
+<span class="code-comment"># SAFE EDIT</span>
+df.loc[condition, 'col'] = value</div>
+
+    <button class="btn print-btn" onclick="window.print()">🖨️ Print / Save Notes as PDF</button>
+
+    <div class="section-label">📚 Continue Learning</div>
+    <div class="resource-grid">
+      <div class="resource-card">
+        <h4>Books</h4>
+        <ul>
+          <li>"Python for Data Analysis" — Wes McKinney</li>
+          <li>"Pandas Cookbook" — Theodore Petrou</li>
+        </ul>
+      </div>
+      <div class="resource-card">
+        <h4>Documentation</h4>
+        <ul>
+          <li>pandas.pydata.org/docs</li>
+          <li>Pandas "10 Minutes to pandas" guide</li>
+        </ul>
+      </div>
+      <div class="resource-card">
+        <h4>Research &amp; Articles</h4>
+        <ul>
+          <li>"Tidy Data" — Hadley Wickham (data cleaning theory)</li>
+          <li>Real Python: Pandas DataFrame guides</li>
+        </ul>
+      </div>
+      <div class="resource-card">
+        <h4>Communities</h4>
+        <ul>
+          <li>r/dataanalysis, r/learnpython</li>
+          <li>Stack Overflow [pandas] tag</li>
+        </ul>
+      </div>
+      <div class="resource-card">
+        <h4>Practice Platforms</h4>
+        <ul>
+          <li>Kaggle Learn — Pandas micro-course</li>
+          <li>StrataScratch, LeetCode (Pandas problems)</li>
+        </ul>
+      </div>
+      <div class="resource-card">
+        <h4>Search Keywords</h4>
+        <ul>
+          <li>"pandas boolean indexing tutorial"</li>
+          <li>"SettingWithCopyWarning explained"</li>
+          <li>"pandas method chaining best practices"</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="section-label">🤖 Prompts for Further AI-Assisted Learning</div>
+    <div>
+      <span class="tag">"Explain groupby + filtering together with an example"</span>
+      <span class="tag">"Give me 5 messy-data cleaning exercises with solutions"</span>
+      <span class="tag">"Compare .query() vs boolean masks for performance"</span>
+      <span class="tag">"Quiz me on Pandas .loc vs .iloc edge cases"</span>
+    </div>
+
+    <div id="completionBanner" style="display:none; margin-top:24px; text-align:center; padding:20px; border-radius:12px; background:var(--grad2); color:#08210f; font-weight:800;">
+      🏆 Badge Unlocked: Pandas Cleaner — You've completed the full tutorial!
+    </div>
+  </div>
+
+  <footer>Interactive Learning Studio · Built for focused, single-sitting mastery · Good luck on your Data Analyst journey, Sidh 🚀</footer>
+</div>
+
+<script>
+let xp = 0;
+const totalModules = 4;
+let completedModules = new Set();
+
+function toggleModule(n){
+  const m = document.getElementById('module'+n);
+  if(m.classList.contains('locked')) return;
+  document.querySelectorAll('.module').forEach(mod=>{
+    if(mod.id !== 'module'+n) mod.classList.remove('open');
+  });
+  m.classList.toggle('open');
+  m.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+document.getElementById('startBtn').addEventListener('click', ()=>{
+  document.getElementById('module1').scrollIntoView({behavior:'smooth'});
+});
+
+function submitQuiz(n){
+  const quizBox = document.getElementById('quiz'+n);
+  const questions = quizBox.querySelectorAll('.quiz-q');
+  let score = 0;
+  let allAnswered = true;
+
+  questions.forEach(q=>{
+    const selected = q.querySelector('.quiz-opt.selected');
+    if(!selected){ allAnswered = false; return; }
+  });
+
+  if(!allAnswered){
+    alert('Please answer all questions before submitting.');
+    return;
+  }
+
+  questions.forEach(q=>{
+    const correctIdx = parseInt(q.dataset.correct);
+    const opts = q.querySelectorAll('.quiz-opt');
+    const selected = q.querySelector('.quiz-opt.selected');
+    const selectedIdx = Array.from(opts).indexOf(selected);
+    opts.forEach((o,i)=>{
+      o.classList.add('disabled');
+      if(i === correctIdx) o.classList.add('correct');
+      else if(o === selected) o.classList.add('incorrect');
+    });
+    if(selectedIdx === correctIdx) score++;
+    q.querySelector('.qexplain').classList.add('show');
+  });
+
+  const summary = document.getElementById('summary'+n);
+  const pct = Math.round((score/questions.length)*100);
+  summary.classList.add('show');
+  if(score >= 3){
+    summary.classList.add('pass');
+    summary.textContent = `✅ ${score}/${questions.length} correct (${pct}%) — Module ${n} passed! +25 XP earned.`;
+    if(!completedModules.has(n)){
+      completedModules.add(n);
+      xp += 25;
+      unlockNext(n);
+      updateProgress();
+    }
+  } else {
+    summary.classList.remove('pass');
+    summary.classList.add('fail');
+    summary.textContent = `⚠️ ${score}/${questions.length} correct (${pct}%) — Review the module and try again to unlock the next one.`;
+  }
+}
+
+// enable option selection
+document.querySelectorAll('.quiz-q').forEach(q=>{
+  q.querySelectorAll('.quiz-opt').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      if(opt.classList.contains('disabled')) return;
+      q.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+    });
+  });
+});
+
+function unlockNext(n){
+  if(n < totalModules){
+    const next = document.getElementById('module'+(n+1));
+    next.classList.remove('locked');
+    setTimeout(()=>{
+      next.classList.add('open');
+      next.scrollIntoView({behavior:'smooth', block:'start'});
+    }, 500);
+  } else {
+    const final = document.getElementById('finalSection');
+    final.classList.remove('locked');
+    document.getElementById('completionBanner').style.display = 'block';
+    setTimeout(()=> final.scrollIntoView({behavior:'smooth'}), 500);
+  }
+}
+
+function updateProgress(){
+  const pct = Math.round((completedModules.size/totalModules)*100);
+  document.getElementById('progressFill').style.width = pct+'%';
+  document.getElementById('progressText').textContent = pct+'% complete';
+}
+
+// theme toggle
+const themeToggle = document.getElementById('themeToggle');
+themeToggle.addEventListener('click', ()=>{
+  const body = document.body;
+  const current = body.getAttribute('data-theme');
+  const next = current === 'dark' ? 'light' : 'dark';
+  body.setAttribute('data-theme', next);
+  themeToggle.textContent = next === 'dark' ? '🌙' : '☀️';
+});
+</script>
+</body>
+</html>
