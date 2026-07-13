@@ -1,0 +1,26 @@
+# Day 42 — Learnings
+
+## 1. Elicitation before generation beats a bigger prompt
+The original brief could have been handed straight to Claude and it would have produced *a* finance dashboard. Instead, forcing an MCQ interview first (user type → income pattern → priority → debt status → auto-design vs. customize) meant every architectural decision downstream — percent-based budgeting, rolling-average income, an emergency fund sized in months — was justified by an actual profile instead of guessed at generically. **Lesson: when a build has more than one plausible "right" shape, spend the first exchange narrowing the shape, not writing code.**
+
+## 2. Generic financial UI has defaults too, not just generic web design
+The frontend-design skill's warning about "AI-generated design clusters" (cream + terracotta, near-black + acid accent, broadsheet hairlines) applies just as much to dashboards as to marketing pages. For a *financial* product specifically, the trap is defaulting to a generic "fintech app" look (rounded cards, blue/green, big bold numbers) that could belong to any SaaS. Grounding the palette and type in the subject's own world — ledgers, invoices, ink, brass — made it feel designed for freelancers specifically, not finance in general.
+
+## 3. Percent-based > fixed budgets for variable income
+A fixed "₹30,000/month budget" is meaningless when monthly income swings. Allocating by **percentage of whatever comes in** (Save/Needs/Wants sliders applied to a rolling average) is the correct mental model for freelance finances — worth remembering for any future build touching irregular income.
+
+## 4. Escaped-quote bug: `\'` inside a plain-text file is not a JS escape
+When generating a large HTML file with `create_file`, the file is written as raw text — there's no JS string-escaping context to "protect." Writing `\'` inside a single-quoted JS string literal puts a literal backslash into the source, which:
+- Terminates the string one character early
+- Leaves a dangling character (`t` from "isn't") that the parser reads as an unexpected identifier
+
+**Fix pattern:** when a string needs an apostrophe, either use double quotes for that string, or don't escape at all if using template literals. **Prevention pattern:** for any file with embedded `<script>` content, extract the JS and run `node -c` (syntax-only check) before shipping — catches this class of bug in seconds instead of relying on the user to report a console error.
+
+## 5. `node -c` as a pre-flight check for generated JS
+`node -c extracted.js` validates syntax without executing the file — a fast, safe way to catch parser-level errors (mismatched quotes, brackets, etc.) before handing a file to the user. Adding this as a standard last step for any HTML/JS artifact going forward.
+
+## 6. Canvas charts without libraries are very doable
+Built three distinct chart types (grouped bar/line combo, donut with legend, dual-line compound-growth chart) entirely with the 2D canvas API — no Chart.js, no D3. Kept the file dependency-free and fast, at the cost of writing more manual layout math (padding, scaling, gridlines) by hand.
+
+## 7. Theme-aware canvas redraws
+Canvas content doesn't automatically restyle on a CSS variable change (unlike DOM elements). Had to explicitly re-run all `drawX()` chart functions inside `setTheme()` so switching dark/light mode actually recolors the charts, not just the surrounding UI.
