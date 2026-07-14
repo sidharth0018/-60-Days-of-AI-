@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LinkedIn Roast & Rebuild — Sidh</title>
+<style>
+  :root{
+    --bg:#12110F; --panel:#1B1A17; --panel2:#221F1B;
+    --line:#332F29; --text:#EDE8DE; --sub:#A79E8E; --muted:#726A5C;
+    --amber:#EF9F27; --amber-dark:#412402; --amber-light:#FAEEDA;
+    --green:#97C459; --green-dark:#173404;
+    --red:#E24B4A; --red-dark:#501313;
+    --serif:'Georgia','Times New Roman',serif;
+    --mono:'Courier New',monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);}
+  .wrap{max-width:880px;margin:0 auto;padding:40px 24px 80px;}
+  .masthead{border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:8px;}
+  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--amber);margin:0 0 10px;}
+  h1{font-family:var(--serif);font-weight:400;font-size:34px;margin:0 0 8px;line-height:1.2;}
+  .dek{color:var(--sub);font-size:15px;margin:0;max-width:560px;}
+
+  .scoreboard{display:flex;gap:16px;margin:28px 0 32px;flex-wrap:wrap;}
+  .score-card{flex:1;min-width:160px;background:var(--panel);border:1px solid var(--line);padding:20px;position:relative;}
+  .score-label{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+  .score-num{font-family:var(--serif);font-size:44px;line-height:1;}
+  .score-num small{font-size:18px;color:var(--muted);}
+  .score-arrow{font-family:var(--mono);font-size:13px;color:var(--green);margin-top:8px;}
+
+  .tabs{display:flex;gap:2px;margin:36px 0 0;border-bottom:1px solid var(--line);}
+  .tab{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:12px 18px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;user-select:none;background:none;}
+  .tab.active{color:var(--amber);border-bottom-color:var(--amber);}
+  .tab:hover:not(.active){color:var(--sub);}
+
+  .panel{display:none;padding-top:28px;}
+  .panel.active{display:block;}
+
+  .section-title{font-family:var(--serif);font-size:20px;margin:32px 0 14px;color:var(--amber-light);}
+  .section-title:first-child{margin-top:0;}
+
+  .row-card{background:var(--panel);border:1px solid var(--line);padding:18px 20px;margin-bottom:14px;}
+  .row-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;flex-wrap:wrap;gap:8px;}
+  .row-title{font-weight:600;font-size:15px;}
+  .grade{font-family:var(--mono);font-size:13px;padding:3px 9px;border:1px solid var(--line);}
+  .grade.low{color:var(--red);border-color:var(--red-dark);}
+  .grade.mid{color:var(--amber);border-color:var(--amber-dark);}
+  .grade.high{color:var(--green);border-color:var(--green-dark);}
+  .quote{font-family:var(--serif);font-style:italic;color:var(--sub);border-left:2px solid var(--amber-dark);padding-left:14px;margin:10px 0;font-size:14px;line-height:1.6;}
+  .why{font-size:13.5px;color:var(--sub);line-height:1.7;margin:6px 0;}
+  .why b{color:var(--text);font-weight:600;}
+
+  .copy-block{background:var(--panel2);border:1px solid var(--line);padding:16px 18px;margin:10px 0;position:relative;font-size:14px;line-height:1.75;white-space:pre-wrap;}
+  .copy-btn{position:absolute;top:10px;right:10px;font-family:var(--mono);font-size:10px;text-transform:uppercase;letter-spacing:.06em;background:var(--panel);border:1px solid var(--line);color:var(--sub);padding:5px 10px;cursor:pointer;}
+  .copy-btn:hover{color:var(--amber);border-color:var(--amber-dark);}
+  .copy-btn.done{color:var(--green);}
+
+  .opt-label{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--amber);margin:18px 0 4px;}
+
+  .tags{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0;}
+  .tag{font-family:var(--mono);font-size:12px;padding:5px 11px;border:1px solid var(--line);color:var(--sub);}
+  .tag.add{border-color:var(--green-dark);color:var(--green);}
+  .tag.remove{border-color:var(--red-dark);color:var(--red);text-decoration:line-through;}
+  .tag.pin{border-color:var(--amber-dark);color:var(--amber);}
+
+  .day-list{display:flex;flex-direction:column;gap:0;}
+  .day{background:var(--panel);border:1px solid var(--line);border-top:none;padding:16px 20px;}
+  .day:first-child{border-top:1px solid var(--line);}
+  .day-head{display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .day-num{font-family:var(--mono);font-size:11px;color:var(--amber);border:1px solid var(--amber-dark);width:26px;height:26px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .day-num.checked{background:var(--amber);color:var(--bg);}
+  .day-title{font-weight:600;font-size:14.5px;flex:1;}
+  .day-chevron{color:var(--muted);font-family:var(--mono);font-size:12px;transition:transform .15s;}
+  .day-body{max-height:0;overflow:hidden;transition:max-height .2s ease;font-size:13.5px;color:var(--sub);line-height:1.7;}
+  .day-body-inner{padding:12px 0 4px 38px;}
+  .day.open .day-body{max-height:600px;}
+  .day.open .day-chevron{transform:rotate(90deg);}
+
+  .summary-card{background:linear-gradient(180deg,var(--panel) 0%, var(--panel2) 100%);border:1px solid var(--amber-dark);padding:28px 26px;font-family:var(--serif);}
+  .summary-card .sc-title{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--amber);margin-bottom:16px;}
+  .summary-score{display:flex;gap:24px;align-items:baseline;margin:14px 0 20px;}
+  .summary-score .n{font-size:38px;}
+  .summary-score .arrow{color:var(--muted);font-family:var(--sans);}
+  .summary-score .after{color:var(--green);}
+  .mistakes{margin:16px 0;padding-left:20px;color:var(--sub);font-size:15px;line-height:1.9;}
+  .punch{color:var(--amber-light);font-style:italic;border-top:1px solid var(--line);padding-top:16px;margin-top:16px;font-size:15px;}
+
+  .footnote{font-family:var(--mono);font-size:11.5px;color:var(--muted);margin-top:10px;}
+  @media(max-width:600px){h1{font-size:26px;} .scoreboard{gap:10px;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <p class="kicker">Profile audit — Data Analyst track</p>
+    <h1>LinkedIn roast &amp; rebuild</h1>
+    <p class="dek">Honest scoring on your current profile, a full rewrite you can copy-paste, and a 7-day plan to make it work for you.</p>
+  </div>
+
+  <div class="scoreboard">
+    <div class="score-card">
+      <div class="score-label">Before</div>
+      <div class="score-num" style="color:var(--red)">38<small>/100</small></div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">After</div>
+      <div class="score-num" style="color:var(--green)">78<small>/100</small></div>
+      <div class="score-arrow">+40 points</div>
+    </div>
+    <div class="score-card">
+      <div class="score-label">Biggest leak</div>
+      <div style="font-family:var(--serif);font-size:17px;margin-top:6px;">Experience section</div>
+      <div class="score-arrow" style="color:var(--muted)">reads as a post, not a résumé</div>
+    </div>
+  </div>
+
+  <div class="tabs" id="tabs">
+    <button class="tab active" data-tab="roast">Roast</button>
+    <button class="tab" data-tab="rebuild">Rebuild</button>
+    <button class="tab" data-tab="plan">7-day plan</button>
+    <button class="tab" data-tab="summary">Summary card</button>
+  </div>
+
+  <!-- ROAST -->
+  <div class="panel active" id="panel-roast">
+
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Headline</span><span class="grade mid">5/10</span></div>
+      <div class="quote">"Data Analyst Intern @Thiranex | Aspiring Data Analyst | SQL • Python • Power BI | Building Real-World Data Projects | Final Year B.Tech ECE | Open to Internships"</div>
+      <p class="why"><b>Problem:</b> six clauses stitched by pipes — a keyword dump, not a pitch. "Aspiring" right after "Intern" undercuts your own status.</p>
+      <p class="why"><b>Cost:</b> you'll surface in keyword search, but nothing here makes a recruiter stop scrolling.</p>
+    </div>
+
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">About — first 2 lines</span><span class="grade low">3/10</span></div>
+      <div class="quote">"Passionate about Data Analytics, Data Engineering, and AI."</div>
+      <p class="why"><b>Problem:</b> "Passionate about" is the most overused opener on LinkedIn. It says how you feel, not what you can do.</p>
+      <p class="why"><b>Cost:</b> this is all that's visible before "see more" — if it doesn't hook, nothing below it gets read.</p>
+    </div>
+
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">About — full section</span><span class="grade mid">4/10</span></div>
+      <p class="why"><b>Problem:</b> every line is a variant of "I enjoy learning and building" — no tool, dataset, or outcome named anywhere.</p>
+      <p class="why"><b>Cost:</b> zero evidence means zero differentiation from every other final-year profile in your field.</p>
+    </div>
+
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Experience</span><span class="grade low">2/10</span></div>
+      <div class="quote">"Data Analytics Intern at Thiranex. This internship will provide me with an opportunity to work on practical projects, learn from industry mentors, and strengthen my analytical and problem-solving skills in a real-world environment."</div>
+      <p class="why"><b>Problem:</b> future tense — describes what the internship will give you, not what you did. Same tone as an excited announcement post.</p>
+      <p class="why"><b>Cost:</b> Experience is the most-weighted section for recruiters. Right now it actively hurts more than it helps.</p>
+    </div>
+
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Skills &amp; keywords</span><span class="grade mid">4/10</span></div>
+      <div class="tags">
+        <span class="tag">problem solving</span><span class="tag">it fundamental</span><span class="tag">sql</span><span class="tag">python</span><span class="tag">team leader</span>
+      </div>
+      <p class="why"><b>Problem:</b> "it fundamental" matches no real search query. "team leader" isn't backed by anything else on your profile.</p>
+      <p class="why"><b>Cost:</b> you're missing Power BI, Data Visualization, Excel — tools you already claim in your own headline.</p>
+    </div>
+
+  </div>
+
+  <!-- REBUILD -->
+  <div class="panel" id="panel-rebuild">
+
+    <div class="section-title">Headline options</div>
+
+    <div class="opt-label">1 — Keyword-optimized (use now)</div>
+    <div class="copy-block" data-copy="1">Data Analyst Intern @ Thiranex | SQL, Python, Power BI | Data Analytics & Visualization | Final Year ECE, 2027<button class="copy-btn">Copy</button></div>
+
+    <div class="opt-label">2 — Value-proposition</div>
+    <div class="copy-block" data-copy="1">Turning Raw Data into Decisions | SQL • Python • Power BI | Data Analyst Intern @ Thiranex | Open to Full-Time Roles, 2027<button class="copy-btn">Copy</button></div>
+
+    <div class="opt-label">3 — Authority (once you have 1-2 real projects)</div>
+    <div class="copy-block" data-copy="1">Aspiring Data Analyst | SQL, Python, Power BI | Built [X] Data Projects | ECE Final Year — Actively Interviewing<button class="copy-btn">Copy</button></div>
+
+    <div class="section-title">About section</div>
+    <div class="copy-block" data-copy="1">I turn messy, unstructured data into insights someone can actually act on.
+
+I'm a final-year ECE student who pivoted into data analytics — currently a Data Analyst Intern at Thiranex and part of the IBM SkillsBuild Big Data & Business Management program (AICTE + BharatCares). My toolkit: SQL for querying, Python for cleaning and analysis, and Power BI for dashboards that non-technical stakeholders can actually read.
+
+What I focus on: clean data pipelines, visualizations that answer a real business question, and dashboards built to be used — not just looked at once.
+
+[Add here once you have one: "Built a [type] dashboard analyzing [dataset], surfacing [insight]" — this is your single biggest gap right now.]
+
+Open to Data Analyst and Data Science internship/full-time roles. If you're hiring or know a team that is — let's talk.<button class="copy-btn">Copy</button></div>
+    <p class="footnote">Keywords embedded: Data Analyst · SQL · Python · Power BI · Data Cleaning · Data Analysis · Data Visualization · Dashboard · Business Intelligence · Data-Driven Decision Making</p>
+
+    <div class="section-title">Experience — rewrite</div>
+    <div class="copy-block" data-copy="1">Support data collection, cleaning, and analysis for business reporting as part of the Data Analyst Intern role at Thiranex
+Work with mentors on dashboard design and reporting workflows to translate raw data into business-usable visuals
+Apply SQL and Python for data processing as part of ongoing analytics projects<button class="copy-btn">Copy</button></div>
+    <p class="footnote">Once you ship one real deliverable, replace the top line with a metric-led bullet — that single change outweighs everything else on this page.</p>
+
+    <div class="section-title">Skills</div>
+    <p class="why" style="margin-bottom:4px;"><b>Add:</b></p>
+    <div class="tags">
+      <span class="tag add">Power BI</span><span class="tag add">Data Analysis</span><span class="tag add">Data Visualization</span><span class="tag add">Data Cleaning</span><span class="tag add">Excel</span><span class="tag add">MySQL</span><span class="tag add">DSA</span><span class="tag add">Business Intelligence</span><span class="tag add">Statistics</span><span class="tag add">Dashboarding</span>
+    </div>
+    <p class="why" style="margin-bottom:4px;"><b>Remove:</b></p>
+    <div class="tags"><span class="tag remove">it fundamental</span><span class="tag remove">team leader</span></div>
+    <p class="why" style="margin-bottom:4px;"><b>Pin to top 3:</b></p>
+    <div class="tags"><span class="tag pin">SQL</span><span class="tag pin">Python</span><span class="tag pin">Power BI</span></div>
+
+    <div class="section-title">Before → after scorecard</div>
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Headline</span><span class="grade mid">5 → <span style="color:var(--green)">8</span></span></div>
+    </div>
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">About (hook)</span><span class="grade mid">3 → <span style="color:var(--green)">8</span></span></div>
+    </div>
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">About (full)</span><span class="grade mid">4 → <span style="color:var(--green)">8</span></span></div>
+    </div>
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Experience</span><span class="grade mid">2 → <span style="color:var(--amber)">7*</span></span></div>
+      <p class="footnote">*capped until you add one real, metric-backed deliverable</p>
+    </div>
+    <div class="row-card">
+      <div class="row-head"><span class="row-title">Skills / keywords</span><span class="grade mid">4 → <span style="color:var(--green)">8</span></span></div>
+    </div>
+
+  </div>
+
+  <!-- PLAN -->
+  <div class="panel" id="panel-plan">
+    <div class="section-title">7-day activation plan</div>
+    <div class="day-list" id="dayList">
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">1</div>
+          <div class="day-title">Make all profile changes</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Update headline · replace About · rewrite Experience bullets · update skills (add 10, remove 2, pin top 3) · add a Featured section pinning your best project or the IBM SkillsBuild program page.</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">2</div>
+          <div class="day-title">Publish "I rebuilt my LinkedIn" post</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Post about realizing your profile was passion-talk instead of proof. See the Rebuild tab for a ready-to-use About section — mirror that tone. Close with your open-to-work line.</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">3</div>
+          <div class="day-title">Send 10 strategic connection requests</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Target Data Analysts / Analytics Managers at fintech and consulting firms, plus ABES alumni in data roles. Template: "Hi [Name], I'm a final-year ECE student moving into data analytics (SQL/Python/Power BI) — currently interning at Thiranex. I'd love to connect and learn from your experience in the field."</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">4</div>
+          <div class="day-title">Comment on 5 posts in your target space</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Formula: Agree + Add insight + Ask a question. Don't just say "Great post" — add something a hiring manager would notice.</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">5</div>
+          <div class="day-title">Publish Post #2 — a lessons-learned take</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Pick one real lesson from your Thiranex internship or the SkillsBuild program. Tell Claude which one and it'll draft the full post.</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">6</div>
+          <div class="day-title">Engage + send 5 more connections</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Reply to every comment on your posts within a few hours. Send 5 more requests using the Day 3 template.</div></div>
+      </div>
+
+      <div class="day">
+        <div class="day-head" onclick="toggleDay(this)">
+          <div class="day-num">7</div>
+          <div class="day-title">Review your numbers</div>
+          <div class="day-chevron">›</div>
+        </div>
+        <div class="day-body"><div class="day-body-inner">Check profile views and connection acceptance rate. Low views + high acceptance → outreach is fine, revisit headline/About. High views + low click-through → hook isn't landing. High acceptance + no replies → sharpen your connection note.</div></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="panel" id="panel-summary">
+    <div class="summary-card">
+      <div class="sc-title">Shareable summary</div>
+      <p style="font-size:16px;line-height:1.7;">I let AI roast my LinkedIn profile today. Here's what changed:</p>
+      <div class="summary-score">
+        <div><div class="score-label">Before</div><div class="n" style="color:var(--red)">38/100</div></div>
+        <div class="arrow">→</div>
+        <div><div class="score-label">After</div><div class="n after">78/100</div></div>
+      </div>
+      <p style="font-size:15px;">Top 3 mistakes I was making:</p>
+      <ol class="mistakes">
+        <li>Writing "passionate about" instead of naming what I can actually do</li>
+        <li>An Experience bullet that read like an excitement post, not a résumé line</li>
+        <li>A skills list that didn't even match my own headline</li>
+      </ol>
+      <p class="punch">The #1 thing that made the biggest difference: rewriting Experience from future-tense hopes to present-tense, tool-specific action.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('panel-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+document.querySelectorAll('.copy-btn').forEach(btn=>{
+  btn.addEventListener('click',(e)=>{
+    e.stopPropagation();
+    const block = btn.closest('.copy-block');
+    const text = block.textContent.replace('Copy','').trim();
+    navigator.clipboard.writeText(text).then(()=>{
+      btn.textContent='Copied';
+      btn.classList.add('done');
+      setTimeout(()=>{btn.textContent='Copy';btn.classList.remove('done');},1500);
+    });
+  });
+});
+
+function toggleDay(head){
+  const day = head.closest('.day');
+  const num = day.querySelector('.day-num');
+  day.classList.toggle('open');
+  num.classList.toggle('checked');
+}
+</script>
+</body>
+</html>
