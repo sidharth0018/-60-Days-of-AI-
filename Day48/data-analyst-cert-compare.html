@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Analyst Certification — Compare & Decide</title>
+<style>
+  :root{
+    --ink:#1c1f26;
+    --paper:#f7f5f0;
+    --panel:#ffffff;
+    --line:#dcd7cb;
+    --accent:#2a5d63;
+    --accent-soft:#e4efee;
+    --gold:#b8863a;
+    --muted:#6b6558;
+    --danger:#a13e2f;
+    --radius:10px;
+    font-size:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Iowan Old Style','Georgia',serif;
+    line-height:1.5;
+  }
+  .mono{font-family:'IBM Plex Mono','Courier New',monospace;}
+  header{
+    padding:2.5rem 1.5rem 1.5rem;
+    max-width:1100px;
+    margin:0 auto;
+    border-bottom:1px solid var(--line);
+  }
+  header .eyebrow{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.75rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    color:var(--accent);
+    margin-bottom:.5rem;
+  }
+  header h1{
+    font-size:2rem;
+    margin:.2rem 0 .5rem;
+    font-weight:600;
+    letter-spacing:-.01em;
+  }
+  header p{
+    color:var(--muted);
+    max-width:640px;
+    margin:.3rem 0;
+    font-size:.98rem;
+  }
+  main{max-width:1100px;margin:0 auto;padding:1.5rem;}
+
+  .layout{display:grid;grid-template-columns:260px 1fr;gap:1.5rem;align-items:start;}
+  @media (max-width:820px){.layout{grid-template-columns:1fr;}}
+
+  .weights{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:1.25rem;
+    position:sticky;
+    top:1rem;
+  }
+  .weights h2{
+    font-size:.85rem;
+    text-transform:uppercase;
+    letter-spacing:.08em;
+    font-family:'IBM Plex Mono',monospace;
+    color:var(--accent);
+    margin:0 0 1rem;
+  }
+  .slider-row{margin-bottom:1.1rem;}
+  .slider-row label{
+    display:flex;justify-content:space-between;
+    font-size:.85rem;margin-bottom:.35rem;
+  }
+  .slider-row .val{font-family:'IBM Plex Mono',monospace;color:var(--gold);}
+  input[type=range]{
+    width:100%;accent-color:var(--accent);height:4px;
+  }
+  .reset-btn{
+    width:100%;margin-top:.5rem;
+    background:none;border:1px solid var(--line);
+    border-radius:6px;padding:.5rem;
+    font-family:'IBM Plex Mono',monospace;font-size:.75rem;
+    cursor:pointer;color:var(--muted);
+  }
+  .reset-btn:hover{border-color:var(--accent);color:var(--accent);}
+  .preset-toggle{
+    display:flex;gap:.4rem;margin-bottom:1rem;
+  }
+  .preset-toggle button{
+    flex:1;font-family:'IBM Plex Mono',monospace;font-size:.7rem;
+    padding:.4rem;border-radius:6px;border:1px solid var(--line);
+    background:var(--paper);cursor:pointer;color:var(--muted);
+  }
+  .preset-toggle button.active{
+    background:var(--accent);color:#fff;border-color:var(--accent);
+  }
+
+  .results{display:flex;flex-direction:column;gap:.9rem;}
+  .card{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:1.1rem 1.25rem;
+    transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .card.rank-1{border-color:var(--accent);box-shadow:0 2px 14px rgba(42,93,99,.12);}
+  .card-top{display:flex;justify-content:space-between;align-items:baseline;gap:1rem;flex-wrap:wrap;}
+  .card-title{display:flex;align-items:baseline;gap:.6rem;}
+  .rank{
+    font-family:'IBM Plex Mono',monospace;font-size:.75rem;color:var(--gold);
+    border:1px solid var(--gold);border-radius:50%;width:22px;height:22px;
+    display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .card h3{margin:0;font-size:1.15rem;}
+  .card .score{
+    font-family:'IBM Plex Mono',monospace;font-size:1.3rem;color:var(--accent);
+  }
+  .bar-track{
+    background:var(--accent-soft);height:6px;border-radius:3px;margin:.6rem 0 .8rem;overflow:hidden;
+  }
+  .bar-fill{
+    background:var(--accent);height:100%;transition:width .3s ease;
+  }
+  .facts{
+    display:grid;grid-template-columns:repeat(5,1fr);gap:.6rem;
+    font-size:.78rem;
+  }
+  @media (max-width:700px){.facts{grid-template-columns:repeat(2,1fr);}}
+  .facts div{border-left:2px solid var(--line);padding-left:.5rem;}
+  .facts .flabel{color:var(--muted);font-family:'IBM Plex Mono',monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;display:block;margin-bottom:.15rem;}
+  .flag{
+    display:inline-block;margin-left:.3rem;font-size:.65rem;
+    background:#f4e6d0;color:var(--gold);border-radius:3px;padding:0 .3rem;
+    font-family:'IBM Plex Mono',monospace;
+  }
+
+  .collapsible{
+    margin-top:1.75rem;border:1px solid var(--line);border-radius:var(--radius);
+    background:var(--panel);overflow:hidden;
+  }
+  .collapsible summary{
+    cursor:pointer;padding:1rem 1.25rem;font-family:'IBM Plex Mono',monospace;
+    font-size:.8rem;text-transform:uppercase;letter-spacing:.06em;color:var(--accent);
+    list-style:none;display:flex;justify-content:space-between;align-items:center;
+  }
+  .collapsible summary::-webkit-details-marker{display:none;}
+  .collapsible summary::after{content:"+";font-size:1.1rem;color:var(--muted);}
+  .collapsible[open] summary::after{content:"–";}
+  .collapsible .body{padding:0 1.25rem 1.25rem;font-size:.9rem;color:#3a362e;}
+  .collapsible .body h4{font-size:.85rem;margin:1rem 0 .3rem;color:var(--ink);}
+  .collapsible .body ul{margin:.3rem 0;padding-left:1.2rem;}
+  .collapsible .body li{margin-bottom:.4rem;}
+
+  .sources{
+    margin-top:1rem;
+  }
+  .sources ol{padding-left:1.3rem;font-size:.82rem;}
+  .sources li{margin-bottom:.5rem;}
+  .sources a{color:var(--accent);word-break:break-word;}
+
+  footer{
+    max-width:1100px;margin:0 auto;padding:1.5rem;
+    font-size:.75rem;color:var(--muted);font-family:'IBM Plex Mono',monospace;
+    border-top:1px solid var(--line);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Compare &amp; Decide — Certification Providers</div>
+  <h1>Which Data Analyst certificate should you actually take?</h1>
+  <p>Built for a final-year student choosing one provider before job hunting. Adjust the weights on the left to match what matters most to you — the ranking updates live. All figures are cited below; anything estimated is flagged.</p>
+</header>
+
+<main>
+  <div class="layout">
+    <div class="weights">
+      <h2>Priority weights</h2>
+      <div class="preset-toggle">
+        <button class="active" data-preset="default">Balanced</button>
+        <button data-preset="budget">Budget-first</button>
+        <button data-preset="jobs">Job-focused</button>
+      </div>
+
+      <div class="slider-row">
+        <label>Cost <span class="val" id="v-cost">20%</span></label>
+        <input type="range" min="0" max="100" value="20" id="w-cost">
+      </div>
+      <div class="slider-row">
+        <label>Time to complete <span class="val" id="v-time">15%</span></label>
+        <input type="range" min="0" max="100" value="15" id="w-time">
+      </div>
+      <div class="slider-row">
+        <label>Job/placement support <span class="val" id="v-jobs">25%</span></label>
+        <input type="range" min="0" max="100" value="25" id="w-jobs">
+      </div>
+      <div class="slider-row">
+        <label>Curriculum depth <span class="val" id="v-curr">20%</span></label>
+        <input type="range" min="0" max="100" value="20" id="w-curr">
+      </div>
+      <div class="slider-row">
+        <label>Industry recognition <span class="val" id="v-rec">20%</span></label>
+        <input type="range" min="0" max="100" value="20" id="w-rec">
+      </div>
+
+      <button class="reset-btn" id="reset">Reset to balanced</button>
+    </div>
+
+    <div>
+      <div class="results" id="results"></div>
+
+      <details class="collapsible">
+        <summary>How this was researched</summary>
+        <div class="body">
+          <h4>Approach</h4>
+          <p>Cost and duration were pulled from official provider pages and Coursera's own program listings where available, cross-checked against independent review sites for consistency. Job/placement support, curriculum depth, and industry recognition are harder to quantify objectively, so those three scores are analyst judgments (0–10 scale) informed by the sourced facts below — not third-party benchmark numbers — and are flagged as estimates in each card.</p>
+          <h4>Conflicts resolved</h4>
+          <ul>
+            <li><strong>Google certificate pricing</strong> varies by source ($49/mo per most reviews vs $59/mo on one Coursera listing, likely a regional or Plus-bundle price). Used the more frequently cited $49/month standalone rate and Coursera's own 6-month median pace ($294 total) as the primary figure.</li>
+            <li><strong>IBM certificate length</strong> is reported as 8, 9, or 11 courses depending on the source and update date — Coursera has been revising the curriculum through 2026. Used the most recent (Feb 2026) figure of an 11-course series, noting older sources say 8–9.</li>
+            <li><strong>upGrad pricing</strong> spans a wide range (₹80,000–₹1,50,000+) across upGrad's own multiple data programs (Advanced Certificate vs Executive PG vs M.Sc.). Used the Advanced Certificate Program in Data Analytics (₹99,999) since it's the closest match to the other three "certificate," not "degree," options.</li>
+            <li><strong>DataCamp</strong> has no single "career track" certificate the way the others do — it's subscription access to modular tracks plus an optional certification exam. Time and cost figures reflect the subscription model, not a bundled program fee.</li>
+          </ul>
+          <h4>What's an estimate</h4>
+          <p>Job/placement support, curriculum depth, and industry recognition scores (shown out of 10 in each card) are the research analyst's synthesis of the cited sources, not numbers published by the providers themselves. Cost and time figures are sourced directly except where noted above.</p>
+        </div>
+      </details>
+
+      <details class="collapsible">
+        <summary>Sources panel</summary>
+        <div class="body sources">
+          <ol>
+            <li>Google Data Analytics Certificate cost &amp; time — practicetestgeeks.com, "Google Data Analytics Certificate: Cost, Time and 2026" (Jul 2026) — <a href="https://practicetestgeeks.com/google/google-data-analytics-certificate" target="_blank">practicetestgeeks.com</a></li>
+            <li>Google certificate curriculum, ROI, median pay claim — onlinecerthub.com, "Google Data Analytics Certificate Cost 2026: Best ROI Math" — <a href="https://onlinecerthub.com/google-data-analytics-certificate-cost-vs-value/" target="_blank">onlinecerthub.com</a></li>
+            <li>Google certificate tools covered (no Python), enrollment scale — ShortCourses.com, "Google Data Analytics Certificate: Complete Review 2026" — <a href="https://shortcourses.com/blog/google-data-analytics-certificate-review" target="_blank">shortcourses.com</a></li>
+            <li>7 Popular Data Analytics Certifications — Coursera official guide (2026) — <a href="https://www.coursera.org/articles/data-analytics-certification" target="_blank">coursera.org</a></li>
+            <li>IBM Data Analyst Professional Certificate — fees in INR, module count, capstone — Collegedunia, "IBM Data Analyst Professional Certificate: Fees, Course Details 2026" — <a href="https://collegedunia.com/courses/data-analytics/ibm-data-analyst-professional-certificate" target="_blank">collegedunia.com</a></li>
+            <li>IBM certificate curriculum breadth (Python, Excel, SQL, visualization), portfolio focus — e-student.org review — <a href="https://e-student.org/coursera-professional-certificate-ibm-data-analyst/" target="_blank">e-student.org</a></li>
+            <li>IBM certificate 2026 update (11-course series, ACE/FIBAA credit, pacing) — FlashGenius, "IBM Data Analyst Professional Certificate: The Ultimate 2026 Guide" — <a href="https://flashgenius.net/blog-article/ibm-data-analyst-professional-certificate-the-ultimate-2026-guide" target="_blank">flashgenius.net</a></li>
+            <li>upGrad Advanced Certificate Program in Data Analytics — fee, duration, tools (Excel/SQL/Python/Power BI/Tableau) — upGrad official program page — <a href="https://www.upgrad.com/offline-centres/data-analytics-course-in-dehradun-city/" target="_blank">upgrad.com</a></li>
+            <li>upGrad placement support model, hiring partners — upGrad blog, "Data Science Course Fees, Duration &amp; Top Career Paths in 2026" — <a href="https://www.upgrad.com/blog/data-science-course-fees-with-roadmap/" target="_blank">upgrad.com</a></li>
+            <li>India data-analytics course fee landscape (context for upGrad positioning) — SkillsetMaster, "Data Analytics Course Fees in India 2026" — <a href="https://skillsetmaster.com/data-analytics-course-fees" target="_blank">skillsetmaster.com</a></li>
+            <li>DataCamp pricing (~$25–33/mo, ~$300/yr), no live instruction/career support — Careery Blog, "Best Data Analyst Bootcamps in 2026" — <a href="https://careery.pro/blog/data-analyst-careers/data-analyst-bootcamp-guide" target="_blank">careery.pro</a></li>
+            <li>DataCamp Data Analyst in Python career track — content, tools (pandas, NumPy, Seaborn), certification — DataCamp official track page — <a href="https://www.datacamp.com/tracks/data-analyst-with-python" target="_blank">datacamp.com</a></li>
+            <li>DataCamp Data Analyst Certification structure (30-day exam window, associate level) — DataCamp official certification page — <a href="https://www.datacamp.com/certification/data-analyst" target="_blank">datacamp.com</a></li>
+          </ol>
+        </div>
+      </details>
+    </div>
+  </div>
+</main>
+
+<footer>
+  Data compiled July 2026 from sources cited above. Cost figures fluctuate with regional pricing, promotions, and subscription duration — confirm current price at checkout. This tool is for orientation only, not financial advice.
+</footer>
+
+<script>
+const providers = [
+  {
+    name: "Google Data Analytics Professional Certificate",
+    sub: "Coursera · Google",
+    cost_usd: 294,
+    cost_display: "$150–$300 (₹12.5k–₹25k)",
+    time_months: 5,
+    time_display: "3–8 months (10 hrs/wk pace)",
+    jobs_score: 6,
+    curriculum_score: 6,
+    recognition_score: 9,
+    curriculum_note: "Excel, SQL, R, Tableau — no Python",
+    estimates: ["jobs","curriculum","recognition"]
+  },
+  {
+    name: "IBM Data Analyst Professional Certificate",
+    sub: "Coursera · IBM",
+    cost_usd: 170,
+    cost_display: "$147–$294 (₹12k–₹25k)",
+    time_months: 4,
+    time_display: "3–4 months (10 hrs/wk pace)",
+    jobs_score: 6,
+    curriculum_score: 8,
+    recognition_score: 8,
+    curriculum_note: "Excel, Python, SQL, visualization, capstone project",
+    estimates: ["jobs","curriculum","recognition"]
+  },
+  {
+    name: "upGrad Advanced Certificate Program in Data Analytics",
+    sub: "upGrad (India)",
+    cost_usd: 1190,
+    cost_display: "₹99,999 (~$1,190)",
+    time_months: 5,
+    time_display: "4–6 months",
+    jobs_score: 8,
+    curriculum_score: 8,
+    recognition_score: 6,
+    curriculum_note: "Excel, SQL, Python, Power BI, Tableau, GenAI",
+    estimates: ["jobs","curriculum","recognition"]
+  },
+  {
+    name: "DataCamp Data Analyst Career Track",
+    sub: "DataCamp subscription",
+    cost_usd: 300,
+    cost_display: "$25–33/mo (~$300/yr, ₹25k/yr)",
+    time_months: 3,
+    time_display: "Self-paced (~85 hrs per track)",
+    jobs_score: 3,
+    curriculum_score: 7,
+    recognition_score: 5,
+    curriculum_note: "Python/SQL/R tracks, modular — pick your own tools",
+    estimates: ["jobs","curriculum","recognition"]
+  }
+];
+
+const maxCost = Math.max(...providers.map(p=>p.cost_usd));
+const maxTime = Math.max(...providers.map(p=>p.time_months));
+
+function computeScores(w){
+  const total = w.cost+w.time+w.jobs+w.curr+w.rec || 1;
+  return providers.map(p=>{
+    const costScore = 10 * (1 - p.cost_usd/maxCost);
+    const timeScore = 10 * (1 - p.time_months/maxTime);
+    const raw = (costScore*w.cost + timeScore*w.time + p.jobs_score*w.jobs +
+                 p.curriculum_score*w.curr + p.recognition_score*w.rec) / total;
+    return {...p, finalScore: raw};
+  }).sort((a,b)=>b.finalScore-a.finalScore);
+}
+
+function flagFor(p, key){
+  return p.estimates.includes(key) ? '<span class="flag">estimate</span>' : '';
+}
+
+function render(w){
+  const ranked = computeScores(w);
+  const top = ranked[0].finalScore;
+  const el = document.getElementById('results');
+  el.innerHTML = ranked.map((p,i)=>`
+    <div class="card ${i===0?'rank-1':''}">
+      <div class="card-top">
+        <div class="card-title">
+          <span class="rank">${i+1}</span>
+          <h3>${p.name}</h3>
+        </div>
+        <span class="score mono">${p.finalScore.toFixed(1)}<span style="font-size:.7rem;color:var(--muted)">/10</span></span>
+      </div>
+      <div style="font-size:.8rem;color:var(--muted);margin-top:.1rem;">${p.sub}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(p.finalScore/top*100).toFixed(0)}%"></div></div>
+      <div class="facts">
+        <div><span class="flabel">Cost</span>${p.cost_display}</div>
+        <div><span class="flabel">Time</span>${p.time_display}</div>
+        <div><span class="flabel">Job support</span>${p.jobs_score}/10 ${flagFor(p,'jobs')}</div>
+        <div><span class="flabel">Curriculum</span>${p.curriculum_score}/10 ${flagFor(p,'curriculum')}</div>
+        <div><span class="flabel">Recognition</span>${p.recognition_score}/10 ${flagFor(p,'recognition')}</div>
+      </div>
+      <div style="font-size:.78rem;color:var(--muted);margin-top:.6rem;">${p.curriculum_note}</div>
+    </div>
+  `).join('');
+}
+
+const sliders = {
+  cost: document.getElementById('w-cost'),
+  time: document.getElementById('w-time'),
+  jobs: document.getElementById('w-jobs'),
+  curr: document.getElementById('w-curr'),
+  rec: document.getElementById('w-rec'),
+};
+const vals = {
+  cost: document.getElementById('v-cost'),
+  time: document.getElementById('v-time'),
+  jobs: document.getElementById('v-jobs'),
+  curr: document.getElementById('v-curr'),
+  rec: document.getElementById('v-rec'),
+};
+
+function currentWeights(){
+  const w = {};
+  Object.keys(sliders).forEach(k=> w[k]=+sliders[k].value);
+  const total = Object.values(w).reduce((a,b)=>a+b,0) || 1;
+  Object.keys(w).forEach(k=> vals[k].textContent = Math.round(w[k]/total*100)+'%');
+  return w;
+}
+
+function update(){
+  render(currentWeights());
+}
+
+Object.values(sliders).forEach(s=> s.addEventListener('input', update));
+
+document.getElementById('reset').addEventListener('click', ()=>{
+  applyPreset({cost:20,time:15,jobs:25,curr:20,rec:20});
+  setActivePreset('default');
+});
+
+const presets = {
+  default: {cost:20,time:15,jobs:25,curr:20,rec:20},
+  budget:  {cost:50,time:20,jobs:10,curr:10,rec:10},
+  jobs:    {cost:10,time:10,jobs:45,curr:20,rec:15},
+};
+
+function applyPreset(p){
+  Object.keys(sliders).forEach(k=> sliders[k].value = p[k]);
+  update();
+}
+function setActivePreset(name){
+  document.querySelectorAll('.preset-toggle button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.preset===name);
+  });
+}
+document.querySelectorAll('.preset-toggle button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    applyPreset(presets[btn.dataset.preset]);
+    setActivePreset(btn.dataset.preset);
+  });
+});
+
+update();
+</script>
+</body>
+</html>
